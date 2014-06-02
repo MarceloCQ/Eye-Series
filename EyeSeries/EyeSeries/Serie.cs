@@ -13,7 +13,7 @@ using UTorrentAPI;
 namespace EyeSeries
 {
 
-    class Serie
+    public class Serie
     {
         //Atributos
         public string Nombre { get; set; } ///Nombre de la serie
@@ -46,6 +46,19 @@ namespace EyeSeries
             }
         }
 
+        public int PorVer
+        {
+            get { return porVer; }
+            set
+            {
+                if (value != porVer)
+                {
+                    porVer = value;
+                    OnPropertyChanged("PorVer");
+                }
+            }
+        }
+
         public int Temporada
         {
             get { return temporada; }
@@ -68,19 +81,6 @@ namespace EyeSeries
                 {
                     capitulo = value;
                     OnPropertyChanged("Capitulo");
-                }
-            }
-        }
-
-        public int PorVer
-        {
-            get { return porVer; }
-            set
-            {
-                if (value != porVer)
-                {
-                    porVer = value;
-                    OnPropertyChanged("PorVer");
                 }
             }
         }
@@ -116,16 +116,12 @@ namespace EyeSeries
         /// <param name="n">Nombre de la serie</param>
         /// <param name="ns">Numero de la serie</param>
         /// <param name="e">Estado de la serie</param>
-        /// <param name="t">Temporada del siguiente episodio a descargar</param>
-        /// <param name="c">Capitulo del siguiente episodio a descargar</param>
-        public Serie(int i, string n, int ns, char e, int t, int c, string h)
+        public Serie(int i, string n, int ns, char e, string h)
         {
             Id = i;
             Nombre = n;
             Numserie = ns;
             Estado = e;
-            Temporada = t;
-            Capitulo = c;
             Descargando = 0;
             PorVer = 0;
             Hora = h;
@@ -228,7 +224,7 @@ namespace EyeSeries
         /// <summary>
         /// Alimenta los episodios de la base de datos a la serie
         /// </summary>
-        public void AlimentarEps()
+        public void AlimentarEps(int t, int c)
         {
             StreamReader leer = new StreamReader(@"C:\Users\Marcelo\Documents\Project Eye\Project-Eye\Base de Datos\Series\" + Nombre + ".txt");
             List<Episodio> aux = new List<Episodio>();
@@ -264,8 +260,12 @@ namespace EyeSeries
 
             }
 
+            Temporada = t;
+            Capitulo = c;
+
             leer.Close();
-            MessageBox.Show("LISTO ALIMENTAR");
+
+            CrearArchivo();
 
         }
 
@@ -289,7 +289,7 @@ namespace EyeSeries
             }
 
             escribe.Close();
-            MessageBox.Show("LISTO");
+           
         }
 
 

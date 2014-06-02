@@ -11,7 +11,7 @@ namespace EyeSeries
 {
     /*Clase episodio que representa un episodio de la serie
      */
-    class Episodio
+    public class Episodio
     {
         //Atributos
         public string NombreSerie { get; set; } //Nombre de la serie a la que pertenece
@@ -80,8 +80,8 @@ namespace EyeSeries
                 //Saca el link de la pagina
                 segundo = codigo.IndexOf("\" title", primero);
                 link = codigo.Substring(primero + 6, segundo - primero - 6);
-                uClient.Torrents.AddUrl(link);
-                //Saca el HASH del link
+               uClient.Torrents.AddUrl(link);
+             //   Saca el HASH del link
                 Regex r2 = new Regex(".+xt=urn:btih:(.+?)&dn=.+");
                 Hash = r2.Match(link).Groups[1].Value.ToUpper();
 

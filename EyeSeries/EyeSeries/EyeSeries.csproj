@@ -56,7 +56,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="IntSerie.xaml.cs">
+      <DependentUpon>IntSerie.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Serie.cs" />
+    <Page Include="IntSerie.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -101,7 +108,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Bases de Datos\Series\" />
-    <Folder Include="Interfaz\FanArt\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Interfaz\FanArt\24.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

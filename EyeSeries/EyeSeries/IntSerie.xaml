@@ -1,0 +1,32 @@
+﻿<UserControl x:Name="IntSeries" x:Class="EyeSeries.IntSerie"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="197" d:DesignWidth="350" Initialized="IntSeries_Initialized">
+    <UserControl.Background>
+        <ImageBrush Stretch="Uniform"/>
+    </UserControl.Background>
+    <Grid x:Name="GPrinc">
+        <Image x:Name="FanArt" HorizontalAlignment="Left" Height="197" VerticalAlignment="Top" Width="350"/>
+        <Rectangle x:Name="RectNombre" Fill="Black" HorizontalAlignment="Left" Height="27" Stroke="Black" VerticalAlignment="Top" Width="133" Opacity="0.5"/>
+        <TextBlock x:Name="Nombre" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Height="27" Width="133" FontFamily="Bebas Neue" FontSize="26" TextAlignment="Center" Foreground="White"/>
+        <Rectangle x:Name="InfoRect" HorizontalAlignment="Left" Height="44" Margin="0,153,0,0" VerticalAlignment="Top" Width="350" Stroke="Black" Fill="Black" Opacity="0.7"/>
+        <TextBlock x:Name="Episodio" HorizontalAlignment="Left" Margin="46,153,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Bebas Neue" FontSize="24" Foreground="White" Height="24"><Run Language="es-mx" Text="S00E00"/></TextBlock>
+        <TextBlock x:Name="NombreEp" HorizontalAlignment="Left" Margin="46,175,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="14" Foreground="White" Height="22"><Run Language="es-mx" Text="Nombre del episodio"/><LineBreak/><Run Language="es-mx"/></TextBlock>
+        <Image x:Name="Eye" HorizontalAlignment="Left" Height="16" Margin="176,168,0,0" VerticalAlignment="Top" Width="33" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\Eye.png"/>
+        <Image x:Name="Desc" HorizontalAlignment="Left" Height="25" Margin="254,163,0,0" VerticalAlignment="Top" Width="21" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\desc.png"/>
+        <TextBlock x:Name="Vert" HorizontalAlignment="Left" Margin="214,162,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="26" FontFamily="Bebas Neue" Foreground="White" Width="31" Height="31" TextAlignment="Center"><Run Language="es-mx" Text="000"/></TextBlock>
+        <TextBlock x:Name="Desct" HorizontalAlignment="Left" Margin="281,162,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="26" FontFamily="Bebas Neue" Foreground="White" Width="31" Height="31" TextAlignment="Center"><Run Language="es-mx" Text="000"/></TextBlock>
+        <Rectangle x:Name="ZonaC" HorizontalAlignment="Left" Height="44" VerticalAlignment="Top" Width="350" MouseEnter="ZonaC_MouseEnter" Margin="0,153,0,0" Fill="Black" Opacity="0" MouseLeave="ZonaC_MouseLeave"/>
+        <Image x:Name="Up" HorizontalAlignment="Left" Margin="323,166,0,0" VerticalAlignment="Top" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\Up.PNG" Stretch="None" MouseUp="Up_MouseUp"/>
+        <Image x:Name="Play" HorizontalAlignment="Left" Height="31" Margin="10,160,0,0" VerticalAlignment="Top" Width="27" Stretch="None" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\play.png"/>
+        <StackPanel x:Name="Temporada" HorizontalAlignment="Left" Height="20" Margin="0,27,0,0" VerticalAlignment="Top" Width="348" Orientation="Horizontal">
+            <Image x:Name="Ant" Stretch="None" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\ant.png" Margin="108,0,0,0" Visibility="Hidden" MouseUp="Ant_MouseUp"/>
+            <TextBlock x:Name="SeleccT" TextWrapping="Wrap" FontSize="15" Foreground="White" HorizontalAlignment="Center" Margin="15,0,0,0" Visibility="Hidden"><Run Language="es-mx" Text="Temporada 0"/><LineBreak/><Run/></TextBlock>
+            <Image x:Name="Sig" Stretch="None" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\sig.png" HorizontalAlignment="Center" Margin="15,0,0,0" Visibility="Hidden" MouseUp="Sig_MouseUp"/>
+        </StackPanel>
+
+    </Grid>
+</UserControl>
