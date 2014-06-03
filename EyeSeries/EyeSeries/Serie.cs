@@ -407,6 +407,7 @@ namespace EyeSeries
 
         }
 
+
         protected void OnPropertyChanged(string name)
         {
             PropertyChangedEventHandler handler = PropertyChanged;

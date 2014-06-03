@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using UTorrentAPI;
 
 namespace EyeSeries
 {
@@ -26,13 +27,23 @@ namespace EyeSeries
     {
         private Serie se;
         private int num;
-        private List<ScrollViewer> temporadas;
+        private ScrollViewer sv;
+        private List<StackPanel> temporadas;
+        private StackPanel master;
         private Boolean normal;
         private int tempActiva;
+        private DispatcherTimer control;
+        private UTorrentClient uClient;
         public IntSerie(Serie s)
         {
             se = s;
             normal = true;
+            uClient = new UTorrentClient(new Uri("http://127.0.0.1:8080/gui/"), "admin", "admin", 1000000);
+            control = new DispatcherTimer()
+            {
+                Interval = new TimeSpan(0, 0, 1),
+            };
+            control.Tick += new EventHandler(Actualiza);
             InitializeComponent();
         }
 
@@ -71,9 +82,37 @@ namespace EyeSeries
         public void AgregarEps()
         {
             //Episodios
-            temporadas = new List<ScrollViewer>();
+            temporadas = new List<StackPanel>();
             tempActiva = se.Temporada - 1;
             int cont = tempActiva;
+            
+            //Se crea el ScrollViewer
+            sv = new ScrollViewer()
+            {
+                Margin = new Thickness(0, 46, 0, 0),
+                Width = 350,
+                Height = 151,
+                VerticalAlignment = System.Windows.VerticalAlignment.Top,
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Left,
+                //Visibility = Visibility.Hidden,
+                Opacity = 0,
+                Visibility = System.Windows.Visibility.Hidden,
+            };
+
+            master = new StackPanel()
+            {
+                Width = 350 * se.Episodios.Count,
+                Margin = new Thickness(-350 * (se.Temporada - 1), 0, 0, 0),
+                Height = 151,
+                VerticalAlignment = System.Windows.VerticalAlignment.Top,
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Left,
+                Orientation = Orientation.Horizontal,
+                
+
+            };
+
+
+
            for (int i = 0; i < se.Episodios.Count; i++)
             {
                //Se crea el StackPanel de cada temporada
@@ -83,24 +122,11 @@ namespace EyeSeries
                     Height = 0,
                     VerticalAlignment = System.Windows.VerticalAlignment.Top,
                     HorizontalAlignment = System.Windows.HorizontalAlignment.Left,
-
                     CanVerticallyScroll = true,
+                    Opacity = 0,
                     
                 };
 
-
-               //Se crea el ScrollViewer de cada temporada
-                ScrollViewer sv = new ScrollViewer()
-                {
-                    Margin = new Thickness(-350*cont, 46, 0, 0),
-                    Width = 350,
-                    Height = 150,
-                    VerticalAlignment = System.Windows.VerticalAlignment.Top,
-                    HorizontalAlignment = System.Windows.HorizontalAlignment.Left,
-                   //Visibility = Visibility.Hidden,
-                    Opacity = 1,
-                };
-            
                //Para cada episodio, se crea su stackpanel 
                 foreach (Episodio ep in se.Episodios[i])
                 {
@@ -146,12 +172,17 @@ namespace EyeSeries
 
 
                 }
-                sv.Content = aux;
-                GPrinc.Children.Add(sv);
-                temporadas.Add(sv);
+                master.Children.Add(aux);
+                temporadas.Add(aux);
                 cont--;
             }
-
+           sv.Content = master;
+           GPrinc.Children.Add(sv);
+           master.Height = temporadas[tempActiva].Height;
+           sv.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+           sv.UpdateLayout();
+           sv.ScrollToVerticalOffset(sv.ExtentHeight - sv.ViewportHeight - 10);
+            //Se pone la temporada seleccionada como texto
            SeleccT.Text = "Temporada " + se.Temporada;
             
         }
@@ -184,7 +215,7 @@ namespace EyeSeries
 
         }
 
-        private void ZonaC_MouseLeave(object sender, MouseEventArgs e)
+        public void ZonaC_MouseLeave(object sender, MouseEventArgs e)
         {
             TimeSpan tiempo = new TimeSpan(0, 0, 0, 0, 250);
             if (!Play.IsMouseOver && !Up.IsMouseOver)
@@ -250,7 +281,7 @@ namespace EyeSeries
 
             if (normal)
             {
-
+                control.Start();
                 ZonaC.Visibility = System.Windows.Visibility.Hidden;
                 //Animacion de sube todo
                 InfoRect.BeginAnimation(HeightProperty, anima);
@@ -273,10 +304,12 @@ namespace EyeSeries
 
                     //Las temporadas se vuelven visibles
                     temporadas[tempActiva].Visibility = Visibility.Visible;
+                    sv.Visibility = Visibility.Visible;
                     SeleccT.Visibility = Visibility.Visible;
-                    Ant.Visibility = Visibility.Visible;
-                    Sig.Visibility = Visibility.Visible;
-                    temporadas[se.Temporada - 1].BeginAnimation(ScrollViewer.OpacityProperty, opac3);
+                    if (tempActiva != 0) Ant.Visibility = Visibility.Visible;
+                    if (tempActiva != se.Episodios.Count - 1) Sig.Visibility = Visibility.Visible;
+                    temporadas[tempActiva].BeginAnimation(ScrollViewer.OpacityProperty, opac3);
+                    sv.BeginAnimation(OpacityProperty, opac3);
                     SeleccT.BeginAnimation(TextBlock.OpacityProperty, opac3);
                     Ant.BeginAnimation(Image.OpacityProperty, opac3);
                     Sig.BeginAnimation(Image.OpacityProperty, opac3);
@@ -296,6 +329,7 @@ namespace EyeSeries
             }
             else
             {
+                control.Stop();
                 ZonaC.Visibility = System.Windows.Visibility.Visible;
                 //Animacion de baja todo
                 InfoRect.BeginAnimation(HeightProperty, animar);
@@ -330,11 +364,13 @@ namespace EyeSeries
                 opac4.Completed += (sender3, e3) =>
                 {
                     temporadas[tempActiva].Visibility = Visibility.Hidden;
+                    sv.Visibility = System.Windows.Visibility.Hidden;
                     SeleccT.Visibility = Visibility.Hidden;
                     Ant.Visibility = Visibility.Hidden;
                     Sig.Visibility = Visibility.Hidden;
                 };
-                temporadas[se.Temporada - 1].BeginAnimation(ScrollViewer.OpacityProperty, opac);
+                temporadas[tempActiva].BeginAnimation(OpacityProperty, opac);
+                sv.BeginAnimation(ScrollViewer.OpacityProperty, opac);
                 SeleccT.BeginAnimation(TextBlock.OpacityProperty, opac);
                 Ant.BeginAnimation(Image.OpacityProperty, opac);
                 Sig.BeginAnimation(Image.OpacityProperty, opac4);
@@ -352,44 +388,62 @@ namespace EyeSeries
 
         private void Sig_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            
-            temporadas[tempActiva].Visibility = System.Windows.Visibility.Hidden;
+            control.Stop();
             tempActiva++;
+            temporadas[tempActiva].Opacity = 1;
             temporadas[tempActiva].Visibility = System.Windows.Visibility.Visible;
+            ThicknessAnimation recorrer = new ThicknessAnimation(new Thickness(master.Margin.Left - 350, 0, 0, 0), new TimeSpan(0, 0, 0, 0, 350));
             SeleccT.Text = "Temporada " + (tempActiva + 1);
-
-            if (tempActiva + 1 == se.Episodios.Count)
+            recorrer.Completed += (sender2, e2) =>
             {
-                Sig.Visibility = System.Windows.Visibility.Hidden;
-            }
+                master.Height = (master.Children[tempActiva] as StackPanel).Height;
+                temporadas[tempActiva - 1].Visibility = System.Windows.Visibility.Hidden;
+                temporadas[tempActiva - 1].Opacity = 0;
+                
+            };
+            master.BeginAnimation(MarginProperty, recorrer);
 
+            if (tempActiva + 1 == se.Episodios.Count) Sig.Visibility = System.Windows.Visibility.Hidden;
             Ant.Visibility = System.Windows.Visibility.Visible;
+            control.Start();
 
         }
 
         private void Ant_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            int i = 0;
-            foreach (ScrollViewer s in temporadas)
-            {
-                s.BeginAnimation(MarginProperty, new ThicknessAnimation(new Thickness(s.Margin.Left + 350, s.Margin.Top, 0, 0), new TimeSpan(0,0,0,0,350)));
-                i++;
-            }
-            /*
-            temporadas[tempActiva].Visibility = System.Windows.Visibility.Hidden;
+            control.Stop();
             tempActiva--;
-            temporadas[tempActiva].Visibility = System.Windows.Visibility.Visible;
             temporadas[tempActiva].Opacity = 1;
+            temporadas[tempActiva].Visibility = System.Windows.Visibility.Visible;
+            ThicknessAnimation recorrer = new ThicknessAnimation(new Thickness(master.Margin.Left + 350, 0, 0, 0), new TimeSpan(0, 0, 0, 0, 350));
             SeleccT.Text = "Temporada " + (tempActiva + 1);
+            recorrer.Completed += (sender2, e2) =>
+                {
+                    master.Height = (master.Children[tempActiva] as StackPanel).Height;
+                    temporadas[tempActiva + 1].Visibility = System.Windows.Visibility.Hidden;
+                    temporadas[tempActiva + 1].Opacity = 0;
+                };
+            master.BeginAnimation(MarginProperty, recorrer);
 
-            if (tempActiva == 0)
-            {
-                Ant.Visibility = System.Windows.Visibility.Hidden;
-            }
-
+            if (tempActiva == 0) Ant.Visibility = System.Windows.Visibility.Hidden;
             Sig.Visibility = System.Windows.Visibility.Visible;
-             */
+            control.Start();
 
+        }
+
+        private void Actualiza(object sender, EventArgs e)
+        {
+            int i = 0;
+            foreach (Episodio ep in se.Episodios[tempActiva])
+            {
+                if (ep.Hash != "-1" && ep.Estado == 1)
+                {
+                    double prog = (double)uClient.Torrents[ep.Hash].DownloadedBytes / (double)uClient.Torrents[ep.Hash].SizeInBytes * 100.0;
+
+                    ((temporadas[tempActiva].Children[i] as StackPanel).Children[1] as TextBlock).Text = "E" + (ep.Capitulo < 10? "0":"") + ep.Capitulo + " - " + ep.NombreEp + " - " + Math.Round(prog, 1) +"%";
+                }
+                    i++;
+            }
         }
 
 
@@ -398,26 +452,66 @@ namespace EyeSeries
             if (e.PropertyName == "Descargando")
                 Application.Current.Dispatcher.Invoke(
                 DispatcherPriority.Normal,
-                (ThreadStart)delegate { Desct.Text = se.Descargando.ToString(); });
+                (ThreadStart)delegate
+                {
+                    Desct.Text = se.Descargando.ToString();
+                });
             else
                 if (e.PropertyName == "Temporada")
                     Application.Current.Dispatcher.Invoke(
                     DispatcherPriority.Normal,
-                    (ThreadStart)delegate { Episodio.Text = "S" + (se.Temporada < 10 ? "0" : "") + se.Temporada + "E" + (se.Capitulo < 10 ? "0" : "") + se.Capitulo;
-                                             
-                                             });
+                    (ThreadStart)delegate 
+                    { 
+                        Episodio.Text = "S" + (se.Temporada < 10 ? "0" : "") + se.Temporada + "E" + (se.Capitulo < 10 ? "0" : "") + se.Capitulo;
+                    });
                 else
                     if (e.PropertyName == "Capitulo")
                         Application.Current.Dispatcher.Invoke(
                         DispatcherPriority.Normal,
-                        (ThreadStart)delegate { Episodio.Text = "S" + (se.Temporada < 10 ? "0" : "") + se.Temporada + "E" + (se.Capitulo < 10 ? "0" : "") + se.Capitulo;
-                                                NombreEp.Text = se.Episodios[se.Temporada - 1][se.Capitulo - 1].NombreEp;
-                                                });
+                        (ThreadStart)delegate
+                        { 
+                            Episodio ep = se.Episodios[se.Temporada - 1][se.Capitulo - 1];
+                            Episodio.Text = "S" + (se.Temporada < 10 ? "0" : "") + se.Temporada + "E" + (se.Capitulo < 10 ? "0" : "") + se.Capitulo;
+                            NombreEp.Text = ep.NombreEp;
+                            string nombre = "";
+
+                            if (ep.Estado == 0)
+                            {
+                                nombre = "Clockb.png";
+                                NombreEp.Text += " - " + ep.Fecha.ToShortDateString();
+                            }
+                            else
+                            {
+                                if (ep.Estado == 1)
+                                {
+                                    nombre = "Descb.PNG";
+                                    double prog = (double)uClient.Torrents[ep.Hash].DownloadedBytes / (double)uClient.Torrents[ep.Hash].SizeInBytes * 100.0;
+                                    NombreEp.Text += " - " + Math.Round(prog, 1) + "%";
+                                }
+                                else
+                                {
+                                    if (ep.Estado == 2)
+                                    {
+                                        nombre = "play.png";
+                                    }
+                                }
+
+                            }
+
+                            Play.Source = new BitmapImage(new Uri
+                            (@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\" + nombre));
+
+                            
+                                               
+                         });
                     else
                         if (e.PropertyName == "PorVer")
                             Application.Current.Dispatcher.Invoke(
                             DispatcherPriority.Normal,
-                            (ThreadStart)delegate { Vert.Text = se.PorVer.ToString(); });
+                            (ThreadStart)delegate
+                            { 
+                                Vert.Text = se.PorVer.ToString(); 
+                            });
 
 
 
