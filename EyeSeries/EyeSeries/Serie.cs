@@ -135,12 +135,11 @@ namespace EyeSeries
         {
             //Se declaran las variables
             XmlNodeList episodios = doc.SelectNodes("/Data/Episode");
-            string nombreSerie, nombreEp, calidad;
+            string nombreEp, calidad;
             int tempo, capi, estado;
             DateTime Fecha;
 
             //Se ponen los parametros
-            nombreSerie = Nombre;
             calidad = "720p";
             List<Episodio> aux = new List<Episodio>();
             int tempAct = 1;
@@ -167,7 +166,7 @@ namespace EyeSeries
                     Fecha = new DateTime(Convert.ToInt32(fecha2.Substring(0, 4)), Convert.ToInt32(fecha2.Substring(5, 2)), Convert.ToInt32(fecha2.Substring(8, 2)), hora, minutos, 0);
                     Fecha = Fecha.AddDays(0.5);
                     estado = 3;
-                    aux.Add(new Episodio(Nombre, tempo, capi, nombreEp, "-1", Fecha, estado, calidad));
+                    aux.Add(new Episodio(this, tempo, capi, nombreEp, "-1", Fecha, estado, calidad));
 
                 }
 
@@ -239,9 +238,9 @@ namespace EyeSeries
                 }
                 else
                 {
-                    DateTime fecha = new DateTime(Convert.ToInt32(linea.Split('*')[5].Split('/')[0]), Convert.ToInt32(linea.Split('*')[5].Split('/')[1]), Convert.ToInt32(linea.Split('*')[5].Split('/')[2]), Convert.ToInt32(linea.Split('*')[5].Split('/')[3]), Convert.ToInt32(linea.Split('*')[5].Split('/')[4]), 0);
-                    Episodio ep = new Episodio(linea.Split('*')[0], Convert.ToInt32(linea.Split('*')[1]), Convert.ToInt32(linea.Split('*')[2]), linea.Split('*')[3], linea.Split('*')[4], fecha, Convert.ToInt32(linea.Split('*')[6]), "720p");
-                    ep.RevisarEp();
+                    DateTime fecha = new DateTime(Convert.ToInt32(linea.Split('*')[4].Split('/')[0]), Convert.ToInt32(linea.Split('*')[4].Split('/')[1]), Convert.ToInt32(linea.Split('*')[4].Split('/')[2]), Convert.ToInt32(linea.Split('*')[4].Split('/')[3]), Convert.ToInt32(linea.Split('*')[4].Split('/')[4]), 0);
+                    Episodio ep = new Episodio(this, Convert.ToInt32(linea.Split('*')[0]), Convert.ToInt32(linea.Split('*')[1]), linea.Split('*')[2], linea.Split('*')[3], fecha, Convert.ToInt32(linea.Split('*')[5]), "720p");
+                    ep.RevisarEp(true);
                     //Hacer el conteo de PorVer/Descargando
                     if (ep.Estado == 1)
                     {
@@ -281,7 +280,7 @@ namespace EyeSeries
             {
                 foreach (Episodio ep in lista)
                 {
-                    se += ep.NombreSerie + "*" + ep.Temporada + "*" + ep.Capitulo + "*" + ep.NombreEp + "*" + ep.Hash + "*" + ep.Fecha.Year + "/" + ep.Fecha.Month + "/" + ep.Fecha.Day + "/" + ep.Fecha.Hour + "/" + ep.Fecha.Minute + "*" + ep.Estado + "\r\n";
+                    se += ep.Temporada + "*" + ep.Capitulo + "*" + ep.NombreEp + "*" + ep.Hash + "*" + ep.Fecha.Year + "/" + ep.Fecha.Month + "/" + ep.Fecha.Day + "/" + ep.Fecha.Hour + "/" + ep.Fecha.Minute + "*" + ep.Estado + "\r\n";
                 }
                 se += "-\r\n";
                 escribe.Write(se);
@@ -388,7 +387,7 @@ namespace EyeSeries
                             if (tempo > Episodios.Count) Episodios.Add(new List<Episodio>());
                             if (fecha < DateTime.Now) estado = 1;
                             else estado = 0;
-                            Episodio aux = new Episodio(Nombre, tempo, epi, nombreEp, "-1", fecha, estado, "720p");
+                            Episodio aux = new Episodio(this, tempo, epi, nombreEp, "-1", fecha, estado, "720p");
                             if (aux.Estado == 1)
                             {
                                 aux.getMagnet();

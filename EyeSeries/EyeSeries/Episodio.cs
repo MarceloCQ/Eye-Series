@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,16 +15,31 @@ namespace EyeSeries
     public class Episodio
     {
         //Atributos
-        public string NombreSerie { get; set; } //Nombre de la serie a la que pertenece
+        public Serie Serie { get; set; } //Serie a la que pertenece
         public string NombreEp { get; set; } //Nombre del episodio
         public int Temporada { get; set; } //Numero de Temporada
         public int Capitulo { get; set; } //Numero de Capitulo
-        public int Estado { get; set; } //0-> No ha salido, 1-> Descargando, 2-> Descargado, 3-> Visto
+        private int estado; //0-> No ha salido, 1-> Descargando, 2-> Descargado, 3-> Visto
         public DateTime Fecha { get; set; } //Fecha de cuando salio el episodio
         public string Hash { get; set; } //Hash del torrent
         public string Calidad { get; set; } //Calidad 720p/1080p
         private UTorrentClient uClient = new UTorrentClient(new Uri("http://127.0.0.1:8080/gui/"), "admin", "admin", 1000000);
 
+        //Eventos
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public int Estado
+        {
+            get { return estado; }
+            set
+            {
+                if (value != estado)
+                {
+                    estado = value;
+                    OnPropertyChanged("Estado");
+                }
+            }
+        }
         /// <summary>
         /// Constructor de episodio
         /// </summary>
@@ -35,10 +51,10 @@ namespace EyeSeries
         /// <param name="fecha">Fecha en que se transmite el episodio</param>
         /// <param name="estado">Estadp del episodio</param>
         /// <param name="calidad">Calidad del episodio</param>
-        public Episodio(string nombrese, int tempo, int capi, string nombrep, string hash, DateTime fecha, int estado, string calidad)
+        public Episodio(Serie s, int tempo, int capi, string nombrep, string hash, DateTime fecha, int estado, string calidad)
         {
             NombreEp = nombrep;
-            NombreSerie = nombrese;
+            Serie = s;
             Temporada = tempo;
             Capitulo = capi;
             Estado = estado;
@@ -58,7 +74,7 @@ namespace EyeSeries
 
             do
             {
-                string pagina = "http://thepiratebay.se/search/" + NombreSerie.Replace(' ', '+') + "+S" + temp + "E" + cap + "+" + Calidad + "/0/7/0";
+                string pagina = "http://thepiratebay.se/search/" + Serie.Nombre.Replace(' ', '+') + "+S" + temp + "E" + cap + "+" + Calidad + "/0/7/0";
                 HttpDownloader fuente = new HttpDownloader(pagina, "thepiratebay.se", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:29.0) Gecko/20100101 Firefox/29.0");
                 codigo = fuente.GetPage();
                 primero = codigo.IndexOf("href=\"magnet");
@@ -96,7 +112,7 @@ namespace EyeSeries
         /// Lo que hace es revisar si el episodio ya salio, si es así, lo descarga
         /// Tambien revisa si es que esta completo el torrent y lo mueve y renombra
         /// </summary>
-        public void RevisarEp()
+        public void RevisarEp(Boolean primera)
         {
             if (Estado == 0)
             {
@@ -104,6 +120,12 @@ namespace EyeSeries
                 {
                     Estado = 1;
                     getMagnet();
+                    Serie.CrearArchivo();
+                    if (!primera)
+                    {
+                        Serie.Descargando++;
+                    }
+                    
                 }
             }
             else
@@ -121,7 +143,7 @@ namespace EyeSeries
                                 break;
                             }
                         }
-                        string dest = @"C:\Users\Marcelo\Videos\Series\" + NombreSerie + @"\Temporada " + Temporada;
+                        string dest = @"C:\Users\Marcelo\Videos\Series\" + Serie.Nombre + @"\Temporada " + Temporada;
                         if (!System.IO.Directory.Exists(dest))
                         {
                             System.IO.Directory.CreateDirectory(dest);
@@ -129,9 +151,26 @@ namespace EyeSeries
                         uClient.Torrents.Remove(Hash, TorrentRemovalOptions.TorrentFile);
                         Hash = "-1";
                         System.IO.File.Move(path, dest + @"\Episodio " + Capitulo + ".mkv");
+                        
                         Estado = 2;
+                        Serie.CrearArchivo();
+                        if (!primera)
+                        {
+                            Serie.PorVer++;
+                            Serie.Descargando--;
+                        }
+
                     }
                 }
+            }
+        }
+
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
             }
         }
 

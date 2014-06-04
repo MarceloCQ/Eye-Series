@@ -31,12 +31,12 @@ namespace EyeSeries
         private void EyeSeries_Initialized(object sender, EventArgs e)
         {
             Serie s = new Serie(76290, "24", 0, 'c', "9:00 PM");
-
+            //Serie s = new Serie(76290);
             IntSerie so = new IntSerie(s);
             BackgroundWorker b = new BackgroundWorker();
             b.DoWork += (sp, ee) =>
                 {
-                    s.AlimentarEps(9, 6);
+                    s.AlimentarEps(9, 3);
                     
                 };
             b.RunWorkerCompleted += (Epa, lala) =>
