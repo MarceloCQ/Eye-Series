@@ -23,7 +23,7 @@ namespace EyeSeries
         public DateTime Fecha { get; set; } //Fecha de cuando salio el episodio
         public string Hash { get; set; } //Hash del torrent
         public string Calidad { get; set; } //Calidad 720p/1080p
-        private UTorrentClient uClient = new UTorrentClient(new Uri("http://127.0.0.1:8080/gui/"), "admin", "admin", 1000000);
+        private UTorrentClient uClient;
 
         //Eventos
         public event PropertyChangedEventHandler PropertyChanged;
@@ -53,6 +53,7 @@ namespace EyeSeries
         /// <param name="calidad">Calidad del episodio</param>
         public Episodio(Serie s, int tempo, int capi, string nombrep, string hash, DateTime fecha, int estado, string calidad)
         {
+            uClient = new UTorrentClient(new Uri("http://127.0.0.1:8080/gui/"), "admin", "admin", 1000000);
             NombreEp = nombrep;
             Serie = s;
             Temporada = tempo;
@@ -120,10 +121,11 @@ namespace EyeSeries
                 {
                     Estado = 1;
                     getMagnet();
-                    Serie.CrearArchivo();
+                    
                     if (!primera)
                     {
                         Serie.Descargando++;
+                        Serie.CrearArchivo();
                     }
                     
                 }
@@ -153,11 +155,12 @@ namespace EyeSeries
                         System.IO.File.Move(path, dest + @"\Episodio " + Capitulo + ".mkv");
                         
                         Estado = 2;
-                        Serie.CrearArchivo();
+                        
                         if (!primera)
                         {
                             Serie.PorVer++;
                             Serie.Descargando--;
+                            Serie.CrearArchivo();
                         }
 
                     }

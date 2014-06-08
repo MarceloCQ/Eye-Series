@@ -147,7 +147,7 @@ namespace EyeSeries
             //Se ingresan los episodios
             foreach (XmlNode e in episodios)
             {
-                if (e.SelectSingleNode("SeasonNumber").InnerText != "" && e.SelectSingleNode("SeasonNumber").InnerText != "0")
+                if (e.SelectSingleNode("SeasonNumber").InnerText != "" && e.SelectSingleNode("SeasonNumber").InnerText != "0" && e.SelectSingleNode("FirstAired").InnerText != "")
                 {
                     if (tempAct < Convert.ToInt32(e.SelectSingleNode("SeasonNumber").InnerText))
                     {
@@ -160,9 +160,25 @@ namespace EyeSeries
                     tempo = Convert.ToInt32(e.SelectSingleNode("SeasonNumber").InnerText);
                     capi = Convert.ToInt32(e.SelectSingleNode("EpisodeNumber").InnerText);
                     string fecha2 = e.SelectSingleNode("FirstAired").InnerText;
-                    int hora = Convert.ToInt32(Hora.Split(':')[0]);
-                    int minutos = Convert.ToInt32(Hora.Split(':')[1].Split(' ')[0]);
-                    hora = Hora.Split(':')[1].Split(' ')[1] == "PM" ? hora += 12 : hora;
+
+                    int hora = 0, minutos = 0;
+                    if (Hora == "")
+                    {
+                        hora = 12;
+                        minutos = 0;
+                    }
+                    else
+                        if (Hora.Length == 5)
+                        {
+                            hora = Convert.ToInt32(Hora.Split(':')[0]);
+                            minutos = Convert.ToInt32(Hora.Split(':')[1]);
+                        }
+                        else
+                        {
+                            hora = Convert.ToInt32(Hora.Split(':')[0]);
+                            minutos = Convert.ToInt32(Hora.Split(':')[1].Split(' ')[0]);
+                            hora = Hora.Split(':')[1].Split(' ')[1] == "PM" ? hora += 12 : hora;
+                        }
                     Fecha = new DateTime(Convert.ToInt32(fecha2.Substring(0, 4)), Convert.ToInt32(fecha2.Substring(5, 2)), Convert.ToInt32(fecha2.Substring(8, 2)), hora, minutos, 0);
                     Fecha = Fecha.AddDays(0.5);
                     estado = 3;
@@ -189,8 +205,11 @@ namespace EyeSeries
 
             //Se descarga la imagen de la serie
             WebClient wc = new WebClient();
-            wc.DownloadFile("http://thetvdb.com/banners/" + doc.SelectSingleNode("/Data/Series/fanart").InnerText, @"C:\Users\Marcelo\Documents\Project Eye\Project-Eye\Interfaz\Fanart\" + Nombre + ".jpg");
+            wc.DownloadFile("http://thetvdb.com/banners/" + doc.SelectSingleNode("/Data/Series/fanart").InnerText, @"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\FanArt\" + Nombre + ".jpg");
+        }
 
+        public void Descarga()
+        {
             for (int i = Temporada - 1; i < Episodios.Count; i++)
             {
                 int j = (i == Temporada - 1 ? capitulo - 1 : 0);
@@ -216,16 +235,15 @@ namespace EyeSeries
                 System.IO.Directory.CreateDirectory(@"C:\Users\Marcelo\Videos\Series\" + Nombre);
             }
             CrearArchivo();
-
-
         }
+        
 
         /// <summary>
         /// Alimenta los episodios de la base de datos a la serie
         /// </summary>
         public void AlimentarEps(int t, int c)
         {
-            StreamReader leer = new StreamReader(@"C:\Users\Marcelo\Documents\Project Eye\Project-Eye\Base de Datos\Series\" + Nombre + ".txt");
+            StreamReader leer = new StreamReader(@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Bases de Datos\Series\" + Nombre + ".txt");
             List<Episodio> aux = new List<Episodio>();
             string linea;
             while (!leer.EndOfStream)
@@ -275,7 +293,7 @@ namespace EyeSeries
         public void CrearArchivo()
         {
             string se = "";
-            StreamWriter escribe = new StreamWriter(@"C:\Users\Marcelo\Documents\Project Eye\Project-Eye\Base de Datos\Series\" + Nombre + ".txt");
+            StreamWriter escribe = new StreamWriter(@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Bases de Datos\Series\" + Nombre + ".txt");
             foreach (List<Episodio> lista in Episodios)
             {
                 foreach (Episodio ep in lista)
@@ -297,7 +315,7 @@ namespace EyeSeries
         /// </summary>
         public void BorrarArchivo()
         {
-            System.IO.File.Delete(@"C:\Users\Marcelo\Documents\Project Eye\Project-Eye\Base de Datos\Series\" + Nombre + ".txt");
+            System.IO.File.Delete(@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Bases de Datos\Series\" + Nombre + ".txt");
         }
 
 

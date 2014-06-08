@@ -30,18 +30,22 @@ namespace EyeSeries
         private ScrollViewer sv;
         private List<StackPanel> temporadas;
         private StackPanel master;
-        private Boolean normal;
+        public Boolean normal;
         private Boolean desplegado;
         private int tempActiva;
         private DispatcherTimer control;
         private DispatcherTimer control2;
         private UTorrentClient uClient;
-        public IntSerie(Serie s)
+        private UTorrentClient uClient2;
+        private MainWindow Principal;
+        public IntSerie(Serie s, MainWindow m)
         {
             se = s;
             normal = true;
             desplegado = true;
             uClient = new UTorrentClient(new Uri("http://127.0.0.1:8080/gui/"), "admin", "admin", 1000000);
+            uClient2 = new UTorrentClient(new Uri("http://127.0.0.1:8080/gui/"), "admin", "admin", 1000000);
+            Principal = m;
             control = new DispatcherTimer()
             {
                 Interval = new TimeSpan(0, 0, 1),
@@ -71,10 +75,25 @@ namespace EyeSeries
 
             //Episodio
             if (se.Temporada != 0 && se.Capitulo != 0)
+            {
+                Episodio ep = se.Episodios[se.Temporada - 1][se.Capitulo - 1];
                 Episodio.Text = "S" + (se.Temporada < 10 ? "0" : "") + se.Temporada + "E" + (se.Capitulo < 10 ? "0" : "") + se.Capitulo;
+                NombreEp.Text = ep.NombreEp;
 
-            //NombreEp
-         //   NombreEp.Text = se.Episodios[se.Temporada - 1][se.Capitulo - 1].NombreEp;
+                if (DateTime.Now < ep.Fecha)
+                {
+                    Play.Source = new BitmapImage(new Uri
+                                   (@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\Clockb.png"));
+                }
+                else
+                {
+                    Play.Source = new BitmapImage(new Uri
+                                    (@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\Descb.png"));
+                }
+                
+                
+            }
+
 
             //Vert
             Vert.Text = se.PorVer.ToString();
@@ -180,7 +199,8 @@ namespace EyeSeries
                     if (ep.Estado == 0) texto.Text += " - " + ep.Fecha.ToShortDateString();
                     else if (ep.Estado == 1)
                     {
-                        double prog = (double)uClient.Torrents[ep.Hash].DownloadedBytes / (double)uClient.Torrents[ep.Hash].SizeInBytes * 100.0;
+
+                        double prog = (double)uClient.Torrents[ep.Hash].ProgressInMils / 10.0;
                         texto.Text += " - " + Math.Round(prog, 1) + "%";
                     }
                     aux2.Children.Add(estado);
@@ -202,6 +222,8 @@ namespace EyeSeries
            sv.ScrollToVerticalOffset(sv.ExtentHeight - sv.ViewportHeight - 10);
             //Se pone la temporada seleccionada como texto
            SeleccT.Text = "Temporada " + se.Temporada;
+           Up.Visibility = System.Windows.Visibility.Visible;
+           Up.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 500)));
            control.Start();
             
         }
@@ -466,8 +488,33 @@ namespace EyeSeries
             {
                 string dir = @"C:\Users\Marcelo\Videos\Series\" + se.Nombre + @"\Temporada " + ep.Temporada + @"\Episodio " + ep.Capitulo + ".mkv";
                 System.Diagnostics.Process.Start(dir);
+               /* if (ep.Capitulo == se.Capitulo && ep.Temporada == se.Temporada)
+                {
+                    se.SiguienteEp();
+                }
+                */
+                int m = ep.Temporada - 1;
+                while (m >= 0)
+                {
+                    int j = m == ep.Temporada - 1 ? ep.Capitulo - 1 : se.Episodios[m].Count - 1;
+                    if (se.Episodios[m][j].Estado != 2)
+                        break;
+                    while (j >= 0 && se.Episodios[m][j].Estado == 2)
+                    {
+                        se.SiguienteEp();
+                        se.Episodios[m][j].Estado = 3;
+                        se.PorVer--;
+                        j--;
+                    }
+                    
+                    m--;
+
+                }
                 
             }
+
+            se.CrearArchivo();
+            Principal.CrearArchivo();
         }
 
         private void Play2_MouseUp(object sender, MouseButtonEventArgs e)
@@ -478,6 +525,10 @@ namespace EyeSeries
                 string dir = @"C:\Users\Marcelo\Videos\Series\" + se.Nombre + @"\Temporada " + ep.Temporada + @"\Episodio " + ep.Capitulo + ".mkv";
                 System.Diagnostics.Process.Start(dir);
                 se.SiguienteEp();
+                ep.Estado = 3;
+                se.PorVer--;
+                Principal.CrearArchivo();
+                se.CrearArchivo();
             }
         }
 
@@ -488,7 +539,7 @@ namespace EyeSeries
             Episodio act = se.Episodios[se.Temporada - 1][se.Capitulo - 1];
             if (act.Estado == 1 && desplegado)
             {
-                double prog = (double)uClient.Torrents[act.Hash].DownloadedBytes / (double)uClient.Torrents[act.Hash].SizeInBytes * 100.0;
+                double prog = (double)uClient.Torrents[act.Hash].ProgressInMils / 10.0;
                 NombreEp.Text = act.NombreEp + " - " + Math.Round(prog, 1) + "%";
                 Ajustar(NombreEp);
             }
@@ -512,7 +563,7 @@ namespace EyeSeries
             {
                 if (ep.Hash != "-1" && ep.Estado == 1)
                 {
-                    double prog = (double)uClient.Torrents[ep.Hash].DownloadedBytes / (double)uClient.Torrents[ep.Hash].SizeInBytes * 100.0;
+                    double prog = (double)uClient2.Torrents[ep.Hash].ProgressInMils / 10.0;
                     ((temporadas[tempActiva].Children[i] as StackPanel).Children[1] as TextBlock).Text = "E" + (ep.Capitulo < 10 ? "0" : "") + ep.Capitulo + " - " + ep.NombreEp + " - " + Math.Round(prog, 1) + "%";
                 }
                 i++;
@@ -561,7 +612,7 @@ namespace EyeSeries
                                     if (ep.Estado == 1)
                                     {
                                         nombre = "Descb.PNG";
-                                        double prog = (double)uClient.Torrents[ep.Hash].DownloadedBytes / (double)uClient.Torrents[ep.Hash].SizeInBytes * 100.0;
+                                        double prog = (double)uClient.Torrents[ep.Hash].ProgressInMils / 10.0;
                                         Play.Margin = new Thickness(10, Play.Margin.Top, 0, 0);
                                         NombreEp.Text += " - " + Math.Round(prog, 1) + "%";
                                         Ajustar(NombreEp);
@@ -620,7 +671,7 @@ namespace EyeSeries
                     if (ep.Estado == 1)
                     {
                         nombre = "Descb.PNG";
-                        double prog = (double)uClient.Torrents[ep.Hash].DownloadedBytes / (double)uClient.Torrents[ep.Hash].SizeInBytes * 100.0;
+                        double prog = (double)uClient.Torrents[ep.Hash].ProgressInMils / 10.0;
                         NombreEp.Text += " - " + Math.Round(prog, 1) + "%";
                     }
                     else
@@ -642,7 +693,7 @@ namespace EyeSeries
                 if (ep.Estado == 1)
                 {
                     nombre = "descs.png";
-                    double prog = (double)uClient.Torrents[ep.Hash].DownloadedBytes / (double)uClient.Torrents[ep.Hash].SizeInBytes * 100.0;
+                    double prog = (double)uClient.Torrents[ep.Hash].ProgressInMils / 10.0;
                     texto.Text += " - " + Math.Round(prog, 1) + "%";
                 }
                 else
@@ -651,6 +702,11 @@ namespace EyeSeries
                     {
                         nombre = "plays.png";
                     }
+                    else
+                        if (ep.Estado == 3)
+                        {
+                            nombre = "paloma.PNG";
+                        }
                 }
             }
 

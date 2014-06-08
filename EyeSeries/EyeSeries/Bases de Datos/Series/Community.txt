@@ -1,0 +1,102 @@
+1*1*Pilot*-1*2009/9/18/8/0*3
+1*2*Spanish 101*-1*2009/9/25/8/0*3
+1*3*Introduction to Film*-1*2009/10/2/8/0*3
+1*4*Social Psychology*-1*2009/10/9/8/0*3
+1*5*Advanced Criminal Law*-1*2009/10/16/8/0*3
+1*6*Football, Feminism and You*-1*2009/10/23/8/0*3
+1*7*Introduction to Statistics*-1*2009/10/30/8/0*3
+1*8*Home Economics*-1*2009/11/6/8/0*3
+1*9*Debate 109*-1*2009/11/13/8/0*3
+1*10*Environmental Science*-1*2009/11/20/8/0*3
+1*11*The Politics of Human Sexuality*-1*2009/12/4/8/0*3
+1*12*Comparative Religion*-1*2009/12/11/8/0*3
+1*13*Investigative Journalism*-1*2010/1/15/8/0*3
+1*14*Interpretive Dance*-1*2010/1/22/8/0*3
+1*15*Romantic Expressionism*-1*2010/2/5/8/0*3
+1*16*Communication Studies*-1*2010/2/12/8/0*3
+1*17*Physical Education*-1*2010/3/5/8/0*3
+1*18*Basic Genealogy*-1*2010/3/12/8/0*3
+1*19*Beginner Pottery*-1*2010/3/19/8/0*3
+1*20*The Science of Illusion*-1*2010/3/26/8/0*3
+1*21*Contemporary American Poultry*-1*2010/4/23/8/0*3
+1*22*The Art of Discourse*-1*2010/4/30/8/0*3
+1*23*Modern Warfare*-1*2010/5/7/8/0*3
+1*24*English as a Second Language*-1*2010/5/14/8/0*3
+1*25*Pascal's Triangle Revisited*-1*2010/5/21/8/0*3
+-
+2*1*Anthropology 101*-1*2010/9/24/8/0*3
+2*2*Accounting for Lawyers*-1*2010/10/1/8/0*3
+2*3*The Psychology of Letting Go*-1*2010/10/8/8/0*3
+2*4*Basic Rocket Science*-1*2010/10/15/8/0*3
+2*5*Messianic Myths and Ancient Peoples*-1*2010/10/22/8/0*3
+2*6*Epidemiology*-1*2010/10/29/8/0*3
+2*7*Aerodynamics of Gender*-1*2010/11/5/8/0*3
+2*8*Cooperative Calligraphy*-1*2010/11/12/8/0*3
+2*9*Conspiracy Theories and Interior Design*-1*2010/11/19/8/0*3
+2*10*Mixology Certification*-1*2010/12/3/8/0*3
+2*11*Abed's Uncontrollable Christmas*-1*2010/12/10/8/0*3
+2*12*Asian Population Studies*-1*2011/1/21/8/0*3
+2*13*Celebrity Pharmacology*-1*2011/1/28/8/0*3
+2*14*Advanced Dungeons & Dragons*-1*2011/2/4/8/0*3
+2*15*Early 21st Century Romanticism*-1*2011/2/11/8/0*3
+2*16*Intermediate Documentary Filmmaking*-1*2011/2/18/8/0*3
+2*17*Intro to Political Science*-1*2011/2/25/8/0*3
+2*18*Custody Law and Eastern European Diplomacy*-1*2011/3/18/8/0*3
+2*19*Critical Film Studies*-1*2011/3/25/8/0*3
+2*20*Competitive Wine Tasting*-1*2011/4/15/8/0*3
+2*21*Paradigms of Human Memory*-1*2011/4/22/8/0*3
+2*22*Applied Anthropology and Culinary Arts*-1*2011/4/29/8/0*3
+2*23*A Fistful of Paintballs (1)*-1*2011/5/6/8/0*3
+2*24*For a Few Paintballs More (2)*-1*2011/5/13/8/0*3
+-
+3*1*Biology 101*-1*2011/9/23/8/0*3
+3*2*Geography of Global Conflict*-1*2011/9/30/8/0*3
+3*3*Competitive Ecology*-1*2011/10/7/8/0*3
+3*4*Remedial Chaos Theory*-1*2011/10/14/8/0*3
+3*5*Horror Fiction in Seven Spooky Steps*-1*2011/10/28/8/0*3
+3*6*Advanced Gay*-1*2011/11/4/8/0*3
+3*7*Studies in Modern Movement*-1*2011/11/11/8/0*3
+3*8*Documentary Filmmaking: Redux*-1*2011/11/18/8/0*3
+3*9*Foosball and Nocturnal Vigilantism*-1*2011/12/2/8/0*3
+3*10*Regional Holiday Music*-1*2011/12/9/8/0*3
+3*11*Urban Matrimony and the Sandwich Arts*-1*2012/3/16/8/0*3
+3*12*Contemporary Impressionists*-1*2012/3/23/8/0*3
+3*13*Digital Exploration of Interior Design (1)*-1*2012/3/30/8/0*3
+3*14*Pillows and Blankets (2)*-1*2012/4/6/8/0*3
+3*15*Origins of Vampire Mythology*-1*2012/4/13/8/0*3
+3*16*Virtual Systems Analysis*-1*2012/4/20/8/0*3
+3*17*Basic Lupine Urology*-1*2012/4/27/8/0*3
+3*18*Course Listing Unavailable*-1*2012/5/4/8/0*3
+3*19*Curriculum Unavailable*-1*2012/5/11/8/0*3
+3*20*Digital Estate Planning*-1*2012/5/18/8/0*3
+3*21*The First Chang Dynasty*-1*2012/5/18/8/0*3
+3*22*Introduction to Finality*-1*2012/5/18/8/0*3
+-
+4*1*History 101*-1*2013/2/8/8/0*3
+4*2*Paranormal Parentage*-1*2013/2/15/8/0*3
+4*3*Conventions of Space and Time*-1*2013/2/22/8/0*3
+4*4*Alternative History of the German Invasion*-1*2013/3/1/8/0*3
+4*5*Cooperative Escapism in Familial Relations*-1*2013/3/8/8/0*3
+4*6*Advanced Documentary Filmmaking*-1*2013/3/15/8/0*3
+4*7*Economics of Marine Biology*-1*2013/3/22/8/0*3
+4*8*Herstory of Dance*-1*2013/4/5/8/0*3
+4*9*Intro to Felt Surrogacy*-1*2013/4/12/8/0*3
+4*10*Intro to Knots*-1*2013/4/19/8/0*3
+4*11*Basic Human Anatomy*-1*2013/4/26/8/0*3
+4*12*Heroic Origins*-1*2013/5/3/8/0*3
+4*13*Advanced Introduction to Finality*-1*2013/5/10/8/0*3
+-
+5*1*Repilot*-1*2014/1/3/8/0*3
+5*2*Introduction to Teaching*-1*2014/1/3/8/0*3
+5*3*Basic Intergluteal Numismatics*-1*2014/1/10/8/0*3
+5*4*Cooperative Polygraphy*-1*2014/1/17/8/0*3
+5*5*Geothermal Escapism*-1*2014/1/24/8/0*3
+5*6*Analysis of Cork-Based Networking*-1*2014/1/31/8/0*3
+5*7*Bondage and Beta Male Sexuality *-1*2014/2/28/8/0*3
+5*8*App Development and Condiments*8F4CD3A3157ECBA846115AC3A878584FA1218A35*2014/3/7/8/0*1
+5*9*VCR Maintenance and Educational Publishing*A138A23D6C0138160EBBA9C81AEA19EC405DCF4D*2014/3/14/8/0*1
+5*10*Advanced Advanced Dungeons & Dragons*5976EA4E030171A0A4A2257E499099181543AD59*2014/3/21/8/0*1
+5*11*G.I. Jeff*1798C4BD917001E97604BA8494F174942F199517*2014/4/4/8/0*1
+5*12*Basic Story*701FD52B92291863451872AD5681B9B449E2E616*2014/4/11/8/0*1
+5*13*Basic Sandwich*903A33076CB7D80434717B6D287427A0839A79BB*2014/4/18/8/0*1
+-

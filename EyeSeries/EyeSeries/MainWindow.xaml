@@ -1,6 +1,6 @@
 ﻿<Window x:Name="EyeSeries" x:Class="EyeSeries.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="EyeSeries" Height="599" Width="1058" Initialized="EyeSeries_Initialized">
+        Title="EyeSeries" Height="629" Width="1074" Initialized="EyeSeries_Initialized" ContentRendered="EyeSeries_ContentRendered" Loaded="EyeSeries_Loaded">
     <Grid x:Name="gPrinc"/>
 </Window>
