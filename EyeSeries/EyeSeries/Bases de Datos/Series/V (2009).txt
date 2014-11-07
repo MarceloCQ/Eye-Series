@@ -1,0 +1,24 @@
+1*1*Pilot*-1*2009/11/4/10/0*3
+1*2*There is No Normal Anymore*-1*2009/11/11/10/0*3
+1*3*A Bright New Day*-1*2009/11/18/10/0*3
+1*4*It's Only the Beginning*-1*2009/11/25/10/0*3
+1*5*Welcome to the War*-1*2010/3/31/10/0*3
+1*6*Pound of Flesh*-1*2010/4/7/10/0*3
+1*7*John May*-1*2010/4/14/10/0*3
+1*8*We Can't Win*-1*2010/4/21/10/0*3
+1*9*Heretic's Fork*-1*2010/4/28/10/0*3
+1*10*Hearts and Minds*-1*2010/5/5/10/0*3
+1*11*Fruition*-1*2010/5/12/10/0*3
+1*12*Red Sky*-1*2010/5/19/10/0*3
+-
+2*1*Red Rain*-1*2011/1/5/10/0*3
+2*2*Serpent's Tooth*-1*2011/1/12/10/0*3
+2*3*Laid Bare*-1*2011/1/19/10/0*3
+2*4*Unholy Alliance*-1*2011/2/2/10/0*3
+2*5*Concordia*-1*2011/2/9/10/0*3
+2*6*Siege*-1*2011/2/16/10/0*3
+2*7*Birth Pangs*-1*2011/2/23/10/0*3
+2*8*Uneasy Lies the Head*-1*2011/3/2/10/0*3
+2*9*Devil in a Blue Dress*-1*2011/3/9/10/0*3
+2*10*Mother's Day*-1*2011/3/16/10/0*3
+-

@@ -37,6 +37,7 @@ namespace EyeSeries
             claves = new List<int>();
             banner = new List<string>();
             Princ = p;
+               
 
         }
 
@@ -122,7 +123,7 @@ namespace EyeSeries
         {
             if (Opciones.SelectedIndex != -1)
             {
-                DoubleAnimation baja = new DoubleAnimation(302, new TimeSpan(0, 0, 0, 0, 250));
+                DoubleAnimation baja = new DoubleAnimation(343, new TimeSpan(0, 0, 0, 0, 250));
                 DoubleAnimation anima = new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 250));
 
                 anima.Completed += (sender3, e3) =>
@@ -134,10 +135,14 @@ namespace EyeSeries
                         DispatcherPriority.Normal,
                         (ThreadStart)delegate
                         {
-                            s = new Serie(claves[Opciones.SelectedIndex]);
+                            s = new Serie(claves[Opciones.SelectedIndex], Princ.Series.Count);
                             List<int> numeros = new List<int>();
                             for (int i = 1; i <= s.Episodios.Count; i++)
                             {
+                                if (s.Episodios[i - 1][0].Fecha > DateTime.Now)
+                                {
+                                    break;
+                                }
                                 numeros.Add(i);
                             }
                             Temp.ItemsSource = numeros;
@@ -152,11 +157,18 @@ namespace EyeSeries
 
                 baja.Completed += (sender2, e2) =>
                     {
+                        Banner.Visibility = System.Windows.Visibility.Visible;
                         Temporada.Visibility = System.Windows.Visibility.Visible;
+                        Ultepv.Visibility = System.Windows.Visibility.Visible;
+                        Selecciona.Visibility = System.Windows.Visibility.Visible;
+                        Ninguno.Visibility = System.Windows.Visibility.Visible;
                         if (banner[Opciones.SelectedIndex] != "")
                             Banner.Source = new BitmapImage(new Uri
                                (@"http://thetvdb.com/banners/" + banner[Opciones.SelectedIndex]));
                         RenderOptions.SetBitmapScalingMode(Banner, BitmapScalingMode.Fant);
+                        Ultepv.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 250)));
+                        Selecciona.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 250)));
+                        Ninguno.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 250)));
                         Temporada.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 250)));                        
                         Banner.BeginAnimation(OpacityProperty, anima);
                     };
@@ -181,11 +193,18 @@ namespace EyeSeries
                         Lona.BeginAnimation(HeightProperty, baja1);
                         Temp.SelectedIndex = -1;
                         Cap.SelectedIndex = -1;
+                        Ninguno.IsChecked = false;
+                        Selecciona.IsChecked = true;
+                        Temp.IsEnabled = true;
+                        Cap.IsEnabled = true;
                         Temp.Visibility = System.Windows.Visibility.Hidden;
                         Cap.Visibility = System.Windows.Visibility.Hidden;
                         Temporada.Visibility = System.Windows.Visibility.Hidden;
                         Capitulo.Visibility = System.Windows.Visibility.Hidden;
                         Aceptar.Visibility = System.Windows.Visibility.Hidden;
+                        Ultepv.Visibility = System.Windows.Visibility.Hidden;
+                        Selecciona.Visibility = System.Windows.Visibility.Hidden;
+                        Ninguno.Visibility = System.Windows.Visibility.Hidden;
 
                     };
 
@@ -195,6 +214,9 @@ namespace EyeSeries
                 Temporada.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
                 Capitulo.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
                 Aceptar.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
+                Ultepv.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
+                Selecciona.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
+                Ninguno.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
 
 
                 //Banner.Source = new BitmapImage();
@@ -230,10 +252,8 @@ namespace EyeSeries
 
             if (Cap.SelectedIndex != -1)
             {
-                int temp = Temp.SelectedIndex;
-                int cap = Cap.SelectedIndex;
 
-                DoubleAnimation baja = new DoubleAnimation(336, new TimeSpan(0, 0, 0, 0, 250));
+                DoubleAnimation baja = new DoubleAnimation(378, new TimeSpan(0, 0, 0, 0, 250));
                 baja.Completed += (sender2, e2) =>
                     {
                         Aceptar.Visibility = Visibility.Visible;
@@ -266,11 +286,15 @@ namespace EyeSeries
                     Cap.Visibility = Visibility.Hidden;
                     Aceptar.Visibility = Visibility.Hidden;
                     Banner.Visibility = Visibility.Hidden;
+                    Ultepv.Visibility = Visibility.Hidden;
+                    Selecciona.Visibility = Visibility.Hidden;
+                    Ninguno.Visibility = Visibility.Hidden;
                     Lona.BeginAnimation(HeightProperty, sube);
                 };
 
             sube.Completed += (sender3, e3) =>
                 {
+                    Lona.Visibility = System.Windows.Visibility.Hidden;
                     RectAdd.BeginAnimation(MarginProperty, sube2);
                     LabAdd.BeginAnimation(MarginProperty, new ThicknessAnimation(new Thickness(0, -34, 0, 0), new TimeSpan(0,0,0,0,125)));
                     Tacha.BeginAnimation(MarginProperty, new ThicknessAnimation(new Thickness(Tacha.Margin.Left, -34, 0, 0), new TimeSpan(0, 0, 0, 0, 125)));
@@ -302,9 +326,13 @@ namespace EyeSeries
             Nombre.TextChanged -= Nombre_TextChanged;
             Opciones.SelectionChanged -= Opciones_SelectionChanged;
             Nombre.Text = "";
+            Temp.IsEnabled = true;
+            Cap.IsEnabled = true;
             Opciones.ItemsSource = null;
             Temp.SelectedIndex = -1;
             Cap.SelectedIndex = -1;
+            Selecciona.IsChecked = true;
+            Ninguno.IsChecked = false;
             Nombre.TextChanged += Nombre_TextChanged;
             Opciones.SelectionChanged += Opciones_SelectionChanged;
 
@@ -314,18 +342,118 @@ namespace EyeSeries
 
         private void Aceptar_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            int temp = (int)Temp.SelectedItem;
-            int cap = (int)Cap.SelectedItem;
-            Tacha_MouseUp(null, null);
-            Princ.AgregarNSerie(s, temp, cap);
+            int temp = 1;
+            int cap = 1;
+            if ((bool)Selecciona.IsChecked)
+            {
+                temp = (int)Temp.SelectedItem;
+                cap = (int)Cap.SelectedItem;
+
+                if (cap + 1 > s.Episodios[temp - 1].Count)
+                {
+                    if (temp + 1 > s.Episodios.Count)
+                    {
+                        temp = 0;
+                        cap = 0;
+                    }
+                    else
+                    {
+                        temp++;
+                        cap = 1;
+                    }
+                }
+                else
+                {
+                    cap++;
+                }
+
+
+
+            }
+
+
+            DoubleAnimation desap = new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250));
+            DoubleAnimation sube = new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250));
+            ThicknessAnimation sube2 = new ThicknessAnimation(new Thickness(0, -34, 0, 0), new TimeSpan(0, 0, 0, 0, 125));
+            DoubleAnimation desap2 = new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 125));
+
+
+            desap.Completed += (sender2, e2) =>
+            {
+                Nombre.Visibility = Visibility.Hidden;
+                Nombrel.Visibility = Visibility.Hidden;
+                Seleccional.Visibility = Visibility.Hidden;
+                Opciones.Visibility = Visibility.Hidden;
+                Temporada.Visibility = Visibility.Hidden;
+                Temp.Visibility = Visibility.Hidden;
+                Capitulo.Visibility = Visibility.Hidden;
+                Cap.Visibility = Visibility.Hidden;
+                Aceptar.Visibility = Visibility.Hidden;
+                Banner.Visibility = Visibility.Hidden;
+                Ninguno.Visibility = Visibility.Hidden;
+                Selecciona.Visibility = Visibility.Hidden;
+                Ultepv.Visibility = Visibility.Hidden;
+
+                Lona.BeginAnimation(HeightProperty, sube);
+            };
+
+            sube.Completed += (sender3, e3) =>
+            {
+                Lona.Visibility = System.Windows.Visibility.Hidden;
+                RectAdd.BeginAnimation(MarginProperty, sube2);
+                LabAdd.BeginAnimation(MarginProperty, new ThicknessAnimation(new Thickness(0, -34, 0, 0), new TimeSpan(0, 0, 0, 0, 125)));
+                Tacha.BeginAnimation(MarginProperty, new ThicknessAnimation(new Thickness(Tacha.Margin.Left, -34, 0, 0), new TimeSpan(0, 0, 0, 0, 125)));
+            };
+
+            sube2.Completed += (sender4, e4) =>
+            {
+
+
+                Princ.tapa.BeginAnimation(OpacityProperty, desap2);
+            };
+
+            desap2.Completed += (sender5, e5) =>
+            {
+                Princ.tapa.Visibility = System.Windows.Visibility.Hidden;
+                Princ.AgregarNSerie(s, temp, cap);
+            };
+
+            Nombre.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
+            Nombrel.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
+            Seleccional.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
+            Opciones.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
+            Temporada.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
+            Temp.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
+            Capitulo.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
+            Cap.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
+            Aceptar.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
+            Selecciona.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
+            Ninguno.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
+            Ultepv.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
+            Banner.BeginAnimation(OpacityProperty, desap);
+
+            Nombre.TextChanged -= Nombre_TextChanged;
+            Opciones.SelectionChanged -= Opciones_SelectionChanged;
+            Nombre.Text = "";
+            Opciones.ItemsSource = null;
+            Temp.SelectedIndex = -1;
+            Cap.SelectedIndex = -1;
+            Nombre.TextChanged += Nombre_TextChanged;
+            Opciones.SelectionChanged += Opciones_SelectionChanged;
+
+           
+
+            
+            
         }
 
         public void AnimaInicio()
         {
+            
             DoubleAnimation ap = new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 250));
             DoubleAnimation baja1 = new DoubleAnimation(216, new TimeSpan(0, 0, 0, 0, 250));
             ThicknessAnimation baja2 = new ThicknessAnimation(new Thickness(0), new TimeSpan(0, 0, 0, 0, 125));
-
+            Lona.Visibility = System.Windows.Visibility.Visible;
             baja1.Completed += (sender3, e3) =>
                 {
                     Nombrel.Visibility = System.Windows.Visibility.Visible;
@@ -336,6 +464,7 @@ namespace EyeSeries
                     Nombre.BeginAnimation(OpacityProperty, ap);
                     Seleccional.BeginAnimation(OpacityProperty, ap);
                     Opciones.BeginAnimation(OpacityProperty, ap);
+                    FocusManager.SetFocusedElement(this, Nombre); 
 
                 };
             baja2.Completed += (sender2, e2) =>
@@ -352,5 +481,59 @@ namespace EyeSeries
 
 
         }
+
+
+
+
+        private void Selecciona_Click(object sender, RoutedEventArgs e)
+        {
+            Temp.IsEnabled = true;
+            Cap.IsEnabled = true;
+
+
+            if (Lona.Height != 0)
+            {
+                DoubleAnimation anima = new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250));
+                anima.Completed += (sender2, e2) =>
+                    {
+                        DoubleAnimation baja = new DoubleAnimation(343, new TimeSpan(0, 0, 0, 0, 250));
+                        Lona.BeginAnimation(HeightProperty, baja);
+                    };
+
+                Aceptar.BeginAnimation(OpacityProperty, anima);
+            }
+            
+
+            
+
+            
+
+        }
+
+        private void Ninguno_Click(object sender, RoutedEventArgs e)
+        {
+            Temp.IsEnabled = false;
+            Cap.IsEnabled = false;
+            Cap.SelectedIndex = -1;
+            Temp.SelectedIndex = -1;
+
+
+            DoubleAnimation baja = new DoubleAnimation(378, new TimeSpan(0, 0, 0, 0, 250));
+            baja.Completed += (sender2, e2) =>
+            {
+                Aceptar.Visibility = Visibility.Visible;
+                Aceptar.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 250)));
+            };
+
+            Lona.BeginAnimation(HeightProperty, baja);
+
+
+
+
+
+
+
+        }
+
     }
 }

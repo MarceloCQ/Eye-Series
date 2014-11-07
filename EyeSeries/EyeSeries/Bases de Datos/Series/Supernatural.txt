@@ -1,0 +1,208 @@
+1*1*Pilot*-1*2005/9/14/9/0*3
+1*2*Wendigo*-1*2005/9/21/9/0*3
+1*3*Dead in the Water*-1*2005/9/28/9/0*3
+1*4*Phantom Traveler*-1*2005/10/5/9/0*3
+1*5*Bloody Mary*-1*2005/10/12/9/0*3
+1*6*Skin*-1*2005/10/19/9/0*3
+1*7*Hook Man*-1*2005/10/26/9/0*3
+1*8*Bugs*-1*2005/11/9/9/0*3
+1*9*Home*-1*2005/11/16/9/0*3
+1*10*Asylum*-1*2005/11/23/9/0*3
+1*11*Scarecrow*-1*2006/1/11/9/0*3
+1*12*Faith*-1*2006/1/18/9/0*3
+1*13*Route 666*-1*2006/2/1/9/0*3
+1*14*Nightmare*-1*2006/2/8/9/0*3
+1*15*The Benders*-1*2006/2/15/9/0*3
+1*16*Shadow*-1*2006/3/1/9/0*3
+1*17*Hell House*-1*2006/3/31/9/0*3
+1*18*Something Wicked*-1*2006/4/7/9/0*3
+1*19*Provenance*-1*2006/4/14/9/0*3
+1*20*Dead Man's Blood*-1*2006/4/21/9/0*3
+1*21*Salvation*-1*2006/4/28/9/0*3
+1*22*Devil's Trap*-1*2006/5/5/9/0*3
+-
+2*1*In My Time of Dying*-1*2006/9/29/9/0*3
+2*2*Everybody Loves A Clown*-1*2006/10/6/9/0*3
+2*3*Bloodlust*-1*2006/10/13/9/0*3
+2*4*Children Shouldn't Play With Dead Things*-1*2006/10/20/9/0*3
+2*5*Simon Said*-1*2006/10/27/9/0*3
+2*6*No Exit*-1*2006/11/3/9/0*3
+2*7*The Usual Suspects*-1*2006/11/10/9/0*3
+2*8*Crossroad Blues*-1*2006/11/17/9/0*3
+2*9*Croatoan*-1*2006/12/8/9/0*3
+2*10*Hunted*-1*2007/1/12/9/0*3
+2*11*Playthings*-1*2007/1/19/9/0*3
+2*12*Nightshifter*-1*2007/1/26/9/0*3
+2*13*Houses of the Holy*-1*2007/2/2/9/0*3
+2*14*Born Under a Bad Sign*-1*2007/2/9/9/0*3
+2*15*Tall Tales*-1*2007/2/16/9/0*3
+2*16*Roadkill*-1*2007/3/16/9/0*3
+2*17*Heart*-1*2007/3/23/9/0*3
+2*18*Hollywood Babylon*-1*2007/4/20/9/0*3
+2*19*Folsom Prison Blues*-1*2007/4/27/9/0*3
+2*20*What Is and What Should Never Be*-1*2007/5/4/9/0*3
+2*21*All Hell Breaks Loose (1)*-1*2007/5/11/9/0*3
+2*22*All Hell Breaks Loose (2)*-1*2007/5/18/9/0*3
+-
+3*1*The Magnificent Seven*-1*2007/10/5/9/0*3
+3*2*The Kids Are Alright*-1*2007/10/12/9/0*3
+3*3*Bad Day at Black Rock*-1*2007/10/19/9/0*3
+3*4*Sin City*-1*2007/10/26/9/0*3
+3*5*Bedtime Stories*-1*2007/11/2/9/0*3
+3*6*Red Sky at Morning*-1*2007/11/9/9/0*3
+3*7*Fresh Blood*-1*2007/11/16/9/0*3
+3*8*A Very Supernatural Christmas*-1*2007/12/14/9/0*3
+3*9*Malleus Maleficarum*-1*2008/2/1/9/0*3
+3*10*Dream a Little Dream of Me*-1*2008/2/8/9/0*3
+3*11*Mystery Spot*-1*2008/2/15/9/0*3
+3*12*Jus in Bello*-1*2008/2/22/9/0*3
+3*13*Ghostfacers!*-1*2008/4/25/9/0*3
+3*14*Long-Distance Call*-1*2008/5/2/9/0*3
+3*15*Time is on My Side*-1*2008/5/9/9/0*3
+3*16*No Rest For the Wicked*-1*2008/5/16/9/0*3
+-
+4*1*Lazarus Rising*-1*2008/9/19/9/0*3
+4*2*Are You There, God? It's Me, Dean Winchester*-1*2008/9/26/9/0*3
+4*3*In the Beginning*-1*2008/10/3/9/0*3
+4*4*Metamorphosis*-1*2008/10/10/9/0*3
+4*5*Monster Movie*-1*2008/10/17/9/0*3
+4*6*Yellow Fever*-1*2008/10/24/9/0*3
+4*7*It's the Great Pumpkin, Sam Winchester*-1*2008/10/31/9/0*3
+4*8*Wishful Thinking*-1*2008/11/7/9/0*3
+4*9*I Know What You Did Last Summer*-1*2008/11/14/9/0*3
+4*10*Heaven and Hell*-1*2008/11/21/9/0*3
+4*11*Family Remains*-1*2009/1/16/9/0*3
+4*12*Criss Angel Is A Douchebag*-1*2009/1/23/9/0*3
+4*13*After School Special*-1*2009/1/30/9/0*3
+4*14*Sex and Violence*-1*2009/2/6/9/0*3
+4*15*Death Takes a Holiday*-1*2009/3/13/9/0*3
+4*16*On the Head of a Pin*-1*2009/3/20/9/0*3
+4*17*It's a Terrible Life*-1*2009/3/27/9/0*3
+4*18*The Monster at the End of this Book*-1*2009/4/3/9/0*3
+4*19*Jump the Shark*-1*2009/4/24/9/0*3
+4*20*The Rapture*-1*2009/5/1/9/0*3
+4*21*When the Levee Breaks*-1*2009/5/8/9/0*3
+4*22*Lucifer Rising*-1*2009/5/15/9/0*3
+-
+5*1*Sympathy for the Devil*-1*2009/9/11/9/0*3
+5*2*Good God, Y'All!*-1*2009/9/18/9/0*3
+5*3*Free to Be You and Me*-1*2009/9/25/9/0*3
+5*4*The End*-1*2009/10/2/9/0*3
+5*5*Fallen Idols*-1*2009/10/9/9/0*3
+5*6*I Believe the Children Are Our Future*-1*2009/10/16/9/0*3
+5*7*The Curious Case of Dean Winchester*-1*2009/10/30/9/0*3
+5*8*Changing Channels*-1*2009/11/6/9/0*3
+5*9*The Real Ghostbusters*-1*2009/11/13/9/0*3
+5*10*Abandon All Hope...*-1*2009/11/20/9/0*3
+5*11*Sam, Interrupted*-1*2010/1/22/9/0*3
+5*12*Swap Meat*-1*2010/1/29/9/0*3
+5*13*The Song Remains the Same*-1*2010/2/5/9/0*3
+5*14*My Bloody Valentine*-1*2010/2/12/9/0*3
+5*15*Dead Men Don't Wear Plaid*-1*2010/3/26/9/0*3
+5*16*Dark Side of the Moon*-1*2010/4/2/9/0*3
+5*17*99 Problems*-1*2010/4/9/9/0*3
+5*18*Point of No Return*-1*2010/4/16/9/0*3
+5*19*Hammer of the Gods*-1*2010/4/23/9/0*3
+5*20*The Devil You Know*-1*2010/4/30/9/0*3
+5*21*Two Minutes To Midnight*-1*2010/5/7/9/0*3
+5*22*Swan Song*-1*2010/5/14/9/0*3
+-
+6*1*Exile on Main Street*-1*2010/9/25/9/0*3
+6*2*Two and a Half Men*-1*2010/10/2/9/0*3
+6*3*The Third Man*-1*2010/10/9/9/0*3
+6*4*Weekend at Bobby's*-1*2010/10/16/9/0*3
+6*5*Live Free or Twihard*-1*2010/10/23/9/0*3
+6*6*You Can't Handle the Truth*-1*2010/10/30/9/0*3
+6*7*Family Matters*-1*2010/11/6/9/0*3
+6*8*All Dogs Go to Heaven*-1*2010/11/13/9/0*3
+6*9*Clap Your Hands If You Believe...*-1*2010/11/20/9/0*3
+6*10*Caged Heat*-1*2010/12/4/9/0*3
+6*11*Appointment in Samarra*-1*2010/12/11/9/0*3
+6*12*Like A Virgin*-1*2011/2/5/9/0*3
+6*13*Unforgiven*-1*2011/2/12/9/0*3
+6*14*Mannequin 3: The Reckoning*-1*2011/2/19/9/0*3
+6*15*The French Mistake*-1*2011/2/26/9/0*3
+6*16*...And Then There Were None*-1*2011/3/5/9/0*3
+6*17*My Heart Will Go On*-1*2011/4/16/9/0*3
+6*18*Frontierland*-1*2011/4/23/9/0*3
+6*19*Mommy Dearest*-1*2011/4/30/9/0*3
+6*20*The Man Who Would Be King*-1*2011/5/7/9/0*3
+6*21*Let It Bleed*-1*2011/5/21/9/0*3
+6*22*The Man Who Knew Too Much*-1*2011/5/21/9/0*3
+-
+7*1*Meet the New Boss*-1*2011/9/24/9/0*3
+7*2*Hello, Cruel World*-1*2011/10/1/9/0*3
+7*3*The Girl Next Door*-1*2011/10/8/9/0*3
+7*4*Defending Your Life*-1*2011/10/15/9/0*3
+7*5*Shut Up, Dr. Phil*-1*2011/10/22/9/0*3
+7*6*Slash Fiction*-1*2011/10/29/9/0*3
+7*7*The Mentalists*-1*2011/11/5/9/0*3
+7*8*Season Seven, Time for a Wedding!*-1*2011/11/12/9/0*3
+7*9*How to Win Friends and Influence Monsters*-1*2011/11/19/9/0*3
+7*10*Death's Door*-1*2011/12/3/9/0*3
+7*11*Adventures in Babysitting*-1*2012/1/7/9/0*3
+7*12*Time After Time After Time*-1*2012/1/14/9/0*3
+7*13*The Slice Girls*-1*2012/2/4/9/0*3
+7*14*Plucky Pennywhistle's Magical Menagerie*-1*2012/2/11/9/0*3
+7*15*Repo Man*-1*2012/2/18/9/0*3
+7*16*Out With the Old*-1*2012/3/17/9/0*3
+7*17*The Born-Again Identity*-1*2012/3/24/9/0*3
+7*18*Party On, Garth*-1*2012/3/31/9/0*3
+7*19*Of Grave Importance*-1*2012/4/21/9/0*3
+7*20*The Girl with the Dungeons and Dragons Tattoo*-1*2012/4/28/9/0*3
+7*21*Reading is Fundamental*-1*2012/5/5/9/0*3
+7*22*There Will Be Blood*-1*2012/5/12/9/0*3
+7*23*Survival of the Fittest*-1*2012/5/19/9/0*3
+-
+8*1*We Need To Talk About Kevin*-1*2012/10/4/9/0*3
+8*2*What's Up, Tiger Mommy?*-1*2012/10/11/9/0*3
+8*3*Heartache*-1*2012/10/18/9/0*3
+8*4*Bitten*-1*2012/10/25/9/0*3
+8*5*Blood Brother*-1*2012/11/1/9/0*3
+8*6*Southern Comfort*-1*2012/11/8/9/0*3
+8*7*A Little Slice of Kevin*-1*2012/11/15/9/0*3
+8*8*Hunteri Heroici*-1*2012/11/29/9/0*3
+8*9*Citizen Fang*-1*2012/12/6/9/0*3
+8*10*Torn and Frayed*-1*2013/1/17/9/0*3
+8*11*LARP and the Real Girl*-1*2013/1/24/9/0*3
+8*12*As Time Goes By*-1*2013/1/31/9/0*3
+8*13*Everybody Hates Hitler*-1*2013/2/7/9/0*3
+8*14*Trial and Error*-1*2013/2/14/9/0*3
+8*15*Man's Best Friend with Benefits*-1*2013/2/21/9/0*3
+8*16*Remember the Titans*-1*2013/2/28/9/0*3
+8*17*Goodbye, Stranger*-1*2013/3/21/9/0*3
+8*18*Freaks and Geeks*-1*2013/3/28/9/0*3
+8*19*Taxi Driver*-1*2013/4/4/9/0*3
+8*20*Pac-Man Fever*-1*2013/4/25/9/0*3
+8*21*The Great Escapist*-1*2013/5/2/9/0*3
+8*22*Clip Show*-1*2013/5/9/9/0*3
+8*23*Sacrifice*-1*2013/5/16/9/0*3
+-
+9*1*I Think I'm Gonna Like It Here*-1*2013/10/9/9/0*3
+9*2*Devil May Care*-1*2013/10/16/9/0*3
+9*3*I'm No Angel*-1*2013/10/23/9/0*3
+9*4*Slumber Party*-1*2013/10/30/9/0*3
+9*5*Dog Dean Afternoon*-1*2013/11/6/9/0*3
+9*6*Heaven Can't Wait*-1*2013/11/13/9/0*3
+9*7*Bad Boys*-1*2013/11/20/9/0*3
+9*8*Rock and a Hard Place*-1*2013/11/27/9/0*3
+9*9*Holy Terror*-1*2013/12/4/9/0*3
+9*10*Road Trip*-1*2014/1/15/9/0*3
+9*11*First Born*-1*2014/1/22/9/0*3
+9*12*Sharp Teeth*-1*2014/1/29/9/0*3
+9*13*The Purge*-1*2014/2/5/9/0*3
+9*14*Captives*-1*2014/2/26/9/0*3
+9*15*#THINMAN*-1*2014/3/5/9/0*3
+9*16*Blade Runners*-1*2014/3/19/9/0*3
+9*17*Mother's Little Helper*-1*2014/3/26/9/0*3
+9*18*Meta Fiction*-1*2014/4/16/9/0*3
+9*19*Alex Annie Alexis Ann*-1*2014/4/23/9/0*3
+9*20*Bloodlines*-1*2014/4/30/9/0*3
+9*21*King of the Damned*-1*2014/5/7/9/0*3
+9*22*Stairway To Heaven*-1*2014/5/14/9/0*3
+9*23*Do You Believe in Miracles?*-1*2014/5/21/9/0*2
+-
+10*1*Black*-1*2014/10/8/9/0*0
+10*2*Reichenbach*-1*2014/10/15/9/0*0
+10*3*Soul Survivor*-1*2014/10/22/9/0*0
+-

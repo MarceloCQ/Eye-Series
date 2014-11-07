@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" Width="318" Height="370">
+             mc:Ignorable="d" Width="318" Height="412">
     <Grid>
-        <Rectangle x:Name="Lona" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="318" Fill="White" RenderTransformOrigin="0.5,0.5" Margin="0,34,0,0" StrokeThickness="0">
+        <Rectangle x:Name="Lona" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="318" Fill="White" RenderTransformOrigin="0.5,0.5" Margin="0,34,0,0" StrokeThickness="0" Visibility="Hidden">
             <Rectangle.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform ScaleY="-1"/>
@@ -26,17 +26,20 @@
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <Label x:Name="Seleccional" Content="Selecciona:" HorizontalAlignment="Left" Margin="20,91,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.533,-0.414" Foreground="Black" Opacity="0" Visibility="Hidden"/>
-        <Label x:Name="Temporada" Content="Temporada:" HorizontalAlignment="Left" Margin="20,247,0,0" VerticalAlignment="Top" Foreground="Black" Opacity="0" Visibility="Hidden"/>
-        <ComboBox x:Name="Temp" HorizontalAlignment="Left" Margin="93,251,0,0" VerticalAlignment="Top" Width="40" RenderTransformOrigin="-0.714,0.773" SelectionChanged="Temp_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Opacity="0" Visibility="Hidden"/>
-        <Image x:Name="Banner" HorizontalAlignment="Left" Height="59" VerticalAlignment="Top" Width="318" Source="C:\Users\Marcelo\Pictures\24.jpg" Opacity="0" Margin="0,278,0,0"/>
-        <Label x:Name="Capitulo" Content="Capitulo:" HorizontalAlignment="Left" Margin="146,247,0,0" VerticalAlignment="Top" Foreground="Black" Opacity="0" Visibility="Hidden"/>
-        <ComboBox x:Name="Cap" HorizontalAlignment="Left" Margin="203,251,0,0" VerticalAlignment="Top" Width="40" RenderTransformOrigin="-0.714,0.773" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" SelectionChanged="Cap_SelectionChanged" Opacity="0" Visibility="Hidden"/>
-        <ListBox x:Name="Opciones" HorizontalAlignment="Left" Height="119" Margin="20,122,0,0" VerticalAlignment="Top" Width="276" SelectionChanged="Opciones_SelectionChanged" Opacity="0" Visibility="Hidden"/>
+        <Label x:Name="Seleccional" Content="Selecciona:" HorizontalAlignment="Left" Margin="20,88,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.533,-0.414" Foreground="Black" Opacity="0" Visibility="Hidden"/>
+        <Label x:Name="Temporada" Content="Temporada:" HorizontalAlignment="Left" Margin="20,285,0,0" VerticalAlignment="Top" Foreground="Black" Opacity="0" Visibility="Hidden"/>
+        <ComboBox x:Name="Temp" HorizontalAlignment="Left" Margin="93,289,0,0" VerticalAlignment="Top" Width="40" RenderTransformOrigin="-0.714,0.773" SelectionChanged="Temp_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Opacity="0" Visibility="Hidden"/>
+        <Image x:Name="Banner" HorizontalAlignment="Left" Height="59" VerticalAlignment="Top" Width="318" Source="C:\Users\Marcelo\Pictures\24.jpg" Margin="0,318,0,0" Opacity="0" Visibility="Hidden"/>
+        <Label x:Name="Capitulo" Content="Capitulo:" HorizontalAlignment="Left" Margin="141,287,0,0" VerticalAlignment="Top" Foreground="Black" Opacity="0" Visibility="Hidden"/>
+        <ComboBox x:Name="Cap" HorizontalAlignment="Left" Margin="198,289,0,0" VerticalAlignment="Top" Width="40" RenderTransformOrigin="-0.714,0.773" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" SelectionChanged="Cap_SelectionChanged" Opacity="0" Visibility="Hidden"/>
+        <ListBox x:Name="Opciones" HorizontalAlignment="Left" Height="119" Margin="20,117,0,0" VerticalAlignment="Top" Width="276" SelectionChanged="Opciones_SelectionChanged" Opacity="0" Visibility="Hidden"/>
         <Rectangle x:Name="RectAdd" Fill="Black" HorizontalAlignment="Left" Height="34" Stroke="Black" VerticalAlignment="Top" Width="318" Margin="0,-34,0,0"/>
         <Label x:Name="LabAdd" Content="+ Añadir serie" HorizontalAlignment="Left" VerticalAlignment="Top" Height="34" Foreground="White" FontFamily="Bebas Neue" FontSize="24" Margin="0,-34,0,0"/>
         <Image x:Name="Tacha" HorizontalAlignment="Left" Margin="285,-28,0,0" VerticalAlignment="Top" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\tacha.png" Stretch="None" MouseUp="Tacha_MouseUp"/>
-        <Image x:Name="Aceptar" HorizontalAlignment="Left" Margin="146,341,0,0" VerticalAlignment="Top" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\aceptar.png" Stretch="None" Opacity="0" Visibility="Hidden" MouseUp="Aceptar_MouseUp"/>
+        <Image x:Name="Aceptar" HorizontalAlignment="Left" Margin="146,383,0,0" VerticalAlignment="Top" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\aceptar.png" Stretch="None" MouseUp="Aceptar_MouseUp" Opacity="0" Visibility="Hidden"/>
+        <Label x:Name="Ultepv" Content="Ultimo episodio visto:" HorizontalAlignment="Left" Margin="20,238,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.533,-0.414" Foreground="Black" Opacity="0" Visibility="Hidden"/>
+        <RadioButton x:Name="Ninguno" Content="Ninguno" HorizontalAlignment="Left" Margin="27,265,0,0" VerticalAlignment="Top" GroupName="Grupo" Opacity="0" Visibility="Hidden" Click="Ninguno_Click"/>
+        <RadioButton x:Name="Selecciona" Content="Selecciona" HorizontalAlignment="Left" Margin="110,265,0,0" VerticalAlignment="Top" IsChecked="True" GroupName="Grupo" Opacity="0" Visibility="Hidden" Click="Selecciona_Click"/>
 
     </Grid>
 </UserControl>

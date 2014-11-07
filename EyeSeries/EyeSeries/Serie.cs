@@ -5,8 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
+using System.Windows.Threading;
 using System.Xml;
 using UTorrentAPI;
 
@@ -16,18 +20,21 @@ namespace EyeSeries
     public class Serie
     {
         //Atributos
+
         public string Nombre { get; set; } ///Nombre de la serie
         public int Id { get; set; }       //Id de la serie
         public int Numserie;             //Numero de la serie
-        public char Estado { get; set; } //Estado de la serie
+        public char estado; //Estado de la serie
         public List<List<Episodio>> Episodios { get; set; } //Matriz de episodios de la serie
+        public int Subid { get; set; }
         private int temporada;  //Temporada de siguiente episodio a ver / descargar
         private int capitulo;   //Capitulo de siguiente episodio a ver / descargar
         private int porVer { get; set; } //Cantidad de episodios por ver
         private int descargando;          //Cantidad de episodios por descargar
         private XmlDocument doc;        //Documento de donde se extrae la informacion de la serie
         private string Hora;
-        private UTorrentClient uClient = new UTorrentClient(new Uri("http://127.0.0.1:8080/gui/"), "admin", "admin", 1000000);
+        private bool aldia;
+        UTorrentClient uClient;
 
         //Eventos
         public event PropertyChangedEventHandler PropertyChanged;
@@ -77,25 +84,49 @@ namespace EyeSeries
             get { return capitulo; }
             set
             {
-                if (value != capitulo)
-                {
+
                     capitulo = value;
                     OnPropertyChanged("Capitulo");
+         
+            }
+        }
+
+        public bool AlDia
+        {
+            get { return aldia; }
+            set
+            {
+                if (value != aldia)
+                {
+                    aldia = value;
+                    OnPropertyChanged("AlDia");
                 }
             }
         }
 
-
+        public char Estado
+        {
+            get { return estado; }
+            set
+            {
+                if (value != estado)
+                {
+                    estado = value;
+                    OnPropertyChanged("Estado");
+                }
+            }
+        }
 
         /// <summary>
         /// Metodo constructor de la serie
         /// </summary>
         /// <param name="id">Id de la serie</param>
 
-        public Serie(int id)
+        public Serie(int id, int nums)
         {
+            Numserie = nums;
             Id = id;
-
+            uClient = new UTorrentClient(new Uri("http://127.0.0.1:8080/gui/"), "admin", "admin", 1000000);
             //Se carga el documento de donde se saca la informacion
             doc = new XmlDocument();
             doc.Load(@"http://thetvdb.com/api/97AAE7796E3F60D2/series/" + Id + "/all/en.xml");
@@ -107,6 +138,24 @@ namespace EyeSeries
             PorVer = 0;
             Descargando = 0;
             Episodios = new List<List<Episodio>>();
+            BackgroundWorker b = new BackgroundWorker();
+            BackgroundWorker c = new BackgroundWorker();
+            b.DoWork += (sender, e) =>
+                {
+                    WebClient wc = new WebClient();
+                    wc.DownloadFile("http://thetvdb.com/banners/" + doc.SelectSingleNode("/Data/Series/fanart").InnerText, @"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\FanArt\" + Nombre + ".jpg");
+                };
+            c.DoWork += (sender, e) =>
+                {
+                    WebClient getid = new WebClient();
+                    string id2 = getid.DownloadString(@"http://www.addic7ed.com/search.php?search="+ Nombre +"&Submit=Search");
+                    Regex pag = new Regex(@"Are you looking for  <a href=""(.+)""");
+                    Match m1 = pag.Match(id2);
+                    Regex num = new Regex(@"/show/(.+)");
+                    Subid = Convert.ToInt32(num.Match(m1.Groups[1].Value).Groups[1].Value);
+                };
+            b.RunWorkerAsync();
+            c.RunWorkerAsync();
             AddEpisodes();
         }
         /// <summary>
@@ -116,7 +165,7 @@ namespace EyeSeries
         /// <param name="n">Nombre de la serie</param>
         /// <param name="ns">Numero de la serie</param>
         /// <param name="e">Estado de la serie</param>
-        public Serie(int i, string n, int ns, char e, string h)
+        public Serie(int i, string n,/* int t, int c,*/ int ns, char e, string h, int s)
         {
             Id = i;
             Nombre = n;
@@ -124,8 +173,13 @@ namespace EyeSeries
             Estado = e;
             Descargando = 0;
             PorVer = 0;
+            //Temporada = t;
+            //Capitulo = c;
             Hora = h;
+            Subid = s;
             Episodios = new List<List<Episodio>>();
+            AlDia = false;
+            uClient = new UTorrentClient(new Uri("http://127.0.0.1:8080/gui/"), "admin", "admin", 1000000);
         }
 
         /// <summary>
@@ -202,37 +256,57 @@ namespace EyeSeries
         {
             Temporada = t;
             Capitulo = c;
+            if ((Temporada == 0 && Capitulo == 0) || Episodios[Temporada - 1][Capitulo - 1].Estado == 0)
+            {
+                AlDia = true;
+            }
+            else
+            {
+                AlDia = false;
+            }
 
-            //Se descarga la imagen de la serie
-            WebClient wc = new WebClient();
-            wc.DownloadFile("http://thetvdb.com/banners/" + doc.SelectSingleNode("/Data/Series/fanart").InnerText, @"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\FanArt\" + Nombre + ".jpg");
         }
 
         public void Descarga()
         {
-            for (int i = Temporada - 1; i < Episodios.Count; i++)
+            if (!AlDia)
             {
-                int j = (i == Temporada - 1 ? capitulo - 1 : 0);
-                while (j < Episodios[i].Count)
+                for (int i = Temporada - 1; i < Episodios.Count; i++)
                 {
-
-                    if (Episodios[i][j].Fecha < DateTime.Now)
+                    int j = (i == Temporada - 1 ? capitulo - 1 : 0);
+                    while (j < Episodios[i].Count)
                     {
-                        Episodios[i][j].getMagnet();
-                        Episodios[i][j].Estado = 1;
-                        Descargando++;
-                    }
-                    else
-                    {
-                        Episodios[i][j].Estado = 0;
-                    }
-                    j++;
 
+                        if (Episodios[i][j].Fecha < DateTime.Now)
+                        {
+                            Episodios[i][j].getMagnet();
+                            Episodios[i][j].Estado = 1;
+                            Descargando++;
+                        }
+                        else
+                        {
+                            Episodios[i][j].Estado = 0;
+                            if ((Episodios[i][j].Fecha - DateTime.Now).TotalDays < 24)
+                            {
+                                System.Timers.Timer act = new System.Timers.Timer()
+                                {
+                                    Interval = (Episodios[i][j].Fecha - DateTime.Now).TotalMilliseconds,
+
+
+                                };
+                                act.Elapsed += (sender, e) => EpAlAire(sender, e, Episodios[i][j]);
+                                act.Start();
+
+                            }
+                        }
+                        j++;
+
+                    }
                 }
-            }
-            if (!System.IO.Directory.Exists(@"C:\Users\Marcelo\Videos\Series\" + Nombre))
-            {
-                System.IO.Directory.CreateDirectory(@"C:\Users\Marcelo\Videos\Series\" + Nombre);
+                if (!System.IO.Directory.Exists(@"C:\Users\Marcelo\Videos\Series\" + Nombre))
+                {
+                    System.IO.Directory.CreateDirectory(@"C:\Users\Marcelo\Videos\Series\" + Nombre);
+                }
             }
             CrearArchivo();
         }
@@ -258,20 +332,53 @@ namespace EyeSeries
                 {
                     DateTime fecha = new DateTime(Convert.ToInt32(linea.Split('*')[4].Split('/')[0]), Convert.ToInt32(linea.Split('*')[4].Split('/')[1]), Convert.ToInt32(linea.Split('*')[4].Split('/')[2]), Convert.ToInt32(linea.Split('*')[4].Split('/')[3]), Convert.ToInt32(linea.Split('*')[4].Split('/')[4]), 0);
                     Episodio ep = new Episodio(this, Convert.ToInt32(linea.Split('*')[0]), Convert.ToInt32(linea.Split('*')[1]), linea.Split('*')[2], linea.Split('*')[3], fecha, Convert.ToInt32(linea.Split('*')[5]), "720p");
-                    ep.RevisarEp(true);
-                    //Hacer el conteo de PorVer/Descargando
-                    if (ep.Estado == 1)
+
+                    if (ep.Estado == 0)
                     {
-                        Descargando++;
+                        if (ep.Fecha < DateTime.Now)
+                        {
+                            ep.Estado = 1;
+                            ep.getMagnet();
+                            Descargando++;
+                            //CrearArchivo();
+                        }
+                        else
+                        {
+                            if ((ep.Fecha - DateTime.Now).TotalDays < 24)
+                            {
+                                System.Timers.Timer act = new System.Timers.Timer()
+                                {
+                                    Interval = (ep.Fecha - DateTime.Now).TotalMilliseconds,
+                                   
+                                    
+                                };
+                                act.Elapsed += (sender, e) => EpAlAire(sender, e, ep);
+                                act.Start();
+                                
+                            }
+                           
+                        }
                     }
                     else
                     {
-                        if (ep.Estado == 2)
+                        if (ep.Estado == 1)
                         {
-                            PorVer++;
+
+                            if (uClient.Torrents[ep.Hash].RemainingBytes == 0 && uClient.Torrents[ep.Hash].DownloadedBytes > 0 || uClient.Torrents[ep.Hash].ProgressInMils == 1000)
+                            {
+                                ep.Mover(uClient, true);
+                                PorVer++;
+                            }
+                            else
+                            {
+                                Descargando++;
+                            }
+                        }
+                        else
+                        {
+                            if (ep.Estado == 2) PorVer++;
                         }
                     }
-
                     aux.Add(ep);
                 }
 
@@ -279,6 +386,16 @@ namespace EyeSeries
 
             Temporada = t;
             Capitulo = c;
+
+            if ((Temporada == 0 && Capitulo == 0) || Episodios[Temporada - 1][Capitulo - 1].Estado == 0)
+            {
+                AlDia = true;
+            }
+            else
+            {
+                AlDia = false;
+            }
+
 
             leer.Close();
 
@@ -325,7 +442,7 @@ namespace EyeSeries
         /// <returns>El string con toda la informacion de la serie</returns>
         public string Imprimir()
         {
-            return Nombre + "\r\n" + Id + "\r\n" + Temporada + " " + Capitulo + "\r\n" + Estado + "\r\n" + Hora + "\r\n-";
+            return Nombre + "\r\n" + Id + "\r\n" + Subid + "\r\n" + Temporada + " " + Capitulo + "\r\n" + Estado + "\r\n" + Hora + "\r\n-";
 
         }
 
@@ -334,18 +451,25 @@ namespace EyeSeries
         /// </summary>
         public void SiguienteEp()
         {
-            Capitulo++;
-            if (Episodios[Temporada - 1].Count < Capitulo)
+
+            if (Capitulo + 1 > Episodios[Temporada - 1].Count)
             {
-                Temporada++;
-                Capitulo = 1;
-                if (Temporada > Episodios.Count)
+                if (Temporada + 1 > Episodios.Count)
                 {
                     Temporada = 0;
                     Capitulo = 0;
                 }
-
+                else
+                {
+                    Temporada++;
+                    Capitulo = 1;
+                }
             }
+            else
+            {
+                Capitulo++;
+            }
+
         }
 
         /// <summary>
@@ -368,8 +492,7 @@ namespace EyeSeries
                     return false;
         }
 
-
-        public void ActualizarBD()
+        public void ActualizarBD(IntSerie interf)
         {
             //Se carga el documento de donde se saca la informacion
             doc = new XmlDocument();
@@ -379,9 +502,10 @@ namespace EyeSeries
             DateTime fecha;
             int tempo, epi, estado;
             string nombreEp;
+            bool agregado = Temporada == 0 && Capitulo == 0? true : false;
             foreach (XmlNode e in episodios)
             {
-                if (e.SelectSingleNode("SeasonNumber").InnerText != "" && e.SelectSingleNode("SeasonNumber").InnerText != "0")
+                if (e.SelectSingleNode("SeasonNumber").InnerText != "" && e.SelectSingleNode("SeasonNumber").InnerText != "0" && e.SelectSingleNode("FirstAired").InnerText != "")
                 {
                     string fecha2 = e.SelectSingleNode("FirstAired").InnerText;
                     int hora = Convert.ToInt32(Hora.Split(':')[0]);
@@ -402,7 +526,12 @@ namespace EyeSeries
                         }
                         else
                         {
-                            if (tempo > Episodios.Count) Episodios.Add(new List<Episodio>());
+                            bool nuevatemp = false;
+                            if (tempo > Episodios.Count)
+                            {
+                                Episodios.Add(new List<Episodio>());
+                                nuevatemp = true;
+                            }
                             if (fecha < DateTime.Now) estado = 1;
                             else estado = 0;
                             Episodio aux = new Episodio(this, tempo, epi, nombreEp, "-1", fecha, estado, "720p");
@@ -410,8 +539,23 @@ namespace EyeSeries
                             {
                                 aux.getMagnet();
                                 Descargando++;
+                                AlDia = false;
                             }
                             Episodios[tempo - 1].Add(aux);
+                            if (agregado)
+                            {
+                                Temporada = aux.Temporada;
+                                Capitulo = aux.Capitulo;
+                                agregado = false;
+                            }
+                            Application.Current.Dispatcher.Invoke(
+                            DispatcherPriority.Normal,
+                            (ThreadStart)delegate
+                            {
+                                interf.AgregarEp(aux, nuevatemp);
+                            });
+                            
+
                         }
                     }
                 }
@@ -419,11 +563,31 @@ namespace EyeSeries
 
             }
 
-            MessageBox.Show("ListoBDE");
+            
+
+
+            CrearArchivo();
 
 
         }
 
+        private void EpAlAire(object sender, EventArgs e, Episodio ep)
+        {
+            System.Timers.Timer d = (System.Timers.Timer)sender;
+            Application.Current.Dispatcher.Invoke(
+               DispatcherPriority.Normal,
+               (ThreadStart)delegate
+               {
+                   
+                    ep.getMagnet();
+                    ep.Estado = 1;
+                    Descargando++;
+                    CrearArchivo();
+               });
+            
+            d.Stop();
+
+        }
 
         protected void OnPropertyChanged(string name)
         {

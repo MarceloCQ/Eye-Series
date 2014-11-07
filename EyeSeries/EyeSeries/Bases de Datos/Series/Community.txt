@@ -93,10 +93,10 @@
 5*5*Geothermal Escapism*-1*2014/1/24/8/0*3
 5*6*Analysis of Cork-Based Networking*-1*2014/1/31/8/0*3
 5*7*Bondage and Beta Male Sexuality *-1*2014/2/28/8/0*3
-5*8*App Development and Condiments*8F4CD3A3157ECBA846115AC3A878584FA1218A35*2014/3/7/8/0*1
-5*9*VCR Maintenance and Educational Publishing*A138A23D6C0138160EBBA9C81AEA19EC405DCF4D*2014/3/14/8/0*1
-5*10*Advanced Advanced Dungeons & Dragons*5976EA4E030171A0A4A2257E499099181543AD59*2014/3/21/8/0*1
-5*11*G.I. Jeff*1798C4BD917001E97604BA8494F174942F199517*2014/4/4/8/0*1
-5*12*Basic Story*701FD52B92291863451872AD5681B9B449E2E616*2014/4/11/8/0*1
-5*13*Basic Sandwich*903A33076CB7D80434717B6D287427A0839A79BB*2014/4/18/8/0*1
+5*8*App Development and Condiments*-1*2014/3/7/8/0*3
+5*9*VCR Maintenance and Educational Publishing*-1*2014/3/14/8/0*3
+5*10*Advanced Advanced Dungeons & Dragons*-1*2014/3/21/8/0*3
+5*11*G.I. Jeff*-1*2014/4/4/8/0*3
+5*12*Basic Story*-1*2014/4/11/8/0*3
+5*13*Basic Sandwich*-1*2014/4/18/8/0*3
 -

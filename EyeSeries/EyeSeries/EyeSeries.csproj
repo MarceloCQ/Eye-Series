@@ -62,6 +62,7 @@
     <Compile Include="IntSerie.xaml.cs">
       <DependentUpon>IntSerie.xaml</DependentUpon>
     </Compile>
+    <Compile Include="OpaqueClickableImage.cs" />
     <Compile Include="Serie.cs" />
     <Page Include="Agregar.xaml">
       <SubType>Designer</SubType>
@@ -115,9 +116,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Bases de Datos\Series\" />
+    <Folder Include="Interfaz\FanArt\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Interfaz\FanArt\24.jpg" />
+    <Resource Include="Pest.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

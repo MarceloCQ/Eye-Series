@@ -117,9 +117,18 @@
 5*17*Other People's Children*-1*2014/3/13/9/0*3
 5*18*Las Vegas*-1*2014/3/27/9/0*3
 5*19*A Hard Jay's Night*-1*2014/4/3/9/0*3
-5*20*Australia*-1*2014/4/24/9/0*2
-5*21*Sleeper*-1*2014/5/1/9/0*2
-5*22*Message Received*-1*2014/5/8/9/0*2
-5*23*The Wedding (1)*-1*2014/5/15/9/0*2
-5*24*The Wedding (2)*-1*2014/5/22/9/0*2
+5*20*Australia*-1*2014/4/24/9/0*3
+5*21*Sleeper*-1*2014/5/1/9/0*3
+5*22*Message Received*-1*2014/5/8/9/0*3
+5*23*The Wedding (1)*-1*2014/5/15/9/0*3
+5*24*The Wedding (2)*-1*2014/5/22/9/0*3
+-
+6*1*The Long Honeymoon*-1*2014/9/25/9/0*3
+6*2*Do Not Push*-1*2014/10/2/9/0*3
+6*3*The Cold*-1*2014/10/9/9/0*3
+6*4*Marco Polo*-1*2014/10/16/9/0*3
+6*5*Won’t You Be Our Neighbor*-1*2014/10/23/9/0*3
+6*6*Halloween 3:  AwesomeLand*-1*2014/10/30/9/0*3
+6*7*Queer Eyes, Full Hearts*-1*2014/11/13/9/0*0
+6*8*Three Turkeys*-1*2014/11/20/9/0*0
 -

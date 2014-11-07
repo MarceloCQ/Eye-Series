@@ -1,0 +1,118 @@
+1*1*Make My Pit a Park*-1*2009/4/10/8/30*3
+1*2*Canvassing*-1*2009/4/17/8/30*3
+1*3*The Reporter*-1*2009/4/24/8/30*3
+1*4*Boys Club*-1*2009/5/1/8/30*3
+1*5*The Banquet*-1*2009/5/8/8/30*3
+1*6*Rock Show*-1*2009/5/15/8/30*3
+-
+2*1*Pawnee Zoo*-1*2009/9/18/8/30*3
+2*2*The Stakeout*-1*2009/9/25/8/30*3
+2*3*Beauty Pageant*-1*2009/10/2/8/30*3
+2*4*The Practice Date*-1*2009/10/9/8/30*3
+2*5*Sister City*-1*2009/10/16/8/30*3
+2*6*Kaboom*-1*2009/10/23/8/30*3
+2*7*Greg Pikitis*-1*2009/10/30/8/30*3
+2*8*Ron and Tammy*-1*2009/11/6/8/30*3
+2*9*The Camel*-1*2009/11/13/8/30*3
+2*10*Hunting Trip*-1*2009/11/20/8/30*3
+2*11*Tom's Divorce*-1*2009/12/4/8/30*3
+2*12*Christmas Scandal*-1*2009/12/11/8/30*3
+2*13*The Set Up*-1*2010/1/15/8/30*3
+2*14*Leslie's House*-1*2010/1/22/8/30*3
+2*15*Sweetums*-1*2010/2/5/8/30*3
+2*16*Galentine's Day*-1*2010/2/12/8/30*3
+2*17*Woman of the Year*-1*2010/3/5/8/30*3
+2*18*The Possum*-1*2010/3/12/8/30*3
+2*19*Park Safety*-1*2010/3/19/8/30*3
+2*20*Summer Catalog*-1*2010/3/26/8/30*3
+2*21*94 Meetings*-1*2010/4/30/8/30*3
+2*22*Telethon*-1*2010/5/7/8/30*3
+2*23*The Master Plan*-1*2010/5/14/8/30*3
+2*24*Freddy Spaghetti*-1*2010/5/21/8/30*3
+-
+3*1*Go Big or Go Home*-1*2011/1/21/8/30*3
+3*2*Flu Season*-1*2011/1/28/8/30*3
+3*3*Time Capsule*-1*2011/2/4/8/30*3
+3*4*Ron and Tammy II*-1*2011/2/11/8/30*3
+3*5*Media Blitz*-1*2011/2/18/8/30*3
+3*6*Indianapolis*-1*2011/2/25/8/30*3
+3*7*Harvest Festival*-1*2011/3/18/8/30*3
+3*8*Camping*-1*2011/3/25/8/30*3
+3*9*Andy and April's Fancy Party*-1*2011/4/15/8/30*3
+3*10*Soulmates*-1*2011/4/22/8/30*3
+3*11*Jerry's Painting*-1*2011/4/29/8/30*3
+3*12*Eagleton*-1*2011/5/6/8/30*3
+3*13*The Fight*-1*2011/5/13/8/30*3
+3*14*Road Trip*-1*2011/5/13/8/30*3
+3*15*The Bubble*-1*2011/5/20/8/30*3
+3*16*Li'l Sebastian*-1*2011/5/20/8/30*3
+-
+4*1*I'm Leslie Knope*-1*2011/9/23/8/30*3
+4*2*Ron and Tammys*-1*2011/9/30/8/30*3
+4*3*Born and Raised*-1*2011/10/7/8/30*3
+4*4*Pawnee Rangers*-1*2011/10/14/8/30*3
+4*5*Meet 'N' Greet*-1*2011/10/28/8/30*3
+4*6*End of the World*-1*2011/11/4/8/30*3
+4*7*The Treaty*-1*2011/11/11/8/30*3
+4*8*Smallest Park*-1*2011/11/18/8/30*3
+4*9*The Trial of Leslie Knope*-1*2011/12/2/8/30*3
+4*10*Citizen Knope*-1*2011/12/9/8/30*3
+4*11*The Comeback Kid*-1*2012/1/13/8/30*3
+4*12*Campaign Ad*-1*2012/1/20/8/30*3
+4*13*Bowling for Votes*-1*2012/1/27/8/30*3
+4*14*Operation Ann*-1*2012/2/3/8/30*3
+4*15*Dave Returns*-1*2012/2/17/8/30*3
+4*16*Sweet Sixteen*-1*2012/2/24/8/30*3
+4*17*Campaign Shake-Up*-1*2012/3/2/8/30*3
+4*18*Lucky*-1*2012/3/9/8/30*3
+4*19*Live Ammo*-1*2012/4/20/8/30*3
+4*20*The Debate*-1*2012/4/27/8/30*3
+4*21*Bus Tour*-1*2012/5/4/8/30*3
+4*22*Win, Lose, or Draw*-1*2012/5/11/8/30*3
+-
+5*1*Ms. Knope Goes to Washington*-1*2012/9/21/8/30*3
+5*2*Soda Tax*-1*2012/9/28/8/30*3
+5*3*How a Bill Becomes a Law*-1*2012/10/5/8/30*3
+5*4*Sex Education*-1*2012/10/19/8/30*3
+5*5*Halloween Surprise*-1*2012/10/26/8/30*3
+5*6*Ben's Parents*-1*2012/11/9/8/30*3
+5*7*Leslie vs. April*-1*2012/11/16/8/30*3
+5*8*Pawnee Commons*-1*2012/11/30/8/30*3
+5*9*Ron and Diane*-1*2012/12/7/8/30*3
+5*10*Two Parties*-1*2013/1/18/8/30*3
+5*11*Women in Garbage*-1*2013/1/25/8/30*3
+5*12*Ann's Decision*-1*2013/2/8/8/30*3
+5*13*Emergency Response*-1*2013/2/15/8/30*3
+5*14*Leslie and Ben*-1*2013/2/22/8/30*3
+5*15*Correspondents' Lunch*-1*2013/2/22/8/30*3
+5*16*Bailout*-1*2013/3/15/8/30*3
+5*17*Partridge*-1*2013/4/5/8/30*3
+5*18*Animal Control*-1*2013/4/12/8/30*3
+5*19*Article Two*-1*2013/4/19/8/30*3
+5*20*Jerry's Retirement*-1*2013/4/19/8/30*3
+5*21*Swing Vote*-1*2013/4/26/8/30*3
+5*22*Are You Better Off?*-1*2013/5/3/8/30*3
+-
+6*1*London (1)*-1*2013/9/27/8/30*3
+6*2*London (2)*-1*2013/9/27/8/30*3
+6*3*The Pawnee-Eagleton Tip Off Classic*-1*2013/10/4/8/30*3
+6*4*Doppelgangers*-1*2013/10/11/8/30*3
+6*5*Gin It Up!*-1*2013/10/18/8/30*3
+6*6*Filibuster*CE1E61F5D03CA32CDDF8B24B09F87E7D089CB321*2013/11/15/8/30*3
+6*7*Recall Vote*-1*2013/11/15/8/30*3
+6*8*Fluoride*22FBF8AD72442DEAA1E6B439FC92E806A3A904B5*2013/11/22/8/30*3
+6*9*The Cones of Dunshire*6173756B29ABA12C32B98917442D089E6A6B5675*2013/11/22/8/30*3
+6*10*Second Chunce*3F31F191D14A838B2783040AC09C370F7087AF5C*2014/1/10/8/30*3
+6*11*New Beginnings*31BB8F400A346B29CB0CD623168735E2909D3308*2014/1/17/8/30*3
+6*12*Farmers Market*2C9003F5B4CEBD3102594F218BBED948AB43F39E*2014/1/24/8/30*3
+6*13*Ann and Chris*9800A4852D54269E76D8FDE4F7E9444871F21BBA*2014/1/31/8/30*3
+6*14*Anniversaries*69EB62FE4E39C89812F947DD647275EE74C0C1FB*2014/2/28/8/30*3
+6*15*The Wall*-1*2014/3/7/8/30*3
+6*16*New Slogan*-1*2014/3/14/8/30*3
+6*17*Galentine's Day*-1*2014/3/21/8/30*3
+6*18*Prom*-1*2014/4/4/8/30*3
+6*19*Flu Season 2*-1*2014/4/11/8/30*3
+6*20*One in 8,000*-1*2014/4/18/8/30*3
+6*21*Moving Up (1)*-1*2014/4/25/8/30*3
+6*22*Moving Up (2)*-1*2014/4/25/8/30*3
+-
