@@ -238,6 +238,28 @@ namespace EyeSeries
             empieza.Tick += new EventHandler(Emp);
             control.Start();
 
+          /*  string path = @"C:\Users\Marcelo\Videos\Series\";
+            string print = "";
+            foreach (Serie s in Series)
+            {
+                for (int p = s.Temporada - 1; p < s.Episodios.Count; p++)
+                {
+                    int j = (p == s.Temporada - 1 ? s.Capitulo - 1 : 0);
+                    while (j < s.Episodios[i].Count)
+                    {
+                        Episodio aux = s.Episodios[p][j];
+                        if (aux.Estado == 2)
+                        {
+                            bool b = System.IO.File.Exists(@"C:\Users\Marcelo\Videos\Series\" + s.Nombre + @"\Temporada " + aux.Temporada + @"\Episodio " + aux.Capitulo + ".mkv");
+                            if (!b)
+                            {
+                                print += s.Nombre + s.Temporada + " " + s.Capitulo + "\r\n";
+                            }
+                        }
+                    }
+                }
+            }
+            MessageBox.Show(print);*/
             
          
         }
@@ -760,6 +782,39 @@ namespace EyeSeries
                     b.RunWorkerAsync();
             });
             
+        }
+
+        private void EyeSeries_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.F1)
+            {
+            string path = @"C:\Users\Marcelo\Videos\Series\";
+           string print = "";
+           foreach (Serie s in Series)
+           {
+               if (!s.AlDia)
+               {
+                   for (int p = s.Temporada - 1; p < s.Episodios.Count; p++)
+                   {
+                       int j = (p == s.Temporada - 1 ? s.Capitulo - 1 : 0);
+                       while (j < s.Episodios[p].Count)
+                       {
+                           Episodio aux = s.Episodios[p][j];
+                           if (aux.Estado == 2)
+                           {
+                               bool b = System.IO.File.Exists(path + s.Nombre + @"\Temporada " + aux.Temporada + @"\Episodio " + aux.Capitulo + ".mkv");
+                               if (!b)
+                               {
+                                   print += s.Nombre + s.Temporada + " " + s.Capitulo + "\r\n";
+                               }
+                           }
+                           j++;
+                       }
+                   }
+               }
+           }
+           MessageBox.Show(print);
+            }
         }
 
     }

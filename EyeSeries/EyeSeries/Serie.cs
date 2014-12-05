@@ -27,6 +27,8 @@ namespace EyeSeries
         public char estado; //Estado de la serie
         public List<List<Episodio>> Episodios { get; set; } //Matriz de episodios de la serie
         public int Subid { get; set; }
+        public string NombreCap { get; set; }
+        public int EstadoCap { get; set; }
         private int temporada;  //Temporada de siguiente episodio a ver / descargar
         private int capitulo;   //Capitulo de siguiente episodio a ver / descargar
         private int porVer { get; set; } //Cantidad de episodios por ver

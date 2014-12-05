@@ -75,6 +75,9 @@
 4*4*Brotherhood*-1*2014/10/15/10/0*2
 4*5*Prophets*-1*2014/10/22/10/0*2
 4*6*Pretenders*-1*2014/10/29/10/0*2
-4*7*Honor Among Thieves*-1*2014/11/12/10/0*0
-4*8*Point of Origin*-1*2014/11/19/10/0*0
+4*7*Honor Among Thieves*-1*2014/11/12/10/0*2
+4*8*Point of Origin*-1*2014/11/19/10/0*2
+4*9*The Devil You Know*-1*2014/11/26/10/0*2
+4*10*The Cold War*-1*2014/12/17/10/0*0
+4*11*If-Then-Else*-1*2015/1/7/10/0*0
 -

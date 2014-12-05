@@ -244,6 +244,7 @@
 13*1*The Simpsons Guy*-1*2014/9/29/9/0*3
 13*2*The Book of Joe*-1*2014/10/6/9/0*3
 13*3*Baking Bad*-1*2014/10/20/9/0*3
-13*4*Brian the Closer*-1*2014/11/10/9/0*0
-13*5*Turkey Guys*-1*2014/11/17/9/0*0
+13*4*Brian the Closer*-1*2014/11/10/9/0*3
+13*5*Turkey Guys*-1*2014/11/17/9/0*2
+13*6*The 2000-Year-Old Virgin*-1*2014/12/8/9/0*0
 -

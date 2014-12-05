@@ -43,7 +43,10 @@
 4*4*Iron in the Fire*-1*2014/10/20/9/0*2
 4*5*About a Boy*-1*2014/10/27/9/0*2
 4*6*From A to B and Back Again*-1*2014/11/3/9/0*2
-4*7*Redux*-1*2014/11/10/9/0*0
-4*8*Halfway to a Donut*-1*2014/11/17/9/0*0
-4*9*There's Something Else Going On*-1*2014/11/24/9/0*0
+4*7*Redux*-1*2014/11/10/9/0*2
+4*8*Halfway to a Donut*-1*2014/11/17/9/0*2
+4*9*There's Something Else Going On*-1*2014/11/24/9/0*2
+4*10*13 Hours in Islamabad*-1*2014/12/8/9/0*0
+4*11*Krieg Nicht Lieb*-1*2014/12/15/9/0*0
+4*12*Long Time Coming*-1*2014/12/22/9/0*0
 -
