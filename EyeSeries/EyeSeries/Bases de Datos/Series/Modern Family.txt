@@ -131,7 +131,7 @@
 6*6*Halloween 3:  AwesomeLand*-1*2014/10/30/9/0*3
 6*7*Queer Eyes, Full Hearts*-1*2014/11/13/9/0*3
 6*8*Three Turkeys*-1*2014/11/20/9/0*3
-6*9*Strangers in the Night*-1*2014/12/4/9/0*0
+6*9*Strangers in the Night*-1*2014/12/4/9/0*2
 6*10*Haley's 21st Birthday*-1*2014/12/11/9/0*0
 6*11*Closet? You'll Love It!*-1*2015/1/8/9/0*0
 -

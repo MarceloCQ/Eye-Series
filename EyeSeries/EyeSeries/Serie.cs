@@ -26,6 +26,7 @@ namespace EyeSeries
         public int Numserie;             //Numero de la serie
         public char estado; //Estado de la serie
         public List<List<Episodio>> Episodios { get; set; } //Matriz de episodios de la serie
+        public List<Episodio> EpisodiosNoVistos { get; set; }
         public int Subid { get; set; }
         public string NombreCap { get; set; }
         public int EstadoCap { get; set; }
@@ -180,6 +181,7 @@ namespace EyeSeries
             Hora = h;
             Subid = s;
             Episodios = new List<List<Episodio>>();
+            EpisodiosNoVistos = new List<Episodio>();
             AlDia = false;
             uClient = new UTorrentClient(new Uri("http://127.0.0.1:8080/gui/"), "admin", "admin", 1000000);
         }
@@ -405,6 +407,24 @@ namespace EyeSeries
 
         }
 
+        public void AlimentarEpisodiosNoVistos()
+        {
+            string PathArchivoLeer = @"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Bases de Datos\Series\EpisodiosNoVistos\" + Nombre + ".txt";
+            StreamReader leer = new StreamReader(PathArchivoLeer);
+            string linea;
+            while (!leer.EndOfStream)
+            {
+                linea = leer.ReadLine();
+                DateTime fecha = new DateTime(Convert.ToInt32(linea.Split('*')[4].Split('/')[0]), Convert.ToInt32(linea.Split('*')[4].Split('/')[1]), Convert.ToInt32(linea.Split('*')[4].Split('/')[2]), Convert.ToInt32(linea.Split('*')[4].Split('/')[3]), Convert.ToInt32(linea.Split('*')[4].Split('/')[4]), 0);
+                Episodio ep = new Episodio(this, Convert.ToInt32(linea.Split('*')[0]), Convert.ToInt32(linea.Split('*')[1]), linea.Split('*')[2], linea.Split('*')[3], fecha, Convert.ToInt32(linea.Split('*')[5]), "720p");
+                EpisodiosNoVistos.Add(ep);
+               
+            }
+
+            leer.Close();
+
+        }
+
         /// <summary>
         /// Metodo que sirve para crear la base de datos de cada serie
         /// </summary>
@@ -417,7 +437,7 @@ namespace EyeSeries
             {
                 foreach (Episodio ep in lista)
                 {
-                    se += ep.Temporada + "*" + ep.Capitulo + "*" + ep.NombreEp + "*" + ep.Hash + "*" + ep.Fecha.Year + "/" + ep.Fecha.Month + "/" + ep.Fecha.Day + "/" + ep.Fecha.Hour + "/" + ep.Fecha.Minute + "*" + ep.Estado + "\r\n";
+                    se += ep.Imprimir() + "\r\n";
                 }
                 se += "-\r\n";
                 escribe.Write(se);

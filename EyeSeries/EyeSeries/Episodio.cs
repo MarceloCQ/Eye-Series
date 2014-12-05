@@ -301,6 +301,11 @@ namespace EyeSeries
 
         }
 
+        public string Imprimir()
+        {
+            return Temporada + "*" + Capitulo + "*" + NombreEp + "*" + Hash + "*" + Fecha.Year + "/" + Fecha.Month + "/" + Fecha.Day + "/" + Fecha.Hour + "/" + Fecha.Minute + "*" + Estado;
+        }
+
 
         public static byte[] Combine(byte[] first, byte[] second)
         {

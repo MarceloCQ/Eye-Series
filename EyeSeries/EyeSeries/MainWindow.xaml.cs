@@ -46,6 +46,7 @@ namespace EyeSeries
         private DateTime UltimaActualizacion;
         private bool Actualizar;
 
+        private Controlador controlador;
 
         private bool TerminoActualizacion
         {
@@ -82,6 +83,7 @@ namespace EyeSeries
             SeriesEnEspera = false;
             SeriesaBorrar = new List<Serie>();
             InterfacesaBorrar = new List<IntSerie>();
+            controlador = new Controlador(this);
            
 
         }
@@ -786,36 +788,83 @@ namespace EyeSeries
 
         private void EyeSeries_KeyDown(object sender, KeyEventArgs e)
         {
+
             if (e.Key == Key.F1)
             {
-            string path = @"C:\Users\Marcelo\Videos\Series\";
-           string print = "";
-           foreach (Serie s in Series)
-           {
-               if (!s.AlDia)
+                
+                
+               string path = @"C:\Users\Marcelo\Videos\Series\";
+               string print = "";
+               foreach (Serie s in Series)
                {
-                   for (int p = s.Temporada - 1; p < s.Episodios.Count; p++)
+                   if (!s.AlDia)
                    {
-                       int j = (p == s.Temporada - 1 ? s.Capitulo - 1 : 0);
-                       while (j < s.Episodios[p].Count)
+                       for (int p = s.Temporada - 1; p < s.Episodios.Count; p++)
                        {
-                           Episodio aux = s.Episodios[p][j];
-                           if (aux.Estado == 2)
+                           int j = (p == s.Temporada - 1 ? s.Capitulo - 1 : 0);
+                           while (j < s.Episodios[p].Count)
                            {
-                               bool b = System.IO.File.Exists(path + s.Nombre + @"\Temporada " + aux.Temporada + @"\Episodio " + aux.Capitulo + ".mkv");
-                               if (!b)
+                               Episodio aux = s.Episodios[p][j];
+                               if (aux.Estado == 2)
                                {
-                                   print += s.Nombre + s.Temporada + " " + s.Capitulo + "\r\n";
+                                   bool b = System.IO.File.Exists(path + s.Nombre + @"\Temporada " + aux.Temporada + @"\Episodio " + aux.Capitulo + ".mkv");
+                                   if (!b)
+                                   {
+                                       print += s.Nombre + s.Temporada + " " + s.Capitulo + "\r\n";
+                                   }
                                }
+                               j++;
                            }
-                           j++;
                        }
                    }
                }
-           }
-           MessageBox.Show(print);
+               MessageBox.Show(print);
+                
             }
-        }
+            else
+            {
+                if (e.Key == Key.F2)
+                {
+                    DateTime inicial = DateTime.Now;
+                    controlador.AlimentarBasedeDatos();
+                    controlador.AlimentarBasedeDatosCapitulosNoVistos();
+                    DateTime final = DateTime.Now;
+                    TimeSpan diferencia = final - inicial;
+                    MessageBox.Show(diferencia.TotalSeconds.ToString());
+                }
+                else
+                {
+                    if (e.Key == Key.F3)
+                    {
+                        
+                        foreach (Serie s in Series)
+                        {
+                            string pathEscribir = @"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Bases de Datos\Series\EpisodiosNoVistos\" + s.Nombre + ".txt";
+                            StreamWriter esc = new StreamWriter(pathEscribir);
+                            if (!s.AlDia || s.Temporada != 0)
+                            {
+                                for (int p = s.Temporada - 1; p < s.Episodios.Count; p++)
+                                {
+                                    int j = (p == s.Temporada - 1 ? s.Capitulo - 1 : 0);
+                                    while (j < s.Episodios[p].Count)
+                                    {
+                                        Episodio aux = s.Episodios[p][j];
+                                        esc.WriteLine(aux.Imprimir());
+                                        j++;
+                                    }
+                                }
+                            }
+
+                            esc.Close();
+                           
+                        }
+
+                        
+                        MessageBox.Show("Listo");
+                    }
+                }
+            }
+            }
 
     }
 }
