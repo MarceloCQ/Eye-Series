@@ -170,3 +170,8 @@
 8*4*The Hook-Up Reverberation*-1*2014/10/7/8/0*3
 8*5*The Focus Attenuation*-1*2014/10/14/8/0*3
 8*6*The Expedition Approximation*4EB9F2BCE7F389EAD06493B70B6CF37FEBCB6CBD*2014/10/21/8/0*3
+8*7*The Misinterpretation Agitation*-1*2014/10/31/8/0*3
+8*8*The Prom Equivalency*-1*2014/11/7/8/0*3
+8*9*The Septum Deviation*-1*2014/11/14/8/0*3
+8*10*The Champagne Reflection*-1*2014/11/21/8/0*3
+8*11*The Clean Room Infiltration*-1*2014/12/12/8/0*3

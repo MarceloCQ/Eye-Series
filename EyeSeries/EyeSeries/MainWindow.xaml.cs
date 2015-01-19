@@ -29,14 +29,17 @@ namespace EyeSeries
         public List<Serie> Series;
         List<IntSerie> IntSeries;
         List<Grid> Pags;
-        public Image Agregar;
-        public Rectangle tapa;
-        private Agregar Agr;
+
+        public Image IconoAgregar;
+        public Rectangle Tapa;
+        private Agregar InterfazAgregar;
+
         private int PagAct;
-        private Image sig;
-        private Image ant;
+
+        private Image IconoSiguiente;
+        private Image IconoAnterior;
+
         DispatcherTimer empieza;
-        UTorrentClient uClient;
         public DispatcherTimer control;
         private int Cargado;
         private bool terminoActualizacion;
@@ -71,17 +74,18 @@ namespace EyeSeries
         {
             
             InitializeComponent();
-            uClient = new UTorrentClient(new Uri("http://127.0.0.1:8080/gui/"), "admin", "admin", 1000000);
             control = new DispatcherTimer()
             {
                 Interval = new TimeSpan(0,0,1),
             };
-            control.Tick += Actualiza;
+       //     control.Tick += Actualiza;
             PagAct = 0;
             Cargado = 0;
             TerminoActualizacion = true;
             SeriesEnEspera = false;
             SeriesaBorrar = new List<Serie>();
+            Pags = new List<Grid>();
+            IntSeries = new List<IntSerie>();
             InterfacesaBorrar = new List<IntSerie>();
             controlador = new Controlador(this);
            
@@ -95,14 +99,17 @@ namespace EyeSeries
 
         private void EyeSeries_ContentRendered(object sender, EventArgs e)
         {
-            
+             
         }
 
         private void EyeSeries_Loaded(object sender, RoutedEventArgs e)
         {
-            Pags = new List<Grid>();
+
+            controlador.iniciarAplicacion();
+
+            /*
             Series = new List<Serie>();
-            IntSeries = new List<IntSerie>();
+            
             CrearPag(0);
             StreamReader leer = new StreamReader(@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Bases de Datos\General.txt");
             int temp = 0;
@@ -126,7 +133,7 @@ namespace EyeSeries
                 char estado = Convert.ToChar(leer.ReadLine());
                 string hora = leer.ReadLine();
 
-                Serie s = new Serie(id, nombre, i, estado, hora, subid);
+                Serie s = new Serie(id, nombre,temp, capi, i, estado, hora, subid);
                 Series.Add(s);
                 AgregarSerie(s, temp, capi, i);
                 leer.ReadLine();
@@ -187,7 +194,7 @@ namespace EyeSeries
             Grid.SetColumn(Agregar, col);
 
 
-            sig = new Image()
+            IconoSiguiente = new Image()
             {
                 Width = 81,
                 Height = 81,
@@ -197,12 +204,12 @@ namespace EyeSeries
                 VerticalAlignment = System.Windows.VerticalAlignment.Center,
                 Margin = new Thickness(0, 0, 10, 0),
                 Visibility = System.Windows.Visibility.Hidden,
-                Tag = "sig",
+                Tag = "IconoSiguiente",
                 Opacity = 0,
 
             };
 
-            ant = new Image()
+            IconoAnterior = new Image()
             {
                 Width = 81,
                 Height = 81,
@@ -212,27 +219,27 @@ namespace EyeSeries
                 VerticalAlignment = System.Windows.VerticalAlignment.Center,
                 Margin = new Thickness(10, 0, 0, 0),
                 Visibility = System.Windows.Visibility.Hidden,
-                Tag = "ant",
+                Tag = "IconoAnterior",
                 Opacity = 0,
 
             };
-            sig.MouseUp += Sig_MouseUp;
-            ant.MouseUp += Ant_MouseUp;
-            sig.MouseEnter += SigAnt_MouseOver;
-            ant.MouseEnter += SigAnt_MouseOver;
-            sig.MouseLeave += SigAnt_MouseLeave;
-            ant.MouseLeave += SigAnt_MouseLeave;
+            IconoSiguiente.MouseUp += Sig_MouseUp;
+            IconoAnterior.MouseUp += Ant_MouseUp;
+            IconoSiguiente.MouseEnter += SigAnt_MouseOver;
+            IconoAnterior.MouseEnter += SigAnt_MouseOver;
+            IconoSiguiente.MouseLeave += SigAnt_MouseLeave;
+            IconoAnterior.MouseLeave += SigAnt_MouseLeave;
 
 
 
-            Pags[0].Children.Add(sig);
-            Pags[0].Children.Add(ant);
-            Grid.SetRow(sig, 1);
-            Grid.SetColumn(sig, 2);
-            Grid.SetRow(ant, 1);
-            Grid.SetColumn(ant, 0);
+            Pags[0].Children.Add(IconoSiguiente);
+            Pags[0].Children.Add(IconoAnterior);
+            Grid.SetRow(IconoSiguiente, 1);
+            Grid.SetColumn(IconoSiguiente, 2);
+            Grid.SetRow(IconoAnterior, 1);
+            Grid.SetColumn(IconoAnterior, 0);
 
-            if (Pags.Count > 1) sig.Visibility = System.Windows.Visibility.Visible;
+            if (Pags.Count > 1) IconoSiguiente.Visibility = System.Windows.Visibility.Visible;
             empieza = new DispatcherTimer()
             {
                 Interval = new TimeSpan(0,0,3),
@@ -244,12 +251,12 @@ namespace EyeSeries
             string print = "";
             foreach (Serie s in Series)
             {
-                for (int p = s.Temporada - 1; p < s.Episodios.Count; p++)
+                for (int p = s.Temporada - 1; p < s.EpisodiosVistos.Count; p++)
                 {
                     int j = (p == s.Temporada - 1 ? s.Capitulo - 1 : 0);
-                    while (j < s.Episodios[i].Count)
+                    while (j < s.EpisodiosVistos[i].Count)
                     {
-                        Episodio aux = s.Episodios[p][j];
+                        Episodio aux = s.EpisodiosVistos[p][j];
                         if (aux.Estado == 2)
                         {
                             bool b = System.IO.File.Exists(@"C:\Users\Marcelo\Videos\Series\" + s.Nombre + @"\Temporada " + aux.Temporada + @"\Episodio " + aux.Capitulo + ".mkv");
@@ -266,17 +273,17 @@ namespace EyeSeries
          
         }
 
-        private void Agregar_MouseUp(object sender, MouseButtonEventArgs e)
+        private void IconoAgregar_MouseUp(object sender, MouseButtonEventArgs e)
         {
             DoubleAnimation desap = new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250));
             desap.Completed += (sender2, e2) =>
                 {
-                    Agregar.Visibility = System.Windows.Visibility.Hidden;
-                    Agr.AnimaInicio();
+                    IconoAgregar.Visibility = System.Windows.Visibility.Hidden;
+                    InterfazAgregar.animaEtapa1();
                 };
-            tapa.Visibility = Visibility.Visible;
-            tapa.BeginAnimation(OpacityProperty, new DoubleAnimation(.7, new TimeSpan(0, 0, 0, 0, 250)));
-            Agregar.BeginAnimation(OpacityProperty, desap);
+            Tapa.Visibility = Visibility.Visible;
+            Tapa.BeginAnimation(OpacityProperty, new DoubleAnimation(.7, new TimeSpan(0, 0, 0, 0, 250)));
+            IconoAgregar.BeginAnimation(OpacityProperty, desap);
             
 
         }
@@ -285,13 +292,13 @@ namespace EyeSeries
         {
             PagAct++;
             gPrinc.BeginAnimation(MarginProperty, new ThicknessAnimation(new Thickness(gPrinc.Margin.Left - 1058, 0, gPrinc.Margin.Right + 1058, 0), new TimeSpan(0, 0, 0, 0, 500)));
-            Pags[PagAct - 1].Children.Remove(sig);
-            Pags[PagAct].Children.Add(sig);
-            Pags[PagAct - 1].Children.Remove(ant);
-            Pags[PagAct].Children.Add(ant);
-            ant.Visibility = System.Windows.Visibility.Visible;
+            Pags[PagAct - 1].Children.Remove(IconoSiguiente);
+            Pags[PagAct].Children.Add(IconoSiguiente);
+            Pags[PagAct - 1].Children.Remove(IconoAnterior);
+            Pags[PagAct].Children.Add(IconoAnterior);
+            IconoAnterior.Visibility = System.Windows.Visibility.Visible;
             if (PagAct == Pags.Count - 1)
-                sig.Visibility = System.Windows.Visibility.Hidden;
+                IconoSiguiente.Visibility = System.Windows.Visibility.Hidden;
 
 
 
@@ -301,27 +308,27 @@ namespace EyeSeries
         {
             PagAct--;
             gPrinc.BeginAnimation(MarginProperty, new ThicknessAnimation(new Thickness(gPrinc.Margin.Left + 1058, 0, gPrinc.Margin.Right - 1058, 0), new TimeSpan(0, 0, 0, 0, 500)));
-            Pags[PagAct + 1].Children.Remove(ant);
-            Pags[PagAct].Children.Add(ant);
-            Pags[PagAct + 1].Children.Remove(sig);
-            Pags[PagAct].Children.Add(sig);
-            sig.Visibility = System.Windows.Visibility.Visible;
+            Pags[PagAct + 1].Children.Remove(IconoAnterior);
+            Pags[PagAct].Children.Add(IconoAnterior);
+            Pags[PagAct + 1].Children.Remove(IconoSiguiente);
+            Pags[PagAct].Children.Add(IconoSiguiente);
+            IconoSiguiente.Visibility = System.Windows.Visibility.Visible;
             if (PagAct == 0)
-                ant.Visibility = System.Windows.Visibility.Hidden;
+                IconoAnterior.Visibility = System.Windows.Visibility.Hidden;
         }
 
         private void SigAnt_MouseOver(object sender, MouseEventArgs e)
         {
             Image im = (Image)sender;
          
-            if (sig.IsMouseOver)
+            if (IconoSiguiente.IsMouseOver)
             {
-                if (IntSeries[5 * (PagAct + 1)].normal)
+                if (IntSeries[5 * (PagAct + 1)].episodiosMostrados)
                     im.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 250)));
             }
             else
             {
-                if (IntSeries[3 * (PagAct + 1)].normal)
+                if (IntSeries[3 * (PagAct + 1)].episodiosMostrados)
                     im.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 250)));
             }
 
@@ -390,12 +397,6 @@ namespace EyeSeries
             }
 
             
-
-
-
-
-
-
             Pags.Add(aux);
             gPrinc.Children.Add(aux);  
             if (num != 0)
@@ -413,7 +414,7 @@ namespace EyeSeries
             
         }
 
-        private void AgregarSerie(Serie s, int temp, int capi, int num)
+      /*  private void AgregarSerie(Serie s, int temp, int capi, int num)
         {
             int pag = num / 9;
             int fil = (num % 9) / 3;
@@ -424,7 +425,7 @@ namespace EyeSeries
             }
 
             IntSerie aux;
-            aux = new IntSerie(s, this, uClient);
+            aux = new IntSerie(s, this);
             if (col == 1) aux.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
             else if (col == 2) aux.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
 
@@ -457,7 +458,7 @@ namespace EyeSeries
                     (ThreadStart)delegate
                     {
                        
-                        aux.AgregarEps();
+                        aux.agregarDesgloseEpisodios();
             
                     });
                 };
@@ -482,6 +483,64 @@ namespace EyeSeries
                
 
 
+        }*/
+
+        public void AgregarSerie2(Serie s, int num)
+        {
+            
+            int pag = num / 9;     //Se calcula la pagina en la que va a estar la serie
+            int fil = (num % 9) / 3; //Se calcula la fila en la que se va a ubicar
+            int col = (num % 9) % 3;  //Se calcula la columna en la que se va a poner
+             
+            IntSerie aux = new IntSerie(s, this);  //Se crea la interfaz de la nueva serie
+
+            //Se alinea depndiendo de en donde se coloque en el vértice horizontal
+            if (col == 1) aux.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
+            else if (col == 2) aux.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
+
+            //Se alinea dependiendo de en donde se coloque en el vértice vertical
+            if (fil == 1) aux.VerticalAlignment = System.Windows.VerticalAlignment.Center;
+            else if (fil == 2) aux.VerticalAlignment = System.Windows.VerticalAlignment.Bottom;
+
+
+            Pags[pag].Children.Add(aux);  //Se añade a los hijos del GRID de la página correspondiente
+            IntSeries.Add(aux);           //Se añade a la lista de interfaces Seri.
+
+            //Se pone en la fila y columna correspondiente
+            Grid.SetRow(aux, fil);
+            Grid.SetColumn(aux, col);
+
+            //Se pone que no se pueda salir ni de la fila ni de la columna
+            Grid.SetRowSpan(aux, 1);
+            Grid.SetColumnSpan(aux, 1);
+
+            //Se anima para que aparezca
+            aux.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 500)));
+
+            /*
+            Cargado++;
+            if (Cargado == Series.Count)
+            {
+
+                empieza.Start();
+                if (Actualizar)
+                {
+                    TerminoActualizacion = false;
+                    ActualizarBD();
+                }
+
+            }
+            */
+
+
+
+
+        }
+
+
+        public void agregarNuevaSerie(Serie s, int temp, int cap)
+        {
+            controlador.agregarNuevaSerie(s, temp, cap);
         }
 
         public void AgregarNSerie(Serie s, int temp, int capi)
@@ -495,7 +554,7 @@ namespace EyeSeries
             Series.Add(s);
             s.addSerie(temp, capi);
             control.Stop();
-            IntSerie nueva = new IntSerie(s, this, uClient);
+            IntSerie nueva = new IntSerie(s, this);
             Grid.SetColumn(nueva, col);
             Grid.SetRow(nueva, fil);
 
@@ -524,7 +583,7 @@ namespace EyeSeries
                     DispatcherPriority.Normal,
                     (ThreadStart)delegate
                     {
-                        nueva.AgregarEps();
+                        nueva.agregarDesgloseEpisodios();
                     });
 
                 };
@@ -534,43 +593,43 @@ namespace EyeSeries
                     control.Start();
                 };
             b.RunWorkerAsync();
-            CrearArchivo();
+            crearArchivo();
             num++;
 
-            Pags[pag].Children.Remove(sig);
-            Pags[pag].Children.Add(sig);
-            Pags[pag].Children.Remove(ant);
-            Pags[pag].Children.Add(ant);
+            Pags[pag].Children.Remove(IconoSiguiente);
+            Pags[pag].Children.Add(IconoSiguiente);
+            Pags[pag].Children.Remove(IconoAnterior);
+            Pags[pag].Children.Add(IconoAnterior);
 
             pag = num / 9;
             fil = (num % 9) / 3;
             col = (num % 9) % 3;
-            Grid.SetColumn(Agregar, col);
-            Grid.SetRow(Agregar, fil);
+            Grid.SetColumn(IconoAgregar, col);
+            Grid.SetRow(IconoAgregar, fil);
 
             if (num % 9 == 0 && num != 0)
             {
                 CrearPag(pag);
-                Pags[pag - 1].Children.Remove(Agregar);
-                Pags[pag].Children.Add(Agregar);
-                Pags[pag - 1].Children.Remove(tapa);
-                Pags[pag].Children.Add(tapa);
-                Pags[pag - 1].Children.Remove(Agr);
-                Pags[pag].Children.Add(Agr);
-                sig.Visibility = System.Windows.Visibility.Visible;
+                Pags[pag - 1].Children.Remove(IconoAgregar);
+                Pags[pag].Children.Add(IconoAgregar);
+                Pags[pag - 1].Children.Remove(Tapa);
+                Pags[pag].Children.Add(Tapa);
+                Pags[pag - 1].Children.Remove(InterfazAgregar);
+                Pags[pag].Children.Add(InterfazAgregar);
+                IconoSiguiente.Visibility = System.Windows.Visibility.Visible;
             }
 
             
-            Pags[pag].Children.Remove(tapa);
-            Pags[pag].Children.Add(tapa);
-            Pags[pag].Children.Remove(Agr);
-            Pags[pag].Children.Add(Agr);
+            Pags[pag].Children.Remove(Tapa);
+            Pags[pag].Children.Add(Tapa);
+            Pags[pag].Children.Remove(InterfazAgregar);
+            Pags[pag].Children.Add(InterfazAgregar);
 
 
             
 
-            Agregar.Visibility = System.Windows.Visibility.Visible;
-            Agregar.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 250)));
+            IconoAgregar.Visibility = System.Windows.Visibility.Visible;
+            IconoAgregar.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 250)));
 
 
 
@@ -593,14 +652,14 @@ namespace EyeSeries
             //Revisa los episodios de la serie a eliminar a ver si hay alguno descargandose
             if (EliminaS.Temporada != 0 && EliminaS.Capitulo != 0)
             {
-                for (int m = EliminaS.Temporada - 1; m < EliminaS.Episodios.Count; m++)
+                for (int m = EliminaS.Temporada - 1; m < EliminaS.EpisodiosVistos.Count; m++)
                 {
-                    for (int j = (m == EliminaS.Temporada - 1 ? EliminaS.Capitulo - 1 : 0); j < EliminaS.Episodios[m].Count; j++)
+                    for (int j = (m == EliminaS.Temporada - 1 ? EliminaS.Capitulo - 1 : 0); j < EliminaS.EpisodiosVistos[m].Count; j++)
                     {
-                        Episodio aux = EliminaS.Episodios[m][j];
+                        Episodio aux = EliminaS.EpisodiosVistos[m][j];
                         if (aux.Estado == 1)
                         {
-                            uClient.Torrents.Remove(aux.Hash, TorrentRemovalOptions.TorrentFileAndData);
+                            //uClient.Torrents.Remove(aux.Hash, TorrentRemovalOptions.TorrentFileAndData);
                         }
                     }
                 }
@@ -669,26 +728,26 @@ namespace EyeSeries
                     int ncolagr = (i % 9) % 3;
 
                     //Se reposiciona la imagen
-                    Grid.SetRow(Agregar, nfilagr);
-                    Grid.SetColumn(Agregar, ncolagr);
+                    Grid.SetRow(IconoAgregar, nfilagr);
+                    Grid.SetColumn(IconoAgregar, ncolagr);
 
                     //Si agregar es la primera de una nueva pagina entonces se va a la pagina anterior, junto con la interfaz
                     //de agregar
                     if ((i + 1) % 9 == 0 && i != 0)
                     {
-                        Pags[npagagr + 1].Children.Remove(Agregar);
-                        Pags[npagagr].Children.Add(Agregar);
-                        Pags[npagagr + 1].Children.Remove(tapa);
-                        Pags[npagagr].Children.Add(tapa);
-                        Pags[npagagr + 1].Children.Remove(Agr);
-                        Pags[npagagr].Children.Add(Agr);
+                        Pags[npagagr + 1].Children.Remove(IconoAgregar);
+                        Pags[npagagr].Children.Add(IconoAgregar);
+                        Pags[npagagr + 1].Children.Remove(Tapa);
+                        Pags[npagagr].Children.Add(Tapa);
+                        Pags[npagagr + 1].Children.Remove(InterfazAgregar);
+                        Pags[npagagr].Children.Add(InterfazAgregar);
 
                         //Se elimina la pagina 
                         gPrinc.BeginAnimation(MarginProperty, new ThicknessAnimation(new Thickness(gPrinc.Margin.Left, 0, gPrinc.Margin.Right + 1058, 0), new TimeSpan(0, 0, 0, 0, 1)));
                         gPrinc.Children.Remove(Pags[Pags.Count - 1]);
                         Pags.RemoveAt(Pags.Count - 1);
 
-                        if (PagAct == Pags.Count - 1) sig.Visibility = System.Windows.Visibility.Hidden;
+                        if (PagAct == Pags.Count - 1) IconoSiguiente.Visibility = System.Windows.Visibility.Hidden;
                         
                         
                     }
@@ -701,7 +760,7 @@ namespace EyeSeries
                         //Se quita la serie de las interfaces
                         IntSeries.Remove(EliminaInt);
                         control.Start();
-                        CrearArchivo();
+                        crearArchivo();
                         System.IO.File.Delete(@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Bases de Datos\Series\" + EliminaS.Nombre + ".txt");
                        
                     }
@@ -730,7 +789,7 @@ namespace EyeSeries
             SeriesEnEspera = false;
         }
 
-        public void CrearArchivo()
+        public void crearArchivo()
         {
             StreamWriter escribe = new StreamWriter(@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Bases de Datos\General.txt");
             escribe.WriteLine(UltimaActualizacion.Day.ToString() + "/" + UltimaActualizacion.Month.ToString() + "/" + UltimaActualizacion.Year.ToString());
@@ -744,19 +803,19 @@ namespace EyeSeries
 
         private void Emp(object sender, EventArgs e)
         {
-            foreach (IntSerie s in IntSeries)
+          /*  foreach (IntSerie s in IntSeries)
             {
                 if (s.normal && !s.ZonaC.IsMouseOver)
                     s.ZonaC_MouseLeave(null, null);
             }
-            empieza.Stop();
+            empieza.Stop();*/
         }
 
         private void Actualiza(object sender, EventArgs e)
         {
             foreach (IntSerie s in IntSeries)
             {
-                if (s.se.Temporada != 0 && s.se.Capitulo != 0)
+                if (s.Se.Temporada != 0 && s.Se.Capitulo != 0)
                  s.Actualiza();
             }
         }
@@ -778,7 +837,7 @@ namespace EyeSeries
                             }
                             UltimaActualizacion = DateTime.Now;
                             TerminoActualizacion = true;
-                            CrearArchivo();
+                            crearArchivo();
                         };
 
                     b.RunWorkerAsync();
@@ -799,12 +858,12 @@ namespace EyeSeries
                {
                    if (!s.AlDia)
                    {
-                       for (int p = s.Temporada - 1; p < s.Episodios.Count; p++)
+                       for (int p = s.Temporada - 1; p < s.EpisodiosVistos.Count; p++)
                        {
                            int j = (p == s.Temporada - 1 ? s.Capitulo - 1 : 0);
-                           while (j < s.Episodios[p].Count)
+                           while (j < s.EpisodiosVistos[p].Count)
                            {
-                               Episodio aux = s.Episodios[p][j];
+                               Episodio aux = s.EpisodiosVistos[p][j];
                                if (aux.Estado == 2)
                                {
                                    bool b = System.IO.File.Exists(path + s.Nombre + @"\Temporada " + aux.Temporada + @"\Episodio " + aux.Capitulo + ".mkv");
@@ -825,30 +884,25 @@ namespace EyeSeries
             {
                 if (e.Key == Key.F2)
                 {
-                    DateTime inicial = DateTime.Now;
-                    controlador.AlimentarBasedeDatos();
-                    controlador.AlimentarBasedeDatosCapitulosNoVistos();
-                    DateTime final = DateTime.Now;
-                    TimeSpan diferencia = final - inicial;
-                    MessageBox.Show(diferencia.TotalSeconds.ToString());
+                    controlador.Series[0].EpisodiosNoVistos[0].Fecha = controlador.Series[0].EpisodiosNoVistos[0].Fecha.AddDays(1);
                 }
                 else
                 {
                     if (e.Key == Key.F3)
                     {
-                        
+
                         foreach (Serie s in Series)
                         {
                             string pathEscribir = @"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Bases de Datos\Series\EpisodiosNoVistos\" + s.Nombre + ".txt";
                             StreamWriter esc = new StreamWriter(pathEscribir);
                             if (!s.AlDia || s.Temporada != 0)
                             {
-                                for (int p = s.Temporada - 1; p < s.Episodios.Count; p++)
+                                for (int p = s.Temporada - 1; p < s.EpisodiosVistos.Count; p++)
                                 {
                                     int j = (p == s.Temporada - 1 ? s.Capitulo - 1 : 0);
-                                    while (j < s.Episodios[p].Count)
+                                    while (j < s.EpisodiosVistos[p].Count)
                                     {
-                                        Episodio aux = s.Episodios[p][j];
+                                        Episodio aux = s.EpisodiosVistos[p][j];
                                         esc.WriteLine(aux.Imprimir());
                                         j++;
                                     }
@@ -856,15 +910,186 @@ namespace EyeSeries
                             }
 
                             esc.Close();
-                           
+
                         }
 
-                        
+
                         MessageBox.Show("Listo");
+                    }
+                    else
+                    {
+                        if (e.Key == Key.F4)
+                        {
+                            controlador.Series[0].siguienteEpisodio();
+                        }
                     }
                 }
             }
             }
+
+        public double getProgesoTorrent(string hash)
+        {
+            return controlador.getProgresoTorrent(hash);
+        }
+
+        public void agregarInterfazAñadir()
+        {
+            //Se saca la posicion del icono agregar
+            int posicion = IntSeries.Count;
+
+            //Se calcula en que pagina, fila y columna estará colocado
+            int pag = posicion / 9;
+            int fil = (posicion % 9) / 3;
+            int col = (posicion % 9) % 3;
+
+            //Se crea la imagen del ícono
+            IconoAgregar = new Image()
+            {
+                Height = 120,
+                Width = 120,
+                Source = new BitmapImage(new Uri
+                         (@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\Plus.png")),
+                Stretch = Stretch.None,
+                VerticalAlignment = System.Windows.VerticalAlignment.Center,
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+            };
+
+            //Se coloca en la fila y columna correspondiente
+            Grid.SetRow(IconoAgregar, fil);
+            Grid.SetColumn(IconoAgregar, col);
+
+
+            //Se le agrega su evento de click
+            IconoAgregar.MouseUp += IconoAgregar_MouseUp;
+
+            //Se crea el rectangulo tapa que es el que cubrira la interfaz cuando esté activo el agregar
+            Tapa = new Rectangle()
+            {
+                Width = 1066,
+                Height = 599,
+                VerticalAlignment = System.Windows.VerticalAlignment.Top,
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Left,
+                Fill = new SolidColorBrush(Colors.Black),
+                Opacity = 0,
+                Visibility = Visibility.Hidden,
+            };
+
+            //Se pone su columnspan y rowspan en 3 para que pueda cubrir todo
+            Grid.SetColumnSpan(Tapa, 3);
+            Grid.SetRowSpan(Tapa, 3);
+           
+
+
+            //Se crea la interfaz agregar
+            InterfazAgregar = new Agregar(this);
+            InterfazAgregar.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
+            InterfazAgregar.VerticalAlignment = System.Windows.VerticalAlignment.Top;
+            Grid.SetColumnSpan(InterfazAgregar, 3);
+            Grid.SetRowSpan(InterfazAgregar, 3);
+
+            //Si el icono agregar va en una nueva página, se crea
+            if (posicion % 9 == 0 && posicion != 0)
+                CrearPag(pag);
+
+            //Se añade a la interfaz la tapa, la interfaz y el ícono
+            Pags[pag].Children.Add(Tapa);
+            Pags[pag].Children.Add(InterfazAgregar);
+            Pags[pag].Children.Add(IconoAgregar);
+
+
+
+
+
+        }
+
+        public void agregarSigAnt()
+        {
+            //Se crea la imagen del icono siguiente
+            IconoSiguiente = new Image()
+            {
+                Width = 81,
+                Height = 81,
+                Source = new BitmapImage(new Uri
+                         (@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\sigp.png")),
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
+                VerticalAlignment = System.Windows.VerticalAlignment.Center,
+                Margin = new Thickness(0, 0, 10, 0),
+                Visibility = System.Windows.Visibility.Hidden,
+                Tag = "sig",
+                Opacity = 0,
+
+            };
+
+            //Se crea la imagen del icono anterior
+            IconoAnterior = new Image()
+            {
+                Width = 81,
+                Height = 81,
+                Source = new BitmapImage(new Uri
+                         (@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\antp.png")),
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Left,
+                VerticalAlignment = System.Windows.VerticalAlignment.Center,
+                Margin = new Thickness(10, 0, 0, 0),
+                Visibility = System.Windows.Visibility.Hidden,
+                Tag = "ant",
+                Opacity = 0,
+
+            };
+
+            //Se le añaden sus eventos al icono siguiente
+            IconoSiguiente.MouseUp += Sig_MouseUp;
+            IconoSiguiente.MouseEnter += SigAnt_MouseOver;
+            IconoSiguiente.MouseLeave += SigAnt_MouseLeave;
+
+            //Se le añaden sus eventos al icono anterior
+            IconoAnterior.MouseUp += Ant_MouseUp;            
+            IconoAnterior.MouseEnter += SigAnt_MouseOver;            
+            IconoAnterior.MouseLeave += SigAnt_MouseLeave;
+
+            //Se añaden a la interfaz
+            Pags[0].Children.Add(IconoSiguiente);
+            Pags[0].Children.Add(IconoAnterior);
+
+            //Se ponen en la columna y fila correspondientes
+            Grid.SetRow(IconoSiguiente, 1);
+            Grid.SetColumn(IconoSiguiente, 2);
+            Grid.SetRow(IconoAnterior, 1);
+            Grid.SetColumn(IconoAnterior, 0);
+
+            //Si hay mas de una página el siguiente se muestra
+            if (Pags.Count > 1) IconoSiguiente.Visibility = System.Windows.Visibility.Visible;
+
+        }
+
+        public void subirLona(IntSerie s, bool primeraVez)
+        {
+            s.subirLona(primeraVez);
+        }
+
+        public void agregarDesgloseEpisodios(IntSerie s)
+        {
+            s.agregarDesgloseEpisodios();
+        }
+
+        public void desplegarEpisodios(IntSerie s)
+        {
+            controlador.desplegarEpisodios(s);
+        }
+
+        public void cambiarEpPrincipal(Episodio ep)
+        {
+            controlador.cambiarEpPrincipal(ep);
+        }
+
+        public int getCantSeries()
+        {
+            return controlador.Series.Count;
+        }
+
+        public Controlador getControlador()
+        {
+            return controlador;
+        }
 
     }
 }

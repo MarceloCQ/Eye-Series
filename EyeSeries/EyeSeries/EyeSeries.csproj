@@ -63,6 +63,7 @@
     <Compile Include="IntSerie.xaml.cs">
       <DependentUpon>IntSerie.xaml</DependentUpon>
     </Compile>
+    <Compile Include="NumberToImageConverter.cs" />
     <Compile Include="OpaqueClickableImage.cs" />
     <Compile Include="Serie.cs" />
     <Page Include="Agregar.xaml">
@@ -121,6 +122,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Pest.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="24.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="tacha.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="aceptar.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -15,7 +15,7 @@ namespace EyeSeries
 {
     /*Clase episodio que representa un episodio de la serie
      */
-    public class Episodio
+    public class Episodio : INotifyPropertyChanged
     {
         //Atributos
         public Serie Serie { get; set; } //Serie a la que pertenece
@@ -69,6 +69,8 @@ namespace EyeSeries
                 }
             }
         }
+
+
         /// <summary>
         /// Constructor de episodio
         /// </summary>
@@ -152,7 +154,7 @@ namespace EyeSeries
                 throw new Exception("No se encontro el torrent");
             }
 
-        }
+        } 
 
         private void getSubtitulo(string nombrearch, bool movido, string patha)
         {
@@ -187,7 +189,7 @@ namespace EyeSeries
                 wc.Headers.Add("user-agent", "SubDB/1.0 (Pyrrot/0.1; http://github.com/jrhames/pyrrot-cli)");
                 wc.DownloadFile("http://api.thesubdb.com/?action=download&hash=" + codigo + "&language=en", @"C:\Users\Marcelo\Videos\Series\" + Serie.Nombre + @"\Temporada " + Temporada + @"\Episodio " + Capitulo + ".srt");
             }
-            catch (Exception e)
+            catch 
             {
                 getSubtitulo2(nombrearch);
             }
@@ -269,7 +271,7 @@ namespace EyeSeries
                     System.IO.File.Move(path, dest + @"\Episodio " + Capitulo + ".mkv");
                 }
             }
-            catch (Exception e)
+            catch
             {
                //Implementar una estructura de datos temporal con un path y el episodio para cuando 
               //el usuario le de salir se mueva
@@ -281,7 +283,7 @@ namespace EyeSeries
             {
                 Serie.PorVer++;
                 Serie.Descargando--;
-                Serie.CrearArchivo();
+                Serie.guardarEpisodiosVistos();
             }
 
        /*     if (!corr)

@@ -1,5 +1,5 @@
 7*1*Nothing But Blue Skies*-1*2014/12/1/10/0*2
-7*2*The Graybar Hotel*-1*2014/12/8/10/0*0
+7*2*The Graybar Hotel*6E293D72008016AE80B93A26D2D31B3E965FD0BB*2014/12/8/10/0*1
 7*3*Orange Blossom Ice Cream*-1*2014/12/15/10/0*0
 7*4*A Hint of Yellow*-1*2014/12/22/10/0*0
 7*5*Silver Briefcase*-1*2014/12/29/10/0*0

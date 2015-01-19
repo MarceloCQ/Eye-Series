@@ -9,40 +9,50 @@
     <UserControl.Background>
         <ImageBrush Stretch="Uniform"/>
     </UserControl.Background>
-    <Grid x:Name="GPrinc" MaxWidth="350" MaxHeight="197">
-        <Image x:Name="FanArt" HorizontalAlignment="Left" Height="197" VerticalAlignment="Top" Width="350" Stretch="UniformToFill"/>
-        <Rectangle x:Name="RectNombre" Fill="Black" HorizontalAlignment="Left" Height="27" Stroke="Black" VerticalAlignment="Top" Width="133" Opacity="0.5"/>
-        <TextBlock x:Name="Nombre" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Height="27" Width="133" FontFamily="Bebas Neue" FontSize="26" TextAlignment="Center" Foreground="White"/>
-        <Rectangle x:Name="InfoRect" HorizontalAlignment="Left" Height="44" Margin="0,153,0,0" VerticalAlignment="Top" Width="350" Stroke="Black" Fill="Black" Opacity="0.7"/>
-        <TextBlock x:Name="Episodio" HorizontalAlignment="Left" Margin="46,153,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Bebas Neue" FontSize="24" Foreground="White" Height="24"><Run Language="es-mx" Text="S00E00"/></TextBlock>
-        <TextBlock x:Name="NombreEp" HorizontalAlignment="Left" Margin="46,175,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="14" Foreground="White" Height="22" Width="131" Padding="0" TextTrimming="CharacterEllipsis"><Run Language="es-mx" Text="Nombre del episodio"/><LineBreak/><Run Language="es-mx"/></TextBlock>
-        <Image x:Name="Eye" HorizontalAlignment="Left" Height="16" Margin="176,168,0,0" VerticalAlignment="Top" Width="33" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\Eye.png"/>
-        <Image x:Name="Desc" HorizontalAlignment="Left" Height="25" Margin="254,163,0,0" VerticalAlignment="Top" Width="21" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\desc.png"/>
-        <TextBlock x:Name="Vert" HorizontalAlignment="Left" Margin="214,162,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="26" FontFamily="Bebas Neue" Foreground="White" Width="31" Height="31" TextAlignment="Center"><Run Language="es-mx" Text="000"/></TextBlock>
-        <TextBlock x:Name="Desct" HorizontalAlignment="Left" Margin="281,162,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="26" FontFamily="Bebas Neue" Foreground="White" Width="31" Height="31" TextAlignment="Center"><Run Language="es-mx" Text="000"/></TextBlock>
-        <Rectangle x:Name="ZonaC" HorizontalAlignment="Left" Height="197" VerticalAlignment="Top" Width="350" MouseEnter="ZonaC_MouseEnter" Fill="Black" Opacity="0" MouseLeave="ZonaC_MouseLeave"/>
-        <Image x:Name="Up" HorizontalAlignment="Left" Margin="323,166,0,0" VerticalAlignment="Top" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\Up.PNG" Stretch="None" MouseUp="Up_MouseUp" Opacity="0" Visibility="Hidden"/>
-        <Image x:Name="Play" HorizontalAlignment="Left" Margin="10,159,0,0" VerticalAlignment="Top" Stretch="None" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\play.png" MouseUp="Play2_MouseUp"/>
-        <utils:OpaqueClickableImage x:Name="Pest" HorizontalAlignment="Left" Margin="330,179,0,0" VerticalAlignment="Top" Stretch="None" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\Pest.png" MouseUp="Pest_MouseUp"/>
-        <Image x:Name="Eli" HorizontalAlignment="Left" Margin="341,188,0,0" VerticalAlignment="Top" Stretch="None" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\Tacha1.png" MouseUp="Pest_MouseUp"/>
-        <Rectangle x:Name="Tapa" Fill="Black" HorizontalAlignment="Left" Height="8" Margin="344,189,0,0" VerticalAlignment="Top" Width="6" Visibility="Hidden" Opacity="0"/>
-        <Label x:Name="Elit" Content="ELIMINAR" HorizontalAlignment="Left" Margin="50,151,0,-7" VerticalAlignment="Top" FontFamily="Bebas Neue" FontSize="36" Foreground="Red" Visibility="Hidden" Opacity="0" MouseUp="Elit_MouseUp"/>
-        <Label x:Name="Cant" Content="CANCELAR" HorizontalAlignment="Left" Margin="191,151,0,-7" VerticalAlignment="Top" FontFamily="Bebas Neue" FontSize="36" Foreground="White" Visibility="Hidden" Opacity="0" MouseUp="Cant_MouseUp"/>
-        <StackPanel x:Name="Temporada" HorizontalAlignment="Left" Height="20" Margin="0,27,0,0" VerticalAlignment="Top" Width="348" Orientation="Horizontal">
-            <Image x:Name="Ant" Stretch="None" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\ant.png" Margin="108,0,0,0" Visibility="Hidden" MouseUp="Ant_MouseUp"/>
-            <TextBlock x:Name="SeleccT" TextWrapping="Wrap" FontSize="15" Foreground="White" HorizontalAlignment="Center" Margin="15,0,0,0" Visibility="Hidden"><Run Language="es-mx" Text="Temporada 0"/><LineBreak/><Run/></TextBlock>
-            <Image x:Name="Sig" Stretch="None" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\sig.png" HorizontalAlignment="Center" Margin="15,0,0,0" Visibility="Hidden" MouseUp="Sig_MouseUp"/>
-        </StackPanel>
-        <Image x:Name="Trian" HorizontalAlignment="Left" Margin="291,0,0,0" VerticalAlignment="Top" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\Trian.png" Stretch="None" Opacity="0" Visibility="Hidden"/>
-        <TextBlock x:Name="Ald" HorizontalAlignment="Right" Margin="0,1,3,0" TextWrapping="Wrap" VerticalAlignment="Top" Foreground="White" RenderTransformOrigin="0.5,0.5" FontSize="14" TextAlignment="Center" FontFamily="Century Gothic" LineHeight="8" Text="AL&#xD;&#xA;DÍA" Visibility="Hidden" Opacity="0">
-            <TextBlock.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="45"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </TextBlock.RenderTransform></TextBlock>
+    <Grid x:Name="GPrinc" MaxWidth="350" MaxHeight="197" MouseLeave="GPrinc_MouseLeave" MouseEnter="GPrinc_MouseEnter">
+        <Grid x:Name="ParteSuperior" HorizontalAlignment="Left" Height="197" VerticalAlignment="Top" Width="350">
+            <Image x:Name="FanArt" HorizontalAlignment="Left" Height="197" VerticalAlignment="Top" Width="350" Stretch="UniformToFill"/>
+            <Rectangle x:Name="RectNombre" Fill="Black" HorizontalAlignment="Left" Height="27" Stroke="Black" VerticalAlignment="Top" Width="133" Opacity="0.5"/>
+            <TextBlock x:Name="Nombre" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Height="27" Width="133" FontFamily="Bebas Neue" FontSize="26" TextAlignment="Center" Foreground="White"/>
+            <Image x:Name="Trian" HorizontalAlignment="Left" Margin="291,0,0,0" VerticalAlignment="Top" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\Trian.png" Stretch="None" Opacity="0" Visibility="Hidden"/>
+            <TextBlock x:Name="Ald" HorizontalAlignment="Right" Margin="0,1,3,0" TextWrapping="Wrap" VerticalAlignment="Top" Foreground="White" RenderTransformOrigin="0.5,0.5" FontSize="14" TextAlignment="Center" FontFamily="Century Gothic" LineHeight="8" Text="AL&#xA;DÍA" Visibility="Hidden" Opacity="0">
+                <TextBlock.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="45"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </TextBlock.RenderTransform></TextBlock>
+        </Grid>
+        <Grid x:Name="InformacionCaps" HorizontalAlignment="Left" Height="44" Margin="0,153,0,0" VerticalAlignment="Top" Width="350">
+            <Rectangle x:Name="InfoRect" HorizontalAlignment="Left" Height="44" VerticalAlignment="Top" Width="350" Stroke="Black" Fill="Black" Opacity="0.7"/>
+            <Image x:Name="Up" HorizontalAlignment="Left" Margin="323,13,0,0" VerticalAlignment="Top" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\Up.PNG" Stretch="None" MouseUp="Up_MouseUp"/>
+            <Grid x:Name="Informacion" HorizontalAlignment="Left" Height="44" VerticalAlignment="Top" Width="350">
+                <TextBlock x:Name="Episodio" HorizontalAlignment="Left" Margin="46,0,-2,0" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Bebas Neue" FontSize="24" Foreground="White" Height="24"><Run Language="es-mx" Text="S00E00"/></TextBlock>
+                <TextBlock x:Name="NombreEp" HorizontalAlignment="Left" Margin="46,22,-77,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="14" Foreground="White" Height="22" Width="131" Padding="0" TextTrimming="CharacterEllipsis"><Run Language="es-mx" Text="Nombre del episodio"/><LineBreak/><Run Language="es-mx"/></TextBlock>
+                <Image x:Name="Eye" HorizontalAlignment="Left" Height="16" Margin="176,15,-109,0" VerticalAlignment="Top" Width="33" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\Eye.png"/>
+                <Image x:Name="Desc" HorizontalAlignment="Left" Height="25" Margin="254,10,-175,0" VerticalAlignment="Top" Width="21" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\desc.png"/>
+                <TextBlock x:Name="Vert" HorizontalAlignment="Left" Margin="214,9,-145,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="26" FontFamily="Bebas Neue" Foreground="White" Width="31" Height="31" TextAlignment="Center"><Run Language="es-mx" Text="000"/></TextBlock>
+                <TextBlock x:Name="Desct" HorizontalAlignment="Left" Margin="281,9,-212,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="26" FontFamily="Bebas Neue" Foreground="White" Width="31" Height="31" TextAlignment="Center"><Run Language="es-mx" Text="000"/></TextBlock>
+                <Image x:Name="Play" HorizontalAlignment="Left" Margin="10,6,0,0" VerticalAlignment="Top" Stretch="None" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\play.png" MouseUp="Play2_MouseUp"/>
+                <utils:OpaqueClickableImage x:Name="Pest" HorizontalAlignment="Left" Margin="330,26,-250,0" VerticalAlignment="Top" Stretch="None" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\Pest.png" MouseUp="Pest_MouseUp"/>
+                <Image x:Name="Eli" HorizontalAlignment="Left" Margin="341,35,-247,0" VerticalAlignment="Top" Stretch="None" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\Tacha1.png" MouseUp="Pest_MouseUp"/>
+                <Rectangle x:Name="Tapa" Fill="Black" HorizontalAlignment="Left" Height="8" Margin="344,36,-250,0" VerticalAlignment="Top" Width="6" Visibility="Hidden" Opacity="0"/>
+                <Label x:Name="Elit" Content="ELIMINAR" HorizontalAlignment="Left" Margin="50,-2,-63,0" VerticalAlignment="Top" FontFamily="Bebas Neue" FontSize="36" Foreground="Red" Visibility="Hidden" Opacity="0" MouseUp="Elit_MouseUp"/>
+                <Label x:Name="Cant" Content="CANCELAR" HorizontalAlignment="Left" Margin="191,-2,-213,0" VerticalAlignment="Top" FontFamily="Bebas Neue" FontSize="36" Foreground="White" Visibility="Hidden" Opacity="0" MouseUp="Cant_MouseUp"/>
+            </Grid>
+        </Grid>
+        <Grid x:Name="DesgloseEpisodios" HorizontalAlignment="Left" Height="170" Margin="0,27,0,0" VerticalAlignment="Top" Width="350" Opacity="0" Visibility="Hidden">
+            <StackPanel x:Name="Temporada" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="348" Orientation="Horizontal">
+                <Image x:Name="Ant" Stretch="None" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\ant.png" Margin="108,0,0,0" MouseUp="Ant_MouseUp"/>
+                <TextBlock x:Name="SeleccT" TextWrapping="Wrap" FontSize="15" Foreground="White" HorizontalAlignment="Center" Margin="15,0,0,0"><Run Language="es-mx" Text="Temporada 0"/><LineBreak/><Run/></TextBlock>
+                <Image x:Name="Sig" Stretch="None" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\sig.png" HorizontalAlignment="Center" Margin="15,0,0,0" MouseUp="Sig_MouseUp"/>
+            </StackPanel>
+            <ScrollViewer x:Name="ScrollEpisodios" HorizontalAlignment="Left" Height="150" Margin="0,20,0,0" VerticalAlignment="Top" Width="350">
+                <StackPanel x:Name="Temporadas" Height="150" Width="350" Orientation="Horizontal" Margin="0,0,0,0"/>
+            </ScrollViewer>
+        </Grid>
 
     </Grid>
 </UserControl>
