@@ -9,7 +9,7 @@
     <UserControl.Background>
         <ImageBrush Stretch="Uniform"/>
     </UserControl.Background>
-    <Grid x:Name="GPrinc" MaxWidth="350" MaxHeight="197" MouseLeave="GPrinc_MouseLeave" MouseEnter="GPrinc_MouseEnter">
+    <Grid x:Name="GPrinc" MaxWidth="350" MaxHeight="197">
         <Grid x:Name="ParteSuperior" HorizontalAlignment="Left" Height="197" VerticalAlignment="Top" Width="350">
             <Image x:Name="FanArt" HorizontalAlignment="Left" Height="197" VerticalAlignment="Top" Width="350" Stretch="UniformToFill"/>
             <Rectangle x:Name="RectNombre" Fill="Black" HorizontalAlignment="Left" Height="27" Stroke="Black" VerticalAlignment="Top" Width="133" Opacity="0.5"/>
@@ -38,7 +38,7 @@
                 <Image x:Name="Play" HorizontalAlignment="Left" Margin="10,6,0,0" VerticalAlignment="Top" Stretch="None" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\play.png" MouseUp="Play2_MouseUp"/>
                 <utils:OpaqueClickableImage x:Name="Pest" HorizontalAlignment="Left" Margin="330,26,-250,0" VerticalAlignment="Top" Stretch="None" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\Pest.png" MouseUp="Pest_MouseUp"/>
                 <Image x:Name="Eli" HorizontalAlignment="Left" Margin="341,35,-247,0" VerticalAlignment="Top" Stretch="None" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\Tacha1.png" MouseUp="Pest_MouseUp"/>
-                <Rectangle x:Name="Tapa" Fill="Black" HorizontalAlignment="Left" Height="8" Margin="344,36,-250,0" VerticalAlignment="Top" Width="6" Visibility="Hidden" Opacity="0"/>
+                <Rectangle x:Name="Tapa" Fill="Black" HorizontalAlignment="Right" Height="8" Margin="0,0,0,0" VerticalAlignment="Bottom" Width="6" Opacity="0" Visibility="Hidden"/>
                 <Label x:Name="Elit" Content="ELIMINAR" HorizontalAlignment="Left" Margin="50,-2,-63,0" VerticalAlignment="Top" FontFamily="Bebas Neue" FontSize="36" Foreground="Red" Visibility="Hidden" Opacity="0" MouseUp="Elit_MouseUp"/>
                 <Label x:Name="Cant" Content="CANCELAR" HorizontalAlignment="Left" Margin="191,-2,-213,0" VerticalAlignment="Top" FontFamily="Bebas Neue" FontSize="36" Foreground="White" Visibility="Hidden" Opacity="0" MouseUp="Cant_MouseUp"/>
             </Grid>

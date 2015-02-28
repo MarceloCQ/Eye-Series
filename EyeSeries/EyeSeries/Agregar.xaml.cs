@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -17,6 +18,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Xml;
+using TVDBSharp;
 
 namespace EyeSeries
 {
@@ -46,6 +48,8 @@ namespace EyeSeries
 
             Princ = p;
 
+            Princ.Tapa.MouseUp += Tacha_MouseUp;
+
             terminodeEscribir = new System.Timers.Timer()
             {
                 Interval = 400,
@@ -58,7 +62,6 @@ namespace EyeSeries
 
         private void Nombre_TextChanged(object sender, TextChangedEventArgs e)
         {
-
 
             if (bwJalando.Count != 0)
             {
@@ -107,6 +110,7 @@ namespace EyeSeries
             if (text != "")
             {
 
+                
                 XmlDocument x = new XmlDocument();
                 x.Load(@"http://thetvdb.com/api/GetSeries.php?seriesname=" + text);
 
@@ -139,7 +143,7 @@ namespace EyeSeries
                     }
                     Opciones.ItemsSource = texto;
                 }
-                ));
+                ));  
             }
 
         }
@@ -148,12 +152,15 @@ namespace EyeSeries
         {
             if (Opciones.SelectedIndex != -1)
             {
+                //Se declara la anmacion para bajar la lona
                 DoubleAnimation baja = new DoubleAnimation()
                 {
                     To = 343,
                     Duration = TimeSpan.FromMilliseconds(250),
 
                 };
+
+                //Se declara la animacion para que aparezcan las siguientes opciones (temporada, etc)
                 DoubleAnimation anima = new DoubleAnimation()
                 {
                     To = 1,
@@ -161,19 +168,27 @@ namespace EyeSeries
                     BeginTime = TimeSpan.FromMilliseconds(250),
                 };
 
-
-
-
+                //Se declara el worker para crear la serie
                 BackgroundWorker hacerSerie = new BackgroundWorker();
+
+                //El worker lo que hace es crear la serie y alimentar los numeros de temporada
                 hacerSerie.DoWork += (sender4, e4) =>
                     {
                         Opciones.Dispatcher.Invoke(new Action(() =>
                         {
-                            s = new Serie(claves[Opciones.SelectedIndex], Princ.getCantSeries());
+                            if (s != null)
+                            {
+                                File.Delete(@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\FanArt\" + s.Nombre + ".jpg");                                                               
+                            }
+
+                            //Se crea la serie seleccionada
+                            s = new Serie(claves[Opciones.SelectedIndex], Princ.getCantSeries(), Princ.getControlador());
                         }
                         ));   
                         
                         List<int> numeros = new List<int>();
+
+                        //Se poblan los numeros dependiendo de las temporadas que haya
                         for (int i = 1; i <= s.EpisodiosVistos.Count; i++)
                         {
                             if (s.EpisodiosVistos[i - 1][0].Fecha > DateTime.Now)
@@ -183,6 +198,7 @@ namespace EyeSeries
                             numeros.Add(i);
                         }
 
+                        //Se añaden los numeros al combobox
                         Temp.Dispatcher.Invoke(new Action(() =>
                         {
                             Temp.ItemsSource = numeros;
@@ -190,15 +206,14 @@ namespace EyeSeries
                         ));                       
                     };
 
+
                 hacerSerie.RunWorkerCompleted += (sender4, e4) =>
                 {
+                    //Cuando se completa el worker, se hace visible la temporada
                     Temp.Visibility = System.Windows.Visibility.Visible;
                     Temp.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 250)));
                 };
 
-                
-
-                Etapa2.Visibility = System.Windows.Visibility.Visible;
 
                 anima.Completed += (sender3, e3) =>
                 {
@@ -206,16 +221,21 @@ namespace EyeSeries
                 };
 
                 baja.Completed += (sender2, e2) =>
-                    {                        
+                    {  
+                        //Se pone la imagen del banner cuando baja la lona
                         if (banner[Opciones.SelectedIndex] != "")
                             Banner.Source = new BitmapImage(new Uri
                                (@"http://thetvdb.com/banners/" + banner[Opciones.SelectedIndex]));
 
-                        Banner.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(250)));
-
-                        RenderOptions.SetBitmapScalingMode(Banner, BitmapScalingMode.Fant);                                          
+                        //Aparece la imagen
+                        Banner.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(250)));                                    
                     };
 
+
+                //Se hace visible la etapa dos
+                Etapa2.Visibility = System.Windows.Visibility.Visible;
+
+                //Se echan a andar ambas animacionaes
                 Lona.BeginAnimation(HeightProperty, baja);
                 Etapa2.BeginAnimation(OpacityProperty, anima);
         
@@ -224,42 +244,45 @@ namespace EyeSeries
             }
             else
             {
-                Banner.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-                Temp.ItemsSource = null;
-                DoubleAnimation desap = new DoubleAnimation(0, new TimeSpan(0,0,0,0,250));
-                DoubleAnimation baja1 = new DoubleAnimation(216, new TimeSpan(0, 0, 0, 0, 250));
-                desap.Completed += (sender2, e2) =>
+
+                DoubleAnimation desaparece = new DoubleAnimation()
+                {
+                    To = 0,
+                    Duration = TimeSpan.FromMilliseconds(250),
+                };
+
+                DoubleAnimation baja = new DoubleAnimation()
+                {
+                    To = 216,
+                    Duration = TimeSpan.FromMilliseconds(250),
+                    BeginTime = TimeSpan.FromMilliseconds(250),
+                };
+
+                DoubleAnimation cambiarValora0 = new DoubleAnimation()
+                {
+                    To = 0,
+                    Duration = TimeSpan.FromMilliseconds(1),
+                };
+
+                
+
+                desaparece.Completed += (sender2, e2) =>
                     {
-                        Lona.BeginAnimation(HeightProperty, baja1);
-                        Temp.SelectedIndex = -1;
-                        Cap.SelectedIndex = -1;
-                        Ninguno.IsChecked = false;
-                        Selecciona.IsChecked = true;
-                        Temp.IsEnabled = true;
-                        Cap.IsEnabled = true;
-                        Temp.Visibility = System.Windows.Visibility.Hidden;
-                        Cap.Visibility = System.Windows.Visibility.Hidden;
-                        Temporada.Visibility = System.Windows.Visibility.Hidden;
-                        Capitulo.Visibility = System.Windows.Visibility.Hidden;
-                        Aceptar.Visibility = System.Windows.Visibility.Hidden;
-                        Ultepv.Visibility = System.Windows.Visibility.Hidden;
-                        Selecciona.Visibility = System.Windows.Visibility.Hidden;
-                        Ninguno.Visibility = System.Windows.Visibility.Hidden;
+                        
+                        Etapa2.Visibility = System.Windows.Visibility.Hidden;
+                        Etapa3.Visibility = System.Windows.Visibility.Hidden;
+
+                        resetearCampos();
+
 
                     };
 
 
-                Temp.BeginAnimation(OpacityProperty, desap);
-                Cap.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-                Temporada.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-                Capitulo.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-                Aceptar.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-                Ultepv.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-                Selecciona.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-                Ninguno.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
+                Etapa2.BeginAnimation(OpacityProperty, desaparece);
+                Etapa3.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
+                Lona.BeginAnimation(HeightProperty, baja);
+                
 
-
-                //Banner.Source = new BitmapImage();
             }
         }
 
@@ -268,6 +291,14 @@ namespace EyeSeries
             if (Temp.SelectedIndex != -1)
             {
                 List<int> caps = new List<int>();
+
+                DoubleAnimation aparece = new DoubleAnimation()
+                {
+                    To = 1,
+                    Duration = TimeSpan.FromMilliseconds(250),
+                };
+
+
                 int i = 1;
                 foreach (Episodio ep in s.EpisodiosVistos[Temp.SelectedIndex])
                 {
@@ -282,8 +313,8 @@ namespace EyeSeries
                 Cap.ItemsSource = caps;
                 Cap.Visibility = System.Windows.Visibility.Visible;
                 Capitulo.Visibility = System.Windows.Visibility.Visible;
-                Cap.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 250)));
-                Capitulo.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 250)));
+                Cap.BeginAnimation(OpacityProperty, aparece);
+                Capitulo.BeginAnimation(OpacityProperty, aparece);
             }
         }
 
@@ -293,14 +324,23 @@ namespace EyeSeries
             if (Cap.SelectedIndex != -1)
             {
 
-                DoubleAnimation baja = new DoubleAnimation(378, new TimeSpan(0, 0, 0, 0, 250));
-                baja.Completed += (sender2, e2) =>
-                    {
-                        Aceptar.Visibility = Visibility.Visible;
-                        Aceptar.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 250)));
-                    };
+                DoubleAnimation baja = new DoubleAnimation()
+                {
+                    To = 378,
+                    Duration = TimeSpan.FromMilliseconds(250),
+                };
+
+                DoubleAnimation aparece = new DoubleAnimation()
+                {
+                    To = 1,
+                    Duration = TimeSpan.FromMilliseconds(250),
+                    BeginTime = TimeSpan.FromMilliseconds(250),
+                };
+                
+                Etapa3.Visibility = Visibility.Visible;
 
                 Lona.BeginAnimation(HeightProperty, baja);
+                Etapa3.BeginAnimation(OpacityProperty, aparece);
             }
 
             
@@ -308,73 +348,73 @@ namespace EyeSeries
 
         private void Tacha_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            DoubleAnimation desap = new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250));
-            DoubleAnimation sube = new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250));
-            ThicknessAnimation sube2 = new ThicknessAnimation(new Thickness(0, -34, 0, 0), new TimeSpan(0,0,0,0,125));
-            DoubleAnimation desap2 = new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 125));
+            DoubleAnimation desapareceElementos = new DoubleAnimation()
+            {
+                To = 0,
+                Duration = TimeSpan.FromMilliseconds(250),
+                
+            };
 
-           
-            desap.Completed += (sender2, e2) =>
-                {
-                    Nombre.Visibility = Visibility.Hidden;
-                    Nombrel.Visibility = Visibility.Hidden;
-                    Seleccional.Visibility = Visibility.Hidden;
-                    Opciones.Visibility = Visibility.Hidden;
-                    Temporada.Visibility = Visibility.Hidden;
-                    Temp.Visibility = Visibility.Hidden;
-                    Capitulo.Visibility = Visibility.Hidden;
-                    Cap.Visibility = Visibility.Hidden;
-                    Aceptar.Visibility = Visibility.Hidden;
-                    Banner.Visibility = Visibility.Hidden;
-                    Ultepv.Visibility = Visibility.Hidden;
-                    Selecciona.Visibility = Visibility.Hidden;
-                    Ninguno.Visibility = Visibility.Hidden;
-                    Lona.BeginAnimation(HeightProperty, sube);
-                };
+            DoubleAnimation subeLona = new DoubleAnimation()
+            {
+                To = 0,
+                Duration = TimeSpan.FromMilliseconds(250),
+                BeginTime = TimeSpan.FromMilliseconds(250),
+            };
 
-            sube.Completed += (sender3, e3) =>
+            ThicknessAnimation subeHeader = new ThicknessAnimation()
+            {
+                To = new Thickness(0, -34, 0, 0),
+                Duration = TimeSpan.FromMilliseconds(125),
+                BeginTime = TimeSpan.FromMilliseconds(500),
+            };
+
+            DoubleAnimation desapareceTapa = new DoubleAnimation()
+            {
+                To = 0,
+                Duration = TimeSpan.FromMilliseconds(125),
+                BeginTime = TimeSpan.FromMilliseconds(750),
+            };
+
+            DoubleAnimation apareceIconoAgregar = new DoubleAnimation()
+            {
+                To = 1,
+                Duration = TimeSpan.FromMilliseconds(125),
+                BeginTime = TimeSpan.FromMilliseconds(750),
+            };
+
+
+            desapareceTapa.Completed += (sender5, e5) =>
                 {
+                    Etapa1.Visibility = Visibility.Hidden;
+                    Etapa2.Visibility = Visibility.Hidden;
+                    Etapa3.Visibility = Visibility.Hidden;
+
                     Lona.Visibility = System.Windows.Visibility.Hidden;
-                    RectAdd.BeginAnimation(MarginProperty, sube2);
-                    LabAdd.BeginAnimation(MarginProperty, new ThicknessAnimation(new Thickness(0, -34, 0, 0), new TimeSpan(0,0,0,0,125)));
-                    Tacha.BeginAnimation(MarginProperty, new ThicknessAnimation(new Thickness(Tacha.Margin.Left, -34, 0, 0), new TimeSpan(0, 0, 0, 0, 125)));
-                };
 
-            sube2.Completed += (sender4, e4) =>
-                {
-                    Princ.Tapa.BeginAnimation(OpacityProperty, desap2);
-                    Princ.IconoAgregar.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 125)));
-                };
-
-            desap2.Completed += (sender5, e5) =>
-                {
                     Princ.Tapa.Visibility = System.Windows.Visibility.Hidden;
                     Princ.IconoAgregar.Visibility = Visibility.Visible;
+
+                    if (s != null)
+                    {
+                        File.Delete(@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\FanArt\" + s.Nombre + ".jpg");                                                              
+                    }
+
                 };
 
-            Nombre.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-            Nombrel.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-            Seleccional.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-            Opciones.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-            Temporada.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-            Temp.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-            Capitulo.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-            Cap.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-            Aceptar.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-            Banner.BeginAnimation(OpacityProperty, desap);
+            Etapa1.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
+            Etapa2.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
+            Etapa3.BeginAnimation(OpacityProperty, desapareceElementos);
 
-            Nombre.TextChanged -= Nombre_TextChanged;
-            Opciones.SelectionChanged -= Opciones_SelectionChanged;
-            Nombre.Text = "";
-            Temp.IsEnabled = true;
-            Cap.IsEnabled = true;
-            Opciones.ItemsSource = null;
-            Temp.SelectedIndex = -1;
-            Cap.SelectedIndex = -1;
-            Selecciona.IsChecked = true;
-            Ninguno.IsChecked = false;
-            Nombre.TextChanged += Nombre_TextChanged;
-            Opciones.SelectionChanged += Opciones_SelectionChanged;
+            Lona.BeginAnimation(HeightProperty, subeLona);
+
+            Header.BeginAnimation(MarginProperty, subeHeader);
+
+            Princ.Tapa.BeginAnimation(OpacityProperty, desapareceTapa);
+            Princ.IconoAgregar.BeginAnimation(OpacityProperty, apareceIconoAgregar);
+
+            resetearCampos();
+
 
 
 
@@ -388,6 +428,9 @@ namespace EyeSeries
             {
                 temp = (int)Temp.SelectedItem;
                 cap = (int)Cap.SelectedItem;
+
+                s.TemporadaUltEpisodioVisto = temp;
+                s.CapituloUltEpisodioVisto = cap;
 
                 if (cap + 1 > s.EpisodiosVistos[temp - 1].Count)
                 {
@@ -406,85 +449,73 @@ namespace EyeSeries
                 {
                     cap++;
                 }
-
-
-
             }
 
 
-            DoubleAnimation desap = new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250));
-            DoubleAnimation sube = new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250));
-            ThicknessAnimation sube2 = new ThicknessAnimation(new Thickness(0, -34, 0, 0), new TimeSpan(0, 0, 0, 0, 125));
-            DoubleAnimation desap2 = new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 125));
-
-
-            desap.Completed += (sender2, e2) =>
+            DoubleAnimation desapareceElementos = new DoubleAnimation()
             {
-                Nombre.Visibility = Visibility.Hidden;
-                Nombrel.Visibility = Visibility.Hidden;
-                Seleccional.Visibility = Visibility.Hidden;
-                Opciones.Visibility = Visibility.Hidden;
-                Temporada.Visibility = Visibility.Hidden;
-                Temp.Visibility = Visibility.Hidden;
-                Capitulo.Visibility = Visibility.Hidden;
-                Cap.Visibility = Visibility.Hidden;
-                Aceptar.Visibility = Visibility.Hidden;
-                Banner.Visibility = Visibility.Hidden;
-                Ninguno.Visibility = Visibility.Hidden;
-                Selecciona.Visibility = Visibility.Hidden;
-                Ultepv.Visibility = Visibility.Hidden;
+                To = 0,
+                Duration = TimeSpan.FromMilliseconds(250),
 
-                Lona.BeginAnimation(HeightProperty, sube);
             };
 
-            sube.Completed += (sender3, e3) =>
+            DoubleAnimation subeLona = new DoubleAnimation()
             {
+                To = 0,
+                Duration = TimeSpan.FromMilliseconds(250),
+                BeginTime = TimeSpan.FromMilliseconds(250),
+            };
+
+            ThicknessAnimation subeHeader = new ThicknessAnimation()
+            {
+                To = new Thickness(0, -34, 0, 0),
+                Duration = TimeSpan.FromMilliseconds(125),
+                BeginTime = TimeSpan.FromMilliseconds(500),
+            };
+
+            DoubleAnimation desapareceTapa = new DoubleAnimation()
+            {
+                To = 0,
+                Duration = TimeSpan.FromMilliseconds(125),
+                BeginTime = TimeSpan.FromMilliseconds(750),
+            };
+
+            DoubleAnimation apareceIconoAgregar = new DoubleAnimation()
+            {
+                To = 1,
+                Duration = TimeSpan.FromMilliseconds(125),
+                BeginTime = TimeSpan.FromMilliseconds(750),
+            };
+
+
+            desapareceTapa.Completed += (sender5, e5) =>
+            {
+                Etapa1.Visibility = Visibility.Hidden;
+                Etapa2.Visibility = Visibility.Hidden;
+                Etapa3.Visibility = Visibility.Hidden;
+
                 Lona.Visibility = System.Windows.Visibility.Hidden;
-                RectAdd.BeginAnimation(MarginProperty, sube2);
-                LabAdd.BeginAnimation(MarginProperty, new ThicknessAnimation(new Thickness(0, -34, 0, 0), new TimeSpan(0, 0, 0, 0, 125)));
-                Tacha.BeginAnimation(MarginProperty, new ThicknessAnimation(new Thickness(Tacha.Margin.Left, -34, 0, 0), new TimeSpan(0, 0, 0, 0, 125)));
-            };
 
-            sube2.Completed += (sender4, e4) =>
-            {
-
-
-                Princ.Tapa.BeginAnimation(OpacityProperty, desap2);
-            };
-
-            desap2.Completed += (sender5, e5) =>
-            {
                 Princ.Tapa.Visibility = System.Windows.Visibility.Hidden;
+
+                resetearCampos();
+
                 Princ.agregarNuevaSerie(s, temp, cap);
+
+                s = null;
             };
 
-            Nombre.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-            Nombrel.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-            Seleccional.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-            Opciones.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-            Temporada.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-            Temp.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-            Capitulo.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-            Cap.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-            Aceptar.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-            Selecciona.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-            Ninguno.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-            Ultepv.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
-            Banner.BeginAnimation(OpacityProperty, desap);
 
-            Nombre.TextChanged -= Nombre_TextChanged;
-            Opciones.SelectionChanged -= Opciones_SelectionChanged;
-            Nombre.Text = "";
-            Opciones.ItemsSource = null;
-            Temp.SelectedIndex = -1;
-            Cap.SelectedIndex = -1;
-            Nombre.TextChanged += Nombre_TextChanged;
-            Opciones.SelectionChanged += Opciones_SelectionChanged;
+            Etapa1.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
+            Etapa2.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
+            Etapa3.BeginAnimation(OpacityProperty, desapareceElementos);
 
-           
+            Lona.BeginAnimation(HeightProperty, subeLona);
 
-            
-            
+            Header.BeginAnimation(MarginProperty, subeHeader);
+
+            Princ.Tapa.BeginAnimation(OpacityProperty, desapareceTapa);
+
         }
 
         public void animaEtapa1()
@@ -514,24 +545,26 @@ namespace EyeSeries
             Temp.IsEnabled = true;
             Cap.IsEnabled = true;
 
-
-            if (Lona.Height != 0)
+            DoubleAnimation desaoareceEtapa3 = new DoubleAnimation()
             {
-                DoubleAnimation anima = new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250));
-                anima.Completed += (sender2, e2) =>
-                    {
-                        DoubleAnimation baja = new DoubleAnimation(343, new TimeSpan(0, 0, 0, 0, 250));
-                        Lona.BeginAnimation(HeightProperty, baja);
-                    };
+                To = 0,
+                Duration = TimeSpan.FromMilliseconds(250),
+            };
+            DoubleAnimation subeLona = new DoubleAnimation()
+            {
+                To = 343,
+                Duration = TimeSpan.FromMilliseconds(250),
+                BeginTime = TimeSpan.FromMilliseconds(250),
+            };
 
-                Aceptar.BeginAnimation(OpacityProperty, anima);
-            }
+            desaoareceEtapa3.Completed += (sender2, e2) =>
+                {
+                    Etapa3.Visibility = Visibility.Hidden;                        
+                };
+
+            Etapa3.BeginAnimation(OpacityProperty, desaoareceEtapa3);
+            Lona.BeginAnimation(HeightProperty, subeLona);
             
-
-            
-
-            
-
         }
 
         private void Ninguno_Click(object sender, RoutedEventArgs e)
@@ -540,22 +573,57 @@ namespace EyeSeries
             Cap.IsEnabled = false;
             Cap.SelectedIndex = -1;
             Temp.SelectedIndex = -1;
+            Etapa3.Visibility = Visibility.Visible;
 
-
-            DoubleAnimation baja = new DoubleAnimation(378, new TimeSpan(0, 0, 0, 0, 250));
-            baja.Completed += (sender2, e2) =>
+            DoubleAnimation baja = new DoubleAnimation()
             {
-                Aceptar.Visibility = Visibility.Visible;
-                Aceptar.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 250)));
+                To = 378,
+                Duration = TimeSpan.FromMilliseconds(250)
             };
 
+            DoubleAnimation aparece = new DoubleAnimation()
+            {
+                To = 1,
+                Duration = TimeSpan.FromMilliseconds(250),
+                BeginTime = TimeSpan.FromMilliseconds(250)
+            };
+
+
             Lona.BeginAnimation(HeightProperty, baja);
+            Etapa3.BeginAnimation(OpacityProperty, aparece);
+            
 
+        }
 
+        private void resetearCampos()
+        {
+            DoubleAnimation cambiarValora0 = new DoubleAnimation()
+            {
+                To = 0,
+                Duration = TimeSpan.FromMilliseconds(1),
+            };
 
+            Nombre.TextChanged -= Nombre_TextChanged;
+            Opciones.SelectionChanged -= Opciones_SelectionChanged;
+            Nombre.Text = "";
+            Temp.IsEnabled = true;
+            Cap.IsEnabled = true;
+            Opciones.ItemsSource = null;
+            Temp.SelectedIndex = -1;
+            Cap.SelectedIndex = -1;
+            Selecciona.IsChecked = true;
+            Ninguno.IsChecked = false;
+            Nombre.TextChanged += Nombre_TextChanged;
+            Opciones.SelectionChanged += Opciones_SelectionChanged;
 
+            Temp.Visibility = System.Windows.Visibility.Hidden;
+            Capitulo.Visibility = System.Windows.Visibility.Hidden;
+            Cap.Visibility = System.Windows.Visibility.Hidden;
 
-
+            Temp.BeginAnimation(OpacityProperty, cambiarValora0);
+            Banner.BeginAnimation(OpacityProperty, cambiarValora0);
+            Capitulo.BeginAnimation(OpacityProperty, cambiarValora0);
+            Cap.BeginAnimation(OpacityProperty, cambiarValora0);
 
         }
 

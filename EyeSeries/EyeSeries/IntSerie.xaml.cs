@@ -28,16 +28,13 @@ namespace EyeSeries
         //Serie de la interfaz 
         public Serie Se; 
 
-        private ScrollViewer sv;
         private List<StackPanel> temporadas;
-        private StackPanel master;
 
         public Boolean episodiosMostrados;
         private Boolean desplegado;
 
         private int tempActiva;
 
-        private UTorrentClient uClient;
         private MainWindow Principal;
 
         private DispatcherTimer actualizarInterfazEpPrinc;
@@ -69,7 +66,7 @@ namespace EyeSeries
 
         }
 
-        public void agregarDesgloseEpisodios()
+        public void agregarDesgloseEpisodios(bool escondido)
         {
 
             actualizarInterfazEpRestantes = new DispatcherTimer()
@@ -118,7 +115,7 @@ namespace EyeSeries
                 Temporadas.Height = temporadas[tempActiva].Height;
                 ScrollEpisodios.ScrollToVerticalOffset(17 * Se.EpisodiosVistos[tempActiva].Count - 9);
 
-                if (tempActiva + 1 == Se.EpisodiosVistos[tempActiva].Count)
+                if (tempActiva + 1 == Se.EpisodiosVistos.Count)
                 {
                     Sig.Visibility = System.Windows.Visibility.Hidden;
                 }
@@ -127,8 +124,9 @@ namespace EyeSeries
                     if (tempActiva == 0) Ant.Visibility = System.Windows.Visibility.Hidden;
                 }
             }
-            
-           
+
+
+           Temporadas.Margin = new Thickness(tempActiva * -350, 0, 0, 0);
 
            ScrollEpisodios.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
            ScrollEpisodios.UpdateLayout();
@@ -139,10 +137,16 @@ namespace EyeSeries
 
            temporadas[tempActiva].Opacity = 1;
 
-           DesgloseEpisodios.Visibility = System.Windows.Visibility.Visible;
-           DesgloseEpisodios.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 250)));
+
+           if (!escondido)
+           {
+               DesgloseEpisodios.Visibility = System.Windows.Visibility.Visible;
+               DesgloseEpisodios.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 250)));
+           }
 
            actualizarInterfazEpRestantes.Start();
+
+           Se.episodiosCargados = true;
             
         }
 
@@ -151,7 +155,7 @@ namespace EyeSeries
             if (temporadas.Count != 0)
             {
                 Temporadas.Width += 350;
-                Temporadas.Margin = new Thickness(Temporadas.Margin.Left - 350, 0, 0, 0);
+                
             }
 
             //Se crea el StackPanel de la temporada
@@ -229,6 +233,11 @@ namespace EyeSeries
             //Se añade el stackPanel del episodio a la temporada
             temporada.Height += 17;
             temporada.Children.Add(spEpisodio);
+
+            if (tempActiva == temporadas.Count - 1)
+            {
+                Temporadas.Height = temporadas[tempActiva].Height;
+            }
 
             if (ep.Temporada != Se.Temporada || ep.Capitulo != Se.Capitulo)
             {
@@ -324,7 +333,7 @@ namespace EyeSeries
                         Ald.Visibility = System.Windows.Visibility.Visible;
                         Trian.Visibility = System.Windows.Visibility.Visible;
                         Ald.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0,0,0,0,250)));
-                        Trian.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0,0,0,0,250)));
+                        Trian.BeginAnimation(OpacityProperty, new DoubleAnimation(.6, new TimeSpan(0,0,0,0,250)));
                     }
                 };
 
@@ -337,7 +346,6 @@ namespace EyeSeries
         }
 
         //Eventos
-
 
         private void Up_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -363,6 +371,7 @@ namespace EyeSeries
 
         private void Sig_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            actualizarInterfazEpRestantes.Stop();
             tempActiva++;
             temporadas[tempActiva].Opacity = 1;
             temporadas[tempActiva].Visibility = System.Windows.Visibility.Visible;
@@ -393,12 +402,13 @@ namespace EyeSeries
             }
 
             Ant.Visibility = System.Windows.Visibility.Visible;
+            actualizarInterfazEpRestantes.Start();
 
         }
 
         private void Ant_MouseUp(object sender, MouseButtonEventArgs e)
         {
-
+            actualizarInterfazEpRestantes.Stop();
             tempActiva--;
             temporadas[tempActiva].Opacity = 1;
             temporadas[tempActiva].Visibility = System.Windows.Visibility.Visible;
@@ -415,6 +425,8 @@ namespace EyeSeries
             if (tempActiva == 0) Ant.Visibility = System.Windows.Visibility.Hidden;
             Sig.Visibility = System.Windows.Visibility.Visible;
 
+            actualizarInterfazEpRestantes.Start();
+
         }
 
         private void Play_MouseUp(object sender, MouseButtonEventArgs e)
@@ -425,107 +437,7 @@ namespace EyeSeries
             Episodio ep = (Episodio)im.Tag;
             
             Principal.cambiarEpPrincipal(ep);
-            
-
-               /* int m = ep.Temporada - 1;
-                while (m >= 0)
-                {
-                    int j = m == ep.Temporada - 1 ? ep.Capitulo - 1 : se.Episodios[m].Count - 1;
-                    if (se.Episodios[m][j].Estado != 2)
-                        break;
-                    while (j >= 0 && se.Episodios[m][j].Estado == 2)
-                    {
-                        se.SiguienteEp();
-                        se.Episodios[m][j].Estado = 3;
-                        se.PorVer--;
-                        j--;
-                    }
-                    
-                    m--;
-
-                }
-                */
-                /*
-                bool salto = false;
-                for (int p = ep.Temporada - 1; p >= 0; p--)
-                {
-                    for (int m = (p == ep.Temporada - 1 ? ep.Capitulo - 1 : Se.EpisodiosVistos[p].Count - 1); m >= 0; m--)
-                    {
-                        Episodio aux = Se.EpisodiosVistos[p][m];
-                        if (aux.Estado == 3)
-                        {
-                            salto = true;
-                            break;
-                        }
-                        else
-                        {
-                            if (aux.Estado == 2)
-                            {
-                                Se.siguienteEpisodio();
-                                aux.Estado = 3;
-                                Se.PorVer--;
-                            }
-                            else
-                            {
-                                if (aux.Estado == 1)
-                                {
-                                    aux.Estado = 3;                                    
-                                    Se.siguienteEpisodio();
-                                    uClient.Torrents.Remove(aux.Hash, TorrentRemovalOptions.TorrentFileAndData);
-                                    aux.Hash = "-1";
-                                    Se.Descargando--;
-
-                                }
-                            }
-                        }
-                    }
-                    if (!salto) break;
-                }
-
-
-
-            }
-            else
-                if (ep.Estado == 3)
-                {
-                    bool salto = false;
-                    for (int p = ep.Temporada - 1; p < Se.EpisodiosVistos.Count; p++)
-                    {
-                        for (int m = (p == ep.Temporada - 1 ? ep.Capitulo - 1 : 0); m < Se.EpisodiosVistos[p].Count; m++)
-                        {
-                            Episodio aux = Se.EpisodiosVistos[p][m];
-                            if (aux.Estado == 0)
-                            {
-                                salto = true;
-                                break;
-
-                            }
-                            else
-                            {
-                                if (aux.Estado == 3)
-                                {
-                                    if (System.IO.File.Exists(@"C:\Users\Marcelo\Videos\Series\" + aux.Serie.Nombre + @"\Temporada " + aux.Temporada + @"\Episodio " + aux.Capitulo + ".mkv"))
-                                    {
-                                        aux.Estado = 2;
-                                        aux.Serie.PorVer++;
-
-                                    }
-                                    else
-                                    {
-                                        aux.getMagnet();
-                                        aux.Estado = 1;
-                                        aux.Serie.Descargando++;
-                                        
-
-                                    }
-                                }
-                            }
-                        }
-                        if (salto) break;
-                    }
-                    Se.Temporada = ep.Temporada;
-                    Se.Capitulo = ep.Capitulo;
-*/
+           
                                   
         }
 
@@ -537,22 +449,37 @@ namespace EyeSeries
                 string dir = @"C:\Users\Marcelo\Videos\Series\" + Se.Nombre + @"\Temporada " + ep.Temporada + @"\Episodio " + ep.Capitulo + ".mkv";
                 System.Diagnostics.Process.Start(dir);
                 ep.PropertyChanged -= PropertyChangedEpisodioPrincipal;
-                ep.PropertyChanged += PropertyChangedEpisodiosRestantes;
+
+                if (Se.EpisodiosVistos.Count != 0)
+                {
+                    ep.PropertyChanged += PropertyChangedEpisodiosRestantes;
+                }
 
                 Se.siguienteEpisodio();
-                ep = Se.EpisodiosNoVistos[0];
 
-                ep.PropertyChanged -= PropertyChangedEpisodiosRestantes;
-                ep.PropertyChanged += PropertyChangedEpisodioPrincipal;           
+                if (Se.EpisodiosNoVistos.Count > 0)
+                {
+                    ep = Se.EpisodiosNoVistos[0];
+
+                    if (Se.EpisodiosVistos.Count != 0)
+                    {
+                        ep.PropertyChanged -= PropertyChangedEpisodiosRestantes;
+                    }
+                    ep.PropertyChanged += PropertyChangedEpisodioPrincipal;
+                }
             }
         }
 
         private void IntSeries_Loaded(object sender, RoutedEventArgs e)
         {
             //Fanart
+            BitmapImage image = new BitmapImage();
+            image.BeginInit();
+            image.CacheOption = BitmapCacheOption.OnLoad;
+            image.UriSource = new Uri(@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\FanArt\" + Se.Nombre + ".jpg");
+            image.EndInit();
             RenderOptions.SetBitmapScalingMode(FanArt, BitmapScalingMode.Fant);
-            FanArt.Source = new BitmapImage(new Uri
-            (@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\FanArt\" + Se.Nombre + ".jpg"));
+            FanArt.Source = image;
 
             //Nombre
             Nombre.Text = Se.Nombre;
@@ -634,11 +561,11 @@ namespace EyeSeries
             Vert.Text = Se.PorVer.ToString();
 
             //Se añaden los propertychanged
-            Se.PropertyChanged += new PropertyChangedEventHandler(PropertyChangedSerie);
+            Se.PropertyChanged += PropertyChangedSerie;
 
             if (ep != null)
             {
-                ep.PropertyChanged += new PropertyChangedEventHandler(PropertyChangedEpisodioPrincipal);
+                ep.PropertyChanged += PropertyChangedEpisodioPrincipal;
             }
 
             //Empieza el actualizador de interfaz
@@ -651,39 +578,38 @@ namespace EyeSeries
         {
             GPrinc.MouseLeave -= GPrinc_MouseLeave;
             GPrinc.MouseEnter -= GPrinc_MouseEnter;
-            DoubleAnimation opac = new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 125));
 
-            opac.Completed += (sender2, e2) =>
-            {
-                DoubleAnimation opac2 = new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 125));
-                opac2.Completed += (sender3, e3) =>
-                {
-                    DoubleAnimation sube = new DoubleAnimation(49, new TimeSpan(0, 0, 0, 0, 75));
 
-                    sube.Completed += (sender4, e4) =>
-                    {
-                        DoubleAnimation grande = new DoubleAnimation(350, new TimeSpan(0, 0, 0, 0, 100));
-                        grande.Completed += (sender5, e5) =>
-                        {
-                            Elit.Visibility = System.Windows.Visibility.Visible;
-                            Cant.Visibility = System.Windows.Visibility.Visible;
-                            DoubleAnimation opc = new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 250));
-                            Elit.BeginAnimation(OpacityProperty, opc);
-                            Cant.BeginAnimation(OpacityProperty, opc);
-                        };
-                        Tapa.BeginAnimation(WidthProperty, grande);
-                        Tapa.BeginAnimation(MarginProperty, new ThicknessAnimation(new Thickness(0, 0, 0, 0), new TimeSpan(0, 0, 0, 0, 100)));
-                    };
-                    Tapa.BeginAnimation(HeightProperty, sube);
-                    Tapa.BeginAnimation(MarginProperty, new ThicknessAnimation(new Thickness(Tapa.Margin.Left, 0, 0, 0), new TimeSpan(0, 0, 0, 0, 75)));
-                };
-                Tapa.Visibility = System.Windows.Visibility.Visible;
-                Tapa.BeginAnimation(OpacityProperty, opac2);
+            DoubleAnimation desaparecePestEli = new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 125));
 
-            };
+            DoubleAnimation apareceTapa = new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 125));
+            apareceTapa.BeginTime = TimeSpan.FromMilliseconds(125);
 
-            Pest.BeginAnimation(OpacityProperty, opac);
-            Eli.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 125)));
+            DoubleAnimation subeTapa = new DoubleAnimation(49, new TimeSpan(0, 0, 0, 0, 75));
+            subeTapa.BeginTime = TimeSpan.FromMilliseconds(250);
+
+            DoubleAnimation grandeTapa = new DoubleAnimation(350, new TimeSpan(0, 0, 0, 0, 100));
+            grandeTapa.BeginTime = TimeSpan.FromMilliseconds(325);
+
+            DoubleAnimation apareceOpciones = new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 250));
+            apareceOpciones.BeginTime = TimeSpan.FromMilliseconds(425);
+
+            Tapa.Visibility = System.Windows.Visibility.Visible;
+            Elit.Visibility = System.Windows.Visibility.Visible;
+            Cant.Visibility = System.Windows.Visibility.Visible;
+
+
+            Pest.BeginAnimation(OpacityProperty, desaparecePestEli);
+            Eli.BeginAnimation(OpacityProperty, desaparecePestEli);
+
+            Tapa.BeginAnimation(OpacityProperty, apareceTapa);
+
+            Tapa.BeginAnimation(HeightProperty, subeTapa);
+
+            Tapa.BeginAnimation(WidthProperty, grandeTapa);
+
+            Elit.BeginAnimation(OpacityProperty, apareceOpciones);
+            Cant.BeginAnimation(OpacityProperty, apareceOpciones);
 
 
         }
@@ -692,63 +618,51 @@ namespace EyeSeries
         {
             GPrinc.MouseEnter += GPrinc_MouseEnter;
             GPrinc.MouseLeave += GPrinc_MouseLeave;
+
             //Se declara animacion para esconder cancelar
-            DoubleAnimation opac = new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250));
+            DoubleAnimation desapareceOpciones = new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250));
 
-            //Cuando se completa la animacion para esconder eliminar y opacidad...
-            opac.Completed += (sender2, e2) =>
-            {
-                //Se esconde cancelar y eliminar
-                Elit.Visibility = System.Windows.Visibility.Hidden;
-                Cant.Visibility = System.Windows.Visibility.Hidden;
+            DoubleAnimation angostaTapa = new DoubleAnimation(6, new TimeSpan(0, 0, 0, 0, 100));
+            angostaTapa.BeginTime = TimeSpan.FromMilliseconds(250);
 
-                //Se declara animacion para hacer angosta la tapa
-                DoubleAnimation chico = new DoubleAnimation(6, new TimeSpan(0, 0, 0, 0, 100));
+            DoubleAnimation bajaTapa = new DoubleAnimation(8, new TimeSpan(0, 0, 0, 0, 75));
+            bajaTapa.BeginTime = TimeSpan.FromMilliseconds(350);
 
-                //Cuando se completa animacion de hacer angosta la tapa
-                chico.Completed += (sender3, e3) =>
+            DoubleAnimation desapareceTapa = new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 75));
+            desapareceTapa.BeginTime = TimeSpan.FromMilliseconds(425);
+
+            DoubleAnimation aparecePestEli = new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 125));
+            aparecePestEli.BeginTime = TimeSpan.FromMilliseconds(495);
+
+            desapareceTapa.Completed += (sender2, e2) =>
                 {
-                    //Se declara animacion para bajar la tapa
-                    DoubleAnimation baja = new DoubleAnimation(8, new TimeSpan(0, 0, 0, 0, 75));
+                    Elit.Visibility = System.Windows.Visibility.Hidden;
+                    Cant.Visibility = System.Windows.Visibility.Hidden;
+                    Tapa.Visibility = System.Windows.Visibility.Hidden;
 
-                    //Cuando se completa animacion de bajar la tapa
-                    baja.Completed += (sender4, e4) =>
-                    {
-                        //Se declara animacion para esconder la tapa
-                        DoubleAnimation opac2 = new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 125));
-
-                        opac2.Completed += (sender5, e5) =>
-                        {
-                            Tapa.Visibility = System.Windows.Visibility.Hidden;
-                            Pest.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 125)));
-                            Eli.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 125)));
-                        };
-
-                        Tapa.BeginAnimation(OpacityProperty, opac2);
-
-                    };
-
-                    //Inicia animacion de bajar la tapa
-
-                    Tapa.BeginAnimation(MarginProperty, new ThicknessAnimation(new Thickness(Tapa.Margin.Left, 36, 0, 0), new TimeSpan(0, 0, 0, 0, 75)));
-                    Tapa.BeginAnimation(HeightProperty, baja);
                 };
-
-                //Se inicia animacion de hacer angosta la tapa
-
-                Tapa.BeginAnimation(MarginProperty, new ThicknessAnimation(new Thickness(344, Tapa.Margin.Top, 0, 0), new TimeSpan(0, 0, 0, 0, 100)));
-                Tapa.BeginAnimation(WidthProperty, chico);
-            };
-
+            
             //Inicia animacion de esconder eliminar y cancelar
-            Elit.BeginAnimation(OpacityProperty, opac);
-            Cant.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
+            Elit.BeginAnimation(OpacityProperty, desapareceOpciones);
+            Cant.BeginAnimation(OpacityProperty, desapareceOpciones);
+
+            Tapa.BeginAnimation(WidthProperty, angostaTapa);
+
+            Tapa.BeginAnimation(HeightProperty, bajaTapa);
+
+            Tapa.BeginAnimation(OpacityProperty, desapareceTapa);
+
+            Pest.BeginAnimation(OpacityProperty, aparecePestEli);
+            Eli.BeginAnimation(OpacityProperty, aparecePestEli);
+
+            actualizarInterfazEpPrinc.Start();
 
         }
 
         private void Elit_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Principal.EliminarSerie(Se.Numserie);
+            actualizarInterfazEpPrinc.Stop();
+            Principal.eliminarSerie(Se.Numserie);
         }
 
         private void PropertyChangedSerie(object sender, PropertyChangedEventArgs e)
@@ -840,14 +754,22 @@ namespace EyeSeries
                     case "NombreEp":
 
                         NombreEp.Text = ep.NombreEp;
+                        if (ep.Estado == 0)
+                        {
+                            DateTime hoy = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 12, 0, 0);
+                            DateTime fechaep = new DateTime(ep.Fecha.Year, ep.Fecha.Month, ep.Fecha.Day, 12, 0, 0);
+                            TimeSpan tiempo = fechaep - hoy;
+                            NombreEp.Text += " - " + (tiempo.TotalDays < 1 ? "Hoy" : tiempo.TotalDays < 2 ? "Mañana" : (tiempo.Days + " Días"));
+                            Ajustar(NombreEp);
+                        }
                         break;
 
                     case "Fecha":
 
-                        DateTime hoy = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 12, 0, 0);
-                        DateTime fechaep = new DateTime(ep.Fecha.Year, ep.Fecha.Month, ep.Fecha.Day, 12, 0, 0);
-                        TimeSpan tiempo = fechaep - hoy;
-                        NombreEp.Text = ep.NombreEp + " - " + (tiempo.TotalDays < 1 ? "Hoy" : tiempo.TotalDays < 2 ? "Mañana" : (tiempo.Days + " Días"));
+                        DateTime hoy2 = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 12, 0, 0);
+                        DateTime fechaep2 = new DateTime(ep.Fecha.Year, ep.Fecha.Month, ep.Fecha.Day, 12, 0, 0);
+                        TimeSpan tiempo2 = fechaep2 - hoy2;
+                        NombreEp.Text = ep.NombreEp + " - " + (tiempo2.TotalDays < 1 ? "Hoy" : tiempo2.TotalDays < 2 ? "Mañana" : (tiempo2.Days + " Días"));
                         Ajustar(NombreEp);
                         break;              
                 }
@@ -932,12 +854,20 @@ namespace EyeSeries
                            case 3:
                                estado.Source = new BitmapImage(new Uri
                                    (@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\paloma.png"));
+                               texto.Text = "E" + (ep.Capitulo < 10 ? "0" : "") + ep.Capitulo + " - " + ep.NombreEp;
                                break;
                        }
                        break;
 
                    case "NombreEp":
-                       texto.Text = "E" + (ep.Capitulo < 10 ? "0" : "") + ep.Capitulo + " - " + ep.NombreEp;
+                       if (ep.Estado == 0)
+                       {
+                           texto.Text = "E" + (ep.Capitulo < 10 ? "0" : "") + ep.Capitulo + " - " + ep.NombreEp + " - " + ep.Fecha.ToShortDateString();
+                       }
+                       else
+                       {
+                           texto.Text = "E" + (ep.Capitulo < 10 ? "0" : "") + ep.Capitulo + " - " + ep.NombreEp;
+                       }
                        break;
 
                    case "Fecha":
@@ -1065,7 +995,7 @@ namespace EyeSeries
         {
             if (mostrar)
             {
-                if (episodiosMostrados)
+                if (!episodiosMostrados)
                 {
                     Ald.Visibility = System.Windows.Visibility.Visible;
                     Trian.Visibility = System.Windows.Visibility.Visible;
@@ -1124,57 +1054,6 @@ namespace EyeSeries
             }
         }
 
-        public void Actualiza()
-        {
-
-            //Actualiza el episodio actual si es necesario
-            Episodio act = Se.EpisodiosVistos[Se.Temporada - 1][Se.Capitulo - 1];
-            if (act.Estado == 1 && desplegado)
-            {
-                double prog = (double)uClient.Torrents[act.Hash].ProgressInMils / 10.0;
-                NombreEp.Text = act.NombreEp + " - " + Math.Round(prog, 1) + "%";
-                Ajustar(NombreEp);
-            }
-
-            //Revisa todos los episodios
-            bool sal = false;
-            for (int m = Se.Temporada - 1; m < Se.EpisodiosVistos.Count; m++)
-            {
-                for (int j = (m == Se.Temporada - 1 ? Se.Capitulo - 1 : 0); j < Se.EpisodiosVistos[m].Count; j++)
-                {
-                    Episodio aux = Se.EpisodiosVistos[m][j];
-                    if (aux.Estado != 2)
-                    {
-                        if (aux.Estado == 0)
-                        {
-                            sal = true;
-                            break;
-                        }
-                        else
-                        {
-                            if (aux.Estado == 1)
-                            {
-                                if (uClient.Torrents[aux.Hash].RemainingBytes == 0 && uClient.Torrents[aux.Hash].DownloadedBytes > 0 || uClient.Torrents[aux.Hash].ProgressInMils == 1000)
-                                {
-                                    aux.Mover(uClient, false);
-                                }
-                                else
-                                {
-                                    if (!episodiosMostrados && tempActiva == aux.Temporada - 1 && (double)uClient.Torrents[aux.Hash].ProgressInMils != 0)
-                                    {
-                                        double prog = (double)uClient.Torrents[aux.Hash].ProgressInMils / 10.0;
-                                        ((temporadas[tempActiva].Children[aux.Capitulo - 1] as StackPanel).Children[1] as TextBlock).Text = "E" + (aux.Capitulo < 10 ? "0" : "") + aux.Capitulo + " - " + aux.NombreEp + " - " + Math.Round(prog, 1) + "%";
-                                    }
-                                }
-                            }
-                        }
-
-                    }
-                    if (sal) break;
-                }
-            }
-        }
-
         private void GPrinc_MouseLeave(object sender, MouseEventArgs e)
         {
 
@@ -1199,7 +1078,40 @@ namespace EyeSeries
             desplegado = true;
         }
 
-  
+        public void agregarHandlerAEpisodioPrincipal()
+        {
+            Se.EpisodiosNoVistos[0].PropertyChanged += PropertyChangedEpisodioPrincipal;
+        }
+
+        public void quitarHandlerAEpisodioPrincipal()
+        {
+            Se.EpisodiosNoVistos[0].PropertyChanged -= PropertyChangedEpisodioPrincipal;
+        }
+
+        public void agregarHandlerDeRestantesAEpisodio(Episodio ep)
+        {
+            ep.PropertyChanged += PropertyChangedEpisodiosRestantes;
+        }
+
+        public void quitarHandlerDeRestantesAEpisodio(Episodio ep)
+        {
+            ep.PropertyChanged -= PropertyChangedEpisodiosRestantes;
+        }
+
+        public void bajarInformacion()
+        {
+            if (!GPrinc.IsMouseOver && !episodiosMostrados)
+            {
+                GPrinc_MouseLeave(null, null);
+            }
+
+
+            if (!episodiosMostrados)
+            {
+                GPrinc.MouseEnter += GPrinc_MouseEnter;
+                GPrinc.MouseLeave += GPrinc_MouseLeave;
+            }
+        }
 
 
 

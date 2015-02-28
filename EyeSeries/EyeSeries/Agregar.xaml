@@ -35,17 +35,19 @@
             <Label x:Name="Seleccional" Content="Selecciona:" HorizontalAlignment="Left" Margin="20,88,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.533,-0.414" Foreground="Black"/>
             <ListBox x:Name="Opciones" HorizontalAlignment="Left" Height="119" Margin="20,117,0,0" VerticalAlignment="Top" Width="276" SelectionChanged="Opciones_SelectionChanged"/>
         </Grid>
-        <Grid x:Name="Etapa2" HorizontalAlignment="Left" Height="139" Margin="0,238,0,0" VerticalAlignment="Top" Width="318" Visibility="Hidden" Opacity="0">
+        <Grid x:Name="Etapa2" HorizontalAlignment="Left" Height="139" Margin="0,238,0,0" VerticalAlignment="Top" Width="318" Opacity="0" Visibility="Hidden">
             <Label x:Name="Temporada" Content="Temporada:" HorizontalAlignment="Left" Margin="20,47,0,0" VerticalAlignment="Top" Foreground="Black"/>
             <ComboBox x:Name="Temp" HorizontalAlignment="Left" Margin="93,51,0,0" VerticalAlignment="Top" Width="40" RenderTransformOrigin="-0.714,0.773" SelectionChanged="Temp_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Opacity="0" Visibility="Hidden"/>
-            <Image x:Name="Banner" HorizontalAlignment="Left" Height="59" VerticalAlignment="Top" Width="318" Margin="0,80,0,0" Opacity="0"/>
+            <Image x:Name="Banner" HorizontalAlignment="Left" Height="59" VerticalAlignment="Top" Width="318" Margin="0,80,0,0" Opacity="0" RenderOptions.BitmapScalingMode="Fant"/>
             <Label x:Name="Capitulo" Content="Capitulo:" HorizontalAlignment="Left" Margin="141,49,0,0" VerticalAlignment="Top" Foreground="Black" Opacity="0" Visibility="Hidden"/>
             <ComboBox x:Name="Cap" HorizontalAlignment="Left" Margin="198,51,0,0" VerticalAlignment="Top" Width="40" RenderTransformOrigin="-0.714,0.773" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" SelectionChanged="Cap_SelectionChanged" Opacity="0" Visibility="Hidden"/>
             <Label x:Name="Ultepv" Content="Ultimo episodio visto:" HorizontalAlignment="Left" Margin="20,0,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.533,-0.414" Foreground="Black"/>
             <RadioButton x:Name="Ninguno" Content="Ninguno" HorizontalAlignment="Left" Margin="27,27,0,0" VerticalAlignment="Top" GroupName="Grupo" Click="Ninguno_Click"/>
             <RadioButton x:Name="Selecciona" Content="Selecciona" HorizontalAlignment="Left" Margin="110,27,0,0" VerticalAlignment="Top" IsChecked="True" GroupName="Grupo" Click="Selecciona_Click"/>
         </Grid>
-        <Image x:Name="Aceptar" HorizontalAlignment="Left" Margin="146,383,0,0" VerticalAlignment="Top" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\aceptar.png" Stretch="None" MouseUp="Aceptar_MouseUp" Opacity="0" Visibility="Hidden"/>
+        <Grid x:Name="Etapa3" HorizontalAlignment="Left" Height="35" Margin="0,377,0,0" VerticalAlignment="Top" Width="318" Visibility="Hidden" Opacity="0">
+            <Image x:Name="Aceptar" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center" Source="C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\aceptar.png" Stretch="None" MouseUp="Aceptar_MouseUp"/>
+        </Grid>
 
     </Grid>
 </UserControl>

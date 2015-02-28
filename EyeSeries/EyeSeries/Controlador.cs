@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -9,9 +10,11 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Threading;
+using System.Xml;
 using UTorrentAPI;
 
 namespace EyeSeries
@@ -62,11 +65,18 @@ namespace EyeSeries
                 int id = Convert.ToInt32(leer.ReadLine());
                 int subid = Convert.ToInt32(leer.ReadLine());
                 string cap = leer.ReadLine();
+
                 int temp = Convert.ToInt32(cap.Split(' ')[0]);
                 int capi = Convert.ToInt32(cap.Split(' ')[1]);
                 char estado = Convert.ToChar(leer.ReadLine());
+
                 string hora = leer.ReadLine();
-                Serie s = new Serie(id, nombre, temp, capi, i, estado, hora, subid, this);
+                string capUV = leer.ReadLine();
+
+                int tempUV = Convert.ToInt32(capUV.Split(' ')[0]);
+                int capiUV = Convert.ToInt32(capUV.Split(' ')[1]);
+
+                Serie s = new Serie(id, nombre, temp, capi, i, estado, hora, subid, tempUV, capiUV, this);
                 Series.Add(s);
                 leer.ReadLine();
                 i++;
@@ -129,7 +139,7 @@ namespace EyeSeries
                 }
 
                 //Se agrega la serie a la interfaz
-                Interfaz.AgregarSerie2(s, cont);
+                Interfaz.agregarSerie(s, cont);
              
                 cont++;
             }
@@ -143,7 +153,7 @@ namespace EyeSeries
             //Se inicia el chequeo a ver si algo ya se termino de descargar
             checarTerminodeDescarga.Start();
 
-
+            Interfaz.bajarInformacion();
 
             DateTime final = DateTime.Now;
             TimeSpan diferencia = final - inicio;
@@ -156,23 +166,52 @@ namespace EyeSeries
             s.Temporada = temp;
             s.Capitulo = cap;
 
+
             if (!System.IO.Directory.Exists(@"C:\Users\Marcelo\Videos\Series\" + s.Nombre))
             {
                 System.IO.Directory.CreateDirectory(@"C:\Users\Marcelo\Videos\Series\" + s.Nombre);
             }
 
-            s.moverEpisodiosVistosaNoVistos();
+            if (temp != 0 && cap != 0)
+            {
+                s.moverEpisodiosVistosaNoVistos();
+                Episodio aux = s.EpisodiosNoVistos[0];
+                if (aux.Fecha > DateTime.Now)
+                {
+                    s.AlDia = true;
+                }
+            }
+            else
+            {  
+                s.EpisodiosNoVistos = new List<Episodio>();
+                s.guardarEpisodiosVistos();
+                s.guardarEpisodiosNoVistos();
+                s.AlDia = true;
+            }
 
-            Interfaz.AgregarSerie2(s, Series.Count);
+            Interfaz.agregarSerie(s, Series.Count);
+
+            Interfaz.agregarDesgloseEpisodios(Interfaz.getInterfazSerie(Series.Count), true);
+
+            Interfaz.reacomodarInterfazAñadir(Series.Count + 1, true);
 
             Series.Add(s);
+
+            guardarBasedeDatos();
             
         }
 
         public double getProgresoTorrent(string hash)
         {
-            double prog = (double)uClient.Torrents[hash].ProgressInMils / 10.0;
-            return Math.Round(prog, 1);
+            if (hash != "-1")
+            {
+                double prog = (double)uClient.Torrents[hash].ProgressInMils / 10.0;
+                return Math.Round(prog, 1);
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         public bool torrentTerminado(string hash)
@@ -268,7 +307,7 @@ namespace EyeSeries
             string codigoFuentePagina = "";
             while (!torrentEncontrado)
             {
-                string pagina = @"http://kickass.so/usearch/"+ nombreSerie + " S" + temp +"E" + cap + " " + calidad + @"/?field=seeders&sorder=desc";
+                string pagina = @"http://kickass.to/usearch/"+ nombreSerie + " S" + temp +"E" + cap + " " + calidad + @"/?field=seeders&sorder=desc";
 
                 //Se saca el codigo fuente de la pagina
                 HttpDownloader fuente = new HttpDownloader(pagina, "kickass.so", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:29.0) Gecko/20100101 Firefox/29.0");
@@ -299,11 +338,12 @@ namespace EyeSeries
                 Regex encontrarMagnet = new Regex("Torrent magnet link\" href=\"(.*?)\"");
                 string magnet = encontrarMagnet.Match(codigoFuentePagina).Groups[1].Value;
 
+                uClient.Torrents.AddUrl(magnet);
+
                 //Saca el HASH del link
                 Regex r2 = new Regex(".+xt=urn:btih:(.+?)&dn=.+");
                 ep.Hash = r2.Match(magnet).Groups[1].Value.ToUpper();
 
-                uClient.Torrents.AddUrl(magnet);
             }
 
             else
@@ -405,30 +445,53 @@ namespace EyeSeries
                 System.IO.Directory.CreateDirectory(pathDestino);
             }
 
-            //Se elimina el torrent de la lista de torrents
-            uClient.Torrents.Remove(ep.Hash, TorrentRemovalOptions.TorrentFile);
-            //Se pone su hash en -1
-            ep.Hash = "-1";
 
             //Se añade al path destino el capitulo
             pathDestino += @"\Episodio " + ep.Capitulo + ".mkv";
 
-            try
+            //Se elimina el torrent de la lista de torrents
+            uClient.Torrents.Remove(ep.Hash, TorrentRemovalOptions.TorrentFile);
+
+            Timer moveryDescargar = new Timer()
             {
-                if (!System.IO.File.Exists(pathDestino))
+                Interval = 1,
+            };
+
+            moveryDescargar.Elapsed += (sender, e) =>
                 {
-                    //Se copia al destino
-                    System.IO.File.Move(pathOrigen, pathDestino);
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("No jalo! " + e.Message);
-            }
+                    try
+                    {
 
-            //Se descarga el subtitulo
-            descargarSubtituloSUBDB(nombreArchivo, pathDestino, ep);
+                        moveryDescargar.Interval = 400;
 
+                        if (!System.IO.File.Exists(pathDestino))
+                        {
+                            //Se copia al destino
+                            System.IO.File.Move(pathOrigen, pathDestino);
+                        }
+
+                        ((Timer)sender).Stop();
+
+                        //Se descarga el subtitulo
+                        descargarSubtituloSUBDB(nombreArchivo, pathDestino, ep);
+
+                        //Se pone su hash en -1
+                        ep.Hash = "-1";
+
+                        
+
+                        
+
+
+
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("No jalo! " + ex.Message);
+                    }
+                };
+
+            moveryDescargar.Start();
         }
 
         private void descargarSubtituloSUBDB(string nombreArchivo, string pathDestino, Episodio ep)
@@ -527,18 +590,15 @@ namespace EyeSeries
                     {
                         if (ep.Estado == 1)
                         {
-                            if (ep.Hash != "-1")
+                            if (ep.Hash != "-1" && torrentTerminado(ep.Hash))
                             {
-                                if (torrentTerminado(ep.Hash))
-                                {
-                                    BackgroundWorker b = new BackgroundWorker();
-                                    b.DoWork += (sender2, e2) => moverEpisodioTerminado(ep);
-                                    b.RunWorkerAsync();
-                                    s.Descargando--;
-                                    s.PorVer++;
-                                    ep.Estado = 2;
-                                    s.guardarEpisodiosNoVistos();
-                                }
+                                BackgroundWorker b = new BackgroundWorker();
+                                b.DoWork += (sender2, e2) => moverEpisodioTerminado(ep);
+                                b.RunWorkerAsync();
+                                s.Descargando--;
+                                s.PorVer++;
+                                ep.Estado = 2;
+                                s.guardarEpisodiosNoVistos();                                
                             }
 
                         }
@@ -568,9 +628,7 @@ namespace EyeSeries
                     };
                 b.RunWorkerCompleted += (sender, e) =>
                     {
-                        Interfaz.agregarDesgloseEpisodios(s);
-                        serieaDesplegar.episodiosCargados = true;
-
+                        Interfaz.agregarDesgloseEpisodios(s, false);
                     };
                 b.RunWorkerAsync();
             }
@@ -604,13 +662,23 @@ namespace EyeSeries
             {
                 if (ep.Estado == 3)
                 {
+                    List<Episodio> aDescargar = new List<Episodio>();
+                    Se.AlDia = false;
 
-                    for (int t = Se.EpisodiosVistos.Count - 1; t >= Se.Temporada - 1; t--)
+                    if (Se.Temporada != 0)
+                    {
+                        Interfaz.getInterfazSerie(Se.Numserie).quitarHandlerAEpisodioPrincipal();
+                    }
+
+                    Interfaz.getInterfazSerie(Se.Numserie).agregarHandlerDeRestantesAEpisodio(ep);
+
+                    for (int t = Se.EpisodiosVistos.Count - 1; t >= ep.Temporada - 1; t--)
                     {
                         int c = Se.EpisodiosVistos[t].Count - 1;
                         while (t == ep.Temporada - 1? c >= ep.Capitulo - 1 : c >= 0)
                         {
-                           
+
+                            
                             Episodio epReferenciado = Se.EpisodiosVistos[t][c];
                             if (System.IO.File.Exists(@"C:\Users\Marcelo\Videos\Series\" + Se.Nombre + @"\Temporada " + epReferenciado.Temporada + @"\Episodio " + epReferenciado.Capitulo + ".mkv"))
                             {
@@ -619,11 +687,8 @@ namespace EyeSeries
                             }
                             else
                             {
-                                epReferenciado.Estado = 1;
-                                BackgroundWorker b = new BackgroundWorker();
-                                b.DoWork += (sender, e) => descargarEpisodio(ep);
-                                b.RunWorkerCompleted += (sender, e) => Se.Descargando++;
-                                
+                                aDescargar.Add(epReferenciado);
+                                epReferenciado.Estado = 1;                               
                             }
                             c--;
 
@@ -639,16 +704,259 @@ namespace EyeSeries
                         }
                     }
 
+                    if (ep.Capitulo == 1)
+                    {
+                        if (ep.Temporada == 1)
+                        {
+                            Se.TemporadaUltEpisodioVisto = 0;
+                            Se.CapituloUltEpisodioVisto = 0;
+                        }
+                        else
+                        {
+                            Se.TemporadaUltEpisodioVisto = ep.Temporada - 1;
+                            Se.CapituloUltEpisodioVisto = Se.EpisodiosVistos[Se.TemporadaUltEpisodioVisto - 1].Count;
+                        }
+                    }
+                    else
+                    {
+                        Se.TemporadaUltEpisodioVisto = ep.Temporada;
+                        Se.CapituloUltEpisodioVisto = ep.Capitulo - 1;
+                    }
+
+
+
+
                     Se.Temporada = ep.Temporada;
                     Se.Capitulo = ep.Capitulo;
 
-                    Se.guardarEpisodiosNoVistos();
-                    Se.guardarEpisodiosVistos();
-                    guardarBasedeDatos();
+                    Interfaz.getInterfazSerie(Se.Numserie).quitarHandlerDeRestantesAEpisodio(Se.EpisodiosNoVistos[0]);
+                    Interfaz.getInterfazSerie(Se.Numserie).agregarHandlerAEpisodioPrincipal();
+
+                    BackgroundWorker b = new BackgroundWorker();
+                    b.DoWork += (sender, e) =>
+                        {
+                            foreach (Episodio epi in aDescargar)
+                            {
+                                descargarEpisodio(epi);
+                                Se.Descargando++;
+                            }
+                            Se.guardarEpisodiosNoVistos();
+                            Se.guardarEpisodiosVistos();
+                            guardarBasedeDatos();
+                        };
+                    b.RunWorkerAsync();
+                    
+
+
                 }
             }
         }
 
+        public void quitarTorrent(string hash)
+        {
+            uClient.Torrents.Remove(hash, TorrentRemovalOptions.TorrentFileAndData);
+        }
+
+        public void eliminarSerie(int num)
+        {
+            Serie eliminaS = Series[num];
+            checarTerminodeDescarga.Stop();
+
+            foreach (Episodio ep in eliminaS.EpisodiosNoVistos)
+            {
+                if (ep.Estado == 1)
+                {
+                    quitarTorrent(ep.Hash);
+                }
+                else
+                {
+                    if (ep.Estado == 0)
+                        break;
+                }
+            }
+
+            Interfaz.eliminarSeriedeInterfaz(num);
+
+            Series.RemoveAt(num);
+
+            guardarBasedeDatos();
+
+            
+
+            System.IO.File.Delete(@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Bases de Datos\Series\EpisodiosNoVistos\" + eliminaS.Nombre + ".txt");
+            System.IO.File.Delete(@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Bases de Datos\Series\EpisodiosVistos\" + eliminaS.Nombre + ".txt");
+            System.IO.File.Delete(@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\FanArt\" + eliminaS.Nombre + ".jpg");
+
+            checarTerminodeDescarga.Start();
+
+
+
+
+
+        }
+
+        public void actualizarBasedeDatos()
+        {
+            List<Serie> seriesaActualizar = new List<Serie>(Series);
+
+            foreach (Serie s in seriesaActualizar)
+            {
+                //Se carga el documento de la info de las series
+                XmlDocument doc = new XmlDocument();
+                doc.Load(@"http://thetvdb.com/api/97AAE7796E3F60D2/series/" + s.Id + "/all/en.xml");
+
+                //Se pone el estado de la serie (si cambio o no)
+                s.Estado = doc.SelectSingleNode("/Data/Series/Status").InnerText == "Continuing" ? 'c' : 'e';
+
+                //Se sacan los nodos de todos los episodios
+                XmlNodeList episodios = doc.SelectNodes("/Data/Episode");
+
+                
+                bool encontrado = false;  //Variable que sirve para saber si el episodio con el que se empezará la actualización ya se encontro
+                int numEp = 0;           //Variable que sirve para saber el numero de episodio que se está actualizando
+                //Se crea una lista de los episodios que se van a descargar; si es que hay
+                List<Episodio> aDescargar = new List<Episodio>();
+                //Se recorren todos los nodos de los episodios
+                foreach (XmlNode e in episodios)
+                {
+                   
+                    //Ignora todos los episodios extras
+                    if (e.SelectSingleNode("SeasonNumber").InnerText != "" && e.SelectSingleNode("SeasonNumber").InnerText != "0" && e.SelectSingleNode("FirstAired").InnerText != "")
+                    {
+                        int temporada = int.Parse(e.SelectSingleNode("SeasonNumber").InnerText);   //Se saca la temporada del episodio
+                        int capitulo = int.Parse(e.SelectSingleNode("EpisodeNumber").InnerText);  //Se saca el capitulo del episodio
+                        
+                        //Si no se ha encontrado el capitulo, lo busca
+                        if (!encontrado)
+                        {
+                            if (temporada == s.TemporadaUltEpisodioVisto && capitulo == s.CapituloUltEpisodioVisto)
+                            {
+                                encontrado = true;
+                            }
+                        }
+                        //Si ya se encontró
+                        else
+                        {
+                            //Se saca su nombre
+                            string nombreEp = e.SelectSingleNode("EpisodeName").InnerText;
+                            //Se saca su fecha
+                            DateTime fecha = convertirAFecha(e.SelectSingleNode("FirstAired").InnerText, s.Hora);
+                            fecha = fecha.AddDays(0.5);
+
+                            //Si el episodio coincide con alguno de los que ya se encuentra
+                            if (numEp + 1 <= s.EpisodiosNoVistos.Count)
+                            {
+                                //Se saca dicho episodio
+                                Episodio epAActualizar = s.EpisodiosNoVistos[numEp];
+
+                                //Se determina si en realidad es el episodio buscado
+                                if (epAActualizar.Temporada == temporada && epAActualizar.Capitulo == capitulo)
+                                {
+                                    epAActualizar.Fecha = fecha;
+                                    epAActualizar.NombreEp = nombreEp;
+                                }
+                                //Si no es, se maneja una excepción
+                                else
+                                {
+                                    MessageBox.Show("Esto no deberia de pasar\r\nEpisodioQuePareció S" + temporada + "E" + capitulo + " Episodio Real: S" + epAActualizar.Temporada + "E" + epAActualizar.Capitulo);
+                                }
+                            }
+                            //Si el episodio no coincide con ninguno de los que ya están (es decir el numero de episodio es mayor que el total de episodios
+                            else
+                            {
+
+
+                                //Se crea el nuevo episodio con los parametros sacados
+                                Episodio epAAgregar = new Episodio(s, temporada, capitulo, nombreEp, "-1", fecha, 0, "720p");
+                                //Se agrega a la lista de episodios
+                                s.EpisodiosNoVistos.Add(epAAgregar);
+
+                                //Si no hay ningun episodio actual
+                                if (s.Temporada == 0 && s.Capitulo == 0)
+                                {
+                                    //Se le agrega el handler al episodio recien agregado
+                                    Interfaz.getInterfazSerie(s.Numserie).agregarHandlerAEpisodioPrincipal();
+                                    //Se cambia la temporada y capitulo
+                                    s.Temporada = epAAgregar.Temporada;
+                                    s.Capitulo = epAAgregar.Capitulo;
+                                }
+
+                                //Si ya estan cargados los episodios
+                                if (s.episodiosCargados)
+                                {
+                                    if (epAAgregar.Capitulo == 1)
+                                    {
+                                        Interfaz.getInterfazSerie(s.Numserie).agregarTemporadaAlDesglose();
+                                        Interfaz.getInterfazSerie(s.Numserie).Sig.Visibility = Visibility.Visible;
+                                    }
+                                    //Se agrega al desglose 
+                                    Interfaz.getInterfazSerie(s.Numserie).agregarEpisodioAlDesglose(epAAgregar);
+                                }
+                                
+
+                                //Se checa si el episodio que se va a agregar ya salió para descargarlo
+                                if (DateTime.Now > epAAgregar.Fecha)
+                                {
+                                    s.AlDia = false;
+                                    aDescargar.Add(epAAgregar);
+                                }
+
+
+
+
+                            }
+
+                            numEp++;
+                        }
+                    }
+                }
+
+                //Se descargan todos los episodios que ya salieron
+                BackgroundWorker b = new BackgroundWorker();
+                b.DoWork += (sender, e2) =>
+                {
+                    foreach (Episodio ep in aDescargar)
+                    {
+                        descargarEpisodio(ep);
+                        ep.Estado = 1;
+                        s.Descargando++;
+                    }
+
+                    if (aDescargar.Count != 0)
+                    {
+                        guardarBasedeDatos();
+                        s.guardarEpisodiosNoVistos();
+                    }
+
+                };
+                b.RunWorkerAsync();
+
+                if (aDescargar.Count == 0)
+                {
+                    guardarBasedeDatos();
+                    s.guardarEpisodiosNoVistos();
+                }
+
+            } 
+
+
+        }
+
+        public void prueba()
+        {
+            actualizarBasedeDatos();
+        }
+
+        private DateTime convertirAFecha(string fecha, string horas)
+        {
+            int hora = Convert.ToInt32(horas.Split(':')[0]);
+            int minutos = Convert.ToInt32(horas.Split(':')[1].Split(' ')[0]);
+            hora = horas.Split(':')[1].Split(' ')[1] == "PM" ? hora += 12 : hora;
+            return new DateTime(Convert.ToInt32(fecha.Substring(0, 4)), Convert.ToInt32(fecha.Substring(5, 2)), Convert.ToInt32(fecha.Substring(8, 2)), hora, minutos, 0);
+        }
 
     }
+
+
+
 }

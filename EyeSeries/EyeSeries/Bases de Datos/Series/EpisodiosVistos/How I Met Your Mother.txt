@@ -1,0 +1,191 @@
+1*1*Pilot*-1*2005/9/20/8/0*3
+1*2*Purple Giraffe*-1*2005/9/27/8/0*3
+1*3*Sweet Taste of Liberty*-1*2005/10/4/8/0*3
+1*4*Return of the Shirt*-1*2005/10/11/8/0*3
+1*5*Okay Awesome*-1*2005/10/18/8/0*3
+1*6*The Slutty Pumpkin*-1*2005/10/25/8/0*3
+1*7*Matchmaker*-1*2005/11/8/8/0*3
+1*8*The Duel*-1*2005/11/15/8/0*3
+1*9*Belly Full of Turkey*-1*2005/11/22/8/0*3
+1*10*The Pineapple Incident*-1*2005/11/29/8/0*3
+1*11*The Limo*-1*2005/12/20/8/0*3
+1*12*The Wedding*-1*2006/1/10/8/0*3
+1*13*Drumroll, Please*-1*2006/1/24/8/0*3
+1*14*Zip, Zip, Zip*-1*2006/2/28/8/0*3
+1*15*Game Night*-1*2006/2/7/8/0*3
+1*16*Cupcake*-1*2006/3/7/8/0*3
+1*17*Life Among the Gorillas*-1*2006/3/21/8/0*3
+1*18*Nothing Good Happens After 2 AM*-1*2006/4/11/8/0*3
+1*19*Mary the Paralegal*-1*2006/4/25/8/0*3
+1*20*Best Prom Ever*-1*2006/5/2/8/0*3
+1*21*Milk*-1*2006/5/9/8/0*3
+1*22*Come On*-1*2006/5/16/8/0*3
+-
+2*1*Where Were We?*-1*2006/9/19/8/0*3
+2*2*The Scorpion and the Toad*-1*2006/9/26/8/0*3
+2*3*Brunch*-1*2006/10/3/8/0*3
+2*4*Ted Mosby, Architect*-1*2006/10/10/8/0*3
+2*5*World's Greatest Couple*-1*2006/10/17/8/0*3
+2*6*Aldrin Justice*-1*2006/10/24/8/0*3
+2*7*Swarley*-1*2006/11/7/8/0*3
+2*8*Atlantic City*-1*2006/11/14/8/0*3
+2*9*Slap Bet*-1*2006/11/21/8/0*3
+2*10*Single Stamina*-1*2006/11/28/8/0*3
+2*11*How Lily Stole Christmas*-1*2006/12/12/8/0*3
+2*12*First Time in New York*-1*2007/1/9/8/0*3
+2*13*Columns*-1*2007/1/23/8/0*3
+2*14*Monday Night Football*-1*2007/2/6/8/0*3
+2*15*Lucky Penny*-1*2007/2/13/8/0*3
+2*16*Stuff*-1*2007/2/20/8/0*3
+2*17*Arrivederci, Fiero*-1*2007/2/27/8/0*3
+2*18*Moving Day*-1*2007/3/20/8/0*3
+2*19*Bachelor Party*-1*2007/4/10/8/0*3
+2*20*Showdown*-1*2007/5/1/8/0*3
+2*21*Something Borrowed*-1*2007/5/8/8/0*3
+2*22*Something Blue*-1*2007/5/15/8/0*3
+-
+3*1*Wait for It*-1*2007/9/25/8/0*3
+3*2*We're Not from Here*-1*2007/10/2/8/0*3
+3*3*Third Wheel*-1*2007/10/9/8/0*3
+3*4*Little Boys*-1*2007/10/16/8/0*3
+3*5*How I Met Everyone Else*-1*2007/10/23/8/0*3
+3*6*I'm Not That Guy*-1*2007/10/30/8/0*3
+3*7*Dowisetrepla*-1*2007/11/6/8/0*3
+3*8*Spoiler Alert*-1*2007/11/13/8/0*3
+3*9*Slapsgiving*-1*2007/11/20/8/0*3
+3*10*The Yips*-1*2007/11/27/8/0*3
+3*11*The Platinum Rule*-1*2007/12/11/8/0*3
+3*12*No Tomorrow*-1*2008/3/18/8/0*3
+3*13*Ten Sessions*-1*2008/3/25/8/0*3
+3*14*The Bracket*-1*2008/4/1/8/0*3
+3*15*The Chain of Screaming*-1*2008/4/15/8/0*3
+3*16*Sandcastles in the Sand*-1*2008/4/22/8/0*3
+3*17*The Goat*-1*2008/4/29/8/0*3
+3*18*Rebound Bro*-1*2008/5/6/8/0*3
+3*19*Everything Must Go*-1*2008/5/13/8/0*3
+3*20*Miracles*-1*2008/5/20/8/0*3
+-
+4*1*Do I Know You?*-1*2008/9/23/8/0*3
+4*2*The Best Burger in New York*-1*2008/9/30/8/0*3
+4*3*I Heart NJ*-1*2008/10/7/8/0*3
+4*4*Intervention*-1*2008/10/14/8/0*3
+4*5*Shelter Island*-1*2008/10/21/8/0*3
+4*6*Happily Ever After*-1*2008/11/4/8/0*3
+4*7*Not a Father's Day*-1*2008/11/11/8/0*3
+4*8*Woooo!*-1*2008/11/18/8/0*3
+4*9*The Naked Man*-1*2008/11/25/8/0*3
+4*10*The Fight*-1*2008/12/9/8/0*3
+4*11*Little Minnesota*-1*2008/12/16/8/0*3
+4*12*Benefits*-1*2009/1/13/8/0*3
+4*13*Three Days of Snow*-1*2009/1/20/8/0*3
+4*14*The Possimpible*-1*2009/2/3/8/0*3
+4*15*The Stinsons*-1*2009/3/3/8/0*3
+4*16*Sorry, Bro*-1*2009/3/10/8/0*3
+4*17*The Front Porch*-1*2009/3/17/8/0*3
+4*18*Old King Clancy*-1*2009/3/24/8/0*3
+4*19*Murtaugh*-1*2009/3/31/8/0*3
+4*20*Mosbius Designs*-1*2009/4/14/8/0*3
+4*21*The Three Days Rule*-1*2009/4/28/8/0*3
+4*22*Right Place Right Time*-1*2009/5/5/8/0*3
+4*23*As Fast as She Can*-1*2009/5/12/8/0*3
+4*24*The Leap*-1*2009/5/19/8/0*3
+-
+5*1*Definitions*-1*2009/9/22/8/0*3
+5*2*Double Date*-1*2009/9/29/8/0*3
+5*3*Robin 101*-1*2009/10/6/8/0*3
+5*4*The Sexless Innkeeper*-1*2009/10/13/8/0*3
+5*5*Duel Citizenship*-1*2009/10/20/8/0*3
+5*6*Bagpipes*-1*2009/11/3/8/0*3
+5*7*The Rough Patch*-1*2009/11/10/8/0*3
+5*8*The Playbook*-1*2009/11/17/8/0*3
+5*9*Slapsgiving 2: Revenge of the Slap*-1*2009/11/24/8/0*3
+5*10*The Window*-1*2009/12/8/8/0*3
+5*11*Last Cigarette Ever*-1*2009/12/15/8/0*3
+5*12*Girls Vs. Suits*-1*2010/1/12/8/0*3
+5*13*Jenkins*-1*2010/1/19/8/0*3
+5*14*Perfect Week*-1*2010/2/2/8/0*3
+5*15*Rabbit or Duck*-1*2010/2/9/8/0*3
+5*16*Hooked*-1*2010/3/2/8/0*3
+5*17*Of Course*-1*2010/3/9/8/0*3
+5*18*Say Cheese*-1*2010/3/23/8/0*3
+5*19*Zoo or False*-1*2010/4/13/8/0*3
+5*20*Home Wreckers*-1*2010/4/20/8/0*3
+5*21*Twin Beds*-1*2010/5/4/8/0*3
+5*22*Robots Vs. Wrestlers*-1*2010/5/11/8/0*3
+5*23*The Wedding Bride*-1*2010/5/18/8/0*3
+5*24*Doppelgangers*-1*2010/5/25/8/0*3
+-
+6*1*Big Days*-1*2010/9/21/8/0*3
+6*2*Cleaning House*-1*2010/9/28/8/0*3
+6*3*Unfinished*-1*2010/10/5/8/0*3
+6*4*Subway Wars*-1*2010/10/12/8/0*3
+6*5*Architect of Destruction*-1*2010/10/19/8/0*3
+6*6*Baby Talk*-1*2010/10/26/8/0*3
+6*7*Canning Randy*-1*2010/11/2/8/0*3
+6*8*Natural History*-1*2010/11/9/8/0*3
+6*9*Glitter*-1*2010/11/16/8/0*3
+6*10*Blitzgiving*-1*2010/11/23/8/0*3
+6*11*The Mermaid Theory*-1*2010/12/7/8/0*3
+6*12*False Positive*-1*2010/12/14/8/0*3
+6*13*Bad News*-1*2011/1/4/8/0*3
+6*14*Last Words*-1*2011/1/18/8/0*3
+6*15*Oh Honey*-1*2011/2/8/8/0*3
+6*16*Desperation Day*-1*2011/2/15/8/0*3
+6*17*Garbage Island*-1*2011/2/22/8/0*3
+6*18*A Change of Heart*-1*2011/3/1/8/0*3
+6*19*Legendaddy*-1*2011/3/22/8/0*3
+6*20*The Exploding Meatball Sub*-1*2011/4/12/8/0*3
+6*21*Hopeless*-1*2011/4/19/8/0*3
+6*22*The Perfect Cocktail*-1*2011/5/3/8/0*3
+6*23*Landmarks*-1*2011/5/10/8/0*3
+6*24*Challenge Accepted*-1*2011/5/17/8/0*3
+-
+7*1*The Best Man*-1*2011/9/20/8/0*3
+7*2*The Naked Truth*-1*2011/9/20/8/0*3
+7*3*Ducky Tie*-1*2011/9/27/8/0*3
+7*4*The Stinson Missile Crisis*-1*2011/10/4/8/0*3
+7*5*Field Trip*-1*2011/10/11/8/0*3
+7*6*Mystery Vs. History*-1*2011/10/18/8/0*3
+7*7*Noretta*-1*2011/10/25/8/0*3
+7*8*The Slutty Pumpkin Returns*-1*2011/11/1/8/0*3
+7*9*Disaster Averted*-1*2011/11/8/8/0*3
+7*10*Tick Tick Tick*-1*2011/11/15/8/0*3
+7*11*The Rebound Girl*-1*2011/11/22/8/0*3
+7*12*Symphony of Illumination*-1*2011/12/6/8/0*3
+7*13*Tailgate*-1*2012/1/3/8/0*3
+7*14*46 Minutes*-1*2012/1/17/8/0*3
+7*15*The Burning Beekeeper*-1*2012/2/7/8/0*3
+7*16*The Drunk Train*-1*2012/2/14/8/0*3
+7*17*No Pressure*-1*2012/2/21/8/0*3
+7*18*Karma*-1*2012/2/28/8/0*3
+7*19*The Broath*-1*2012/3/20/8/0*3
+7*20*Trilogy Time*-1*2012/4/10/8/0*3
+7*21*Now We're Even*-1*2012/4/17/8/0*3
+7*22*Good Crazy*-1*2012/5/1/8/0*3
+7*23*The Magician's Code: Part One*-1*2012/5/15/8/0*3
+7*24*The Magician's Code: Part Two*-1*2012/5/15/8/0*3
+-
+8*1*Farhampton*-1*2012/9/25/8/0*3
+8*2*The Pre-Nup*-1*2012/10/2/8/0*3
+8*3*Nannies*-1*2012/10/9/8/0*3
+8*4*Who Wants to Be a Godparent*-1*2012/10/16/8/0*3
+8*5*The Autumn of Breakups*-1*2012/11/6/8/0*3
+8*6*Splitsville*-1*2012/11/13/8/0*3
+8*7*The Stamp Tramp*-1*2012/11/20/8/0*3
+8*8*Twelve Horny Women*-1*2012/11/27/8/0*3
+8*9*Lobster Crawl*-1*2012/12/4/8/0*3
+8*10*The Over-Correction*-1*2012/12/11/8/0*3
+8*11*The Final Page: Part One*-1*2012/12/18/8/0*3
+8*12*The Final Page: Part Two*-1*2012/12/18/8/0*3
+8*13*Band or DJ?*-1*2013/1/15/8/0*3
+8*14*Ring Up!*-1*2013/1/22/8/0*3
+8*15*P.S. I Love You*-1*2013/2/5/8/0*3
+8*16*Bad Crazy*-1*2013/2/12/8/0*3
+8*17*The Ashtray*-1*2013/2/19/8/0*3
+8*18*Weekend at Barney's*-1*2013/2/26/8/0*3
+8*19*The Fortress*-1*2013/3/19/8/0*3
+8*20*The Time Travelers*-1*2013/3/26/8/0*3
+8*21*Romeward Bound*-1*2013/4/16/8/0*3
+8*22*The Bro Mitzvah*-1*2013/4/30/8/0*3
+8*23*Something Old*-1*2013/5/7/8/0*3
+8*24*Something New*-1*2013/5/14/8/0*3

@@ -323,12 +323,12 @@ namespace EyeSeries
          
             if (IconoSiguiente.IsMouseOver)
             {
-                if (IntSeries[5 * (PagAct + 1)].episodiosMostrados)
+                if (!IntSeries[5 * (PagAct + 1)].episodiosMostrados)
                     im.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 250)));
             }
             else
             {
-                if (IntSeries[3 * (PagAct + 1)].episodiosMostrados)
+                if (!IntSeries[3 * (PagAct + 1)].episodiosMostrados)
                     im.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 250)));
             }
 
@@ -401,7 +401,8 @@ namespace EyeSeries
             gPrinc.Children.Add(aux);  
             if (num != 0)
             {
-                gPrinc.Margin = new Thickness(gPrinc.Margin.Left, 0, PagAct == 0? -1068 * num : -1068, 0);               
+                Thickness nueva = new Thickness(gPrinc.Margin.Left, 0, PagAct == 0 ? -1068 * num : -1068, 0);
+                gPrinc.BeginAnimation(MarginProperty, new ThicknessAnimation(nueva, TimeSpan.FromMilliseconds(1)));             
             }
             if (num != 0 && PagAct != 0)
             {
@@ -414,78 +415,8 @@ namespace EyeSeries
             
         }
 
-      /*  private void AgregarSerie(Serie s, int temp, int capi, int num)
-        {
-            int pag = num / 9;
-            int fil = (num % 9) / 3;
-            int col = (num % 9) % 3;
-            if (num % 9 == 0 && num != 0)
-            {
-                CrearPag(pag);
-            }
 
-            IntSerie aux;
-            aux = new IntSerie(s, this);
-            if (col == 1) aux.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
-            else if (col == 2) aux.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
-
-            if (fil == 1) aux.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-            else if (fil == 2) aux.VerticalAlignment = System.Windows.VerticalAlignment.Bottom;
-           
-            Pags[pag].Children.Add(aux);
-            
-            IntSeries.Add(aux);
-            Grid.SetRow(aux, fil);
-            Grid.SetColumn(aux, col);
-            Grid.SetRowSpan(aux, 1);
-            Grid.SetColumnSpan(aux, 1);
-
-            
-            
-            BackgroundWorker b = new BackgroundWorker();
-            b.DoWork += (sender, e) =>
-            {
-                Application.Current.Dispatcher.Invoke(
-                    DispatcherPriority.Normal,
-                    (ThreadStart)delegate
-                    {
-                       aux.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 500))); 
-                    });
-                    
-                    s.AlimentarEps(temp, capi);
-                    Application.Current.Dispatcher.Invoke(
-                    DispatcherPriority.Normal,
-                    (ThreadStart)delegate
-                    {
-                       
-                        aux.agregarDesgloseEpisodios();
-            
-                    });
-                };
-            b.RunWorkerCompleted += (sender2, e2) =>
-                {
-                    Cargado++;
-                    if (Cargado == Series.Count)
-                    {
-                        
-                        empieza.Start();
-                        if (Actualizar)
-                        {
-                            TerminoActualizacion = false;
-                            ActualizarBD();
-                        }
-                        
-                        
-
-                    }
-                };
-                b.RunWorkerAsync();
-               
-
-
-        }*/
-
-        public void AgregarSerie2(Serie s, int num)
+        public void agregarSerie(Serie s, int num)
         {
             
             int pag = num / 9;     //Se calcula la pagina en la que va a estar la serie
@@ -541,101 +472,7 @@ namespace EyeSeries
         public void agregarNuevaSerie(Serie s, int temp, int cap)
         {
             controlador.agregarNuevaSerie(s, temp, cap);
-        }
-
-        public void AgregarNSerie(Serie s, int temp, int capi)
-        
-        {
-           
-            int num = Series.Count;
-            int pag = num / 9;
-            int fil = (num % 9) / 3;
-            int col = (num % 9) % 3;
-            Series.Add(s);
-            s.addSerie(temp, capi);
-            control.Stop();
-            IntSerie nueva = new IntSerie(s, this);
-            Grid.SetColumn(nueva, col);
-            Grid.SetRow(nueva, fil);
-
-            Pags[pag].Children.Add(nueva);
-
-
-            if (col == 1) nueva.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
-            else if (col == 2) nueva.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
-
-            if (fil == 1) nueva.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-            else if (fil == 2) nueva.VerticalAlignment = System.Windows.VerticalAlignment.Bottom;
-
-            BackgroundWorker b = new BackgroundWorker();
-            b.DoWork += (sender, e) =>
-            {
-                Application.Current.Dispatcher.Invoke(
-                   DispatcherPriority.Normal,
-                   (ThreadStart)delegate
-                   {
-                       nueva.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 500)));
-                   });
-
-                s.Descarga();
-                
-                    Application.Current.Dispatcher.Invoke(
-                    DispatcherPriority.Normal,
-                    (ThreadStart)delegate
-                    {
-                        nueva.agregarDesgloseEpisodios();
-                    });
-
-                };
-            b.RunWorkerCompleted += (sender2, e2) =>
-                {
-                    IntSeries.Add(nueva);
-                    control.Start();
-                };
-            b.RunWorkerAsync();
-            crearArchivo();
-            num++;
-
-            Pags[pag].Children.Remove(IconoSiguiente);
-            Pags[pag].Children.Add(IconoSiguiente);
-            Pags[pag].Children.Remove(IconoAnterior);
-            Pags[pag].Children.Add(IconoAnterior);
-
-            pag = num / 9;
-            fil = (num % 9) / 3;
-            col = (num % 9) % 3;
-            Grid.SetColumn(IconoAgregar, col);
-            Grid.SetRow(IconoAgregar, fil);
-
-            if (num % 9 == 0 && num != 0)
-            {
-                CrearPag(pag);
-                Pags[pag - 1].Children.Remove(IconoAgregar);
-                Pags[pag].Children.Add(IconoAgregar);
-                Pags[pag - 1].Children.Remove(Tapa);
-                Pags[pag].Children.Add(Tapa);
-                Pags[pag - 1].Children.Remove(InterfazAgregar);
-                Pags[pag].Children.Add(InterfazAgregar);
-                IconoSiguiente.Visibility = System.Windows.Visibility.Visible;
-            }
-
-            
-            Pags[pag].Children.Remove(Tapa);
-            Pags[pag].Children.Add(Tapa);
-            Pags[pag].Children.Remove(InterfazAgregar);
-            Pags[pag].Children.Add(InterfazAgregar);
-
-
-            
-
-            IconoAgregar.Visibility = System.Windows.Visibility.Visible;
-            IconoAgregar.BeginAnimation(OpacityProperty, new DoubleAnimation(1, new TimeSpan(0, 0, 0, 0, 250)));
-
-
-
-
-
-        }
+        }       
 
         public void EliminarSerie(int num)
         {
@@ -779,6 +616,92 @@ namespace EyeSeries
             EliminaInt.BeginAnimation(OpacityProperty, desaparece);
         }
 
+        public void eliminarSeriedeInterfaz(int num)
+        {
+            //Interfaz de la serie a eliminar
+            IntSerie eliminaInt = IntSeries[num];
+
+            //Serie de la serie a eliminar
+            Serie eliminaS = eliminaInt.Se;
+
+            //Pagina en que se encuentra la serie a eliminar
+            int pag = num / 9;
+
+            //Declaracion animacion de desaparece
+            DoubleAnimation desapareceSerie = new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250));
+
+            desapareceSerie.Completed += (sender, e) =>
+                {
+                    //Se esconde la interfaz de la serie
+                    eliminaInt.Visibility = System.Windows.Visibility.Hidden;
+
+                    //Se quita de la pagina
+                    Pags[pag].Children.Remove(eliminaInt);
+
+                    //Se reacomodan las series
+                    reacomodarSeries(num);
+
+                    //Se reacomoda la interfaz añadir
+                    reacomodarInterfazAñadir(IntSeries.Count - 1, false);
+
+                    IntSeries.Remove(eliminaInt);
+
+                    
+
+
+                };
+
+            eliminaInt.BeginAnimation(OpacityProperty, desapareceSerie);
+
+
+        }
+
+        public void eliminarSerie(int num)
+        {
+            controlador.eliminarSerie(num);
+        }
+
+        private void reacomodarSeries(int num)
+        {
+            //Se itera sobre las series para cambiarlas de posición
+            //El entero i corresponde a el nuevo numserie de las series iteradas
+            int i = num;
+            while (i < IntSeries.Count - 1)
+            {
+                //Interfaz de serie a mover
+                IntSerie tempi = IntSeries[i + 1];
+
+                tempi.Se.Numserie--;
+
+                //Nueva fila, pagina y columna de la serie a mover
+                int npag = i / 9;
+                int nfil = (i % 9) / 3;
+                int ncol = (i % 9) % 3;
+
+                //Se reposiciona la serie
+                Grid.SetColumn(tempi, ncol);
+                Grid.SetRow(tempi, nfil);
+
+                //Se reposicionan conforme a su posicion en el grid (por columna y fila)
+                if (ncol == 0) tempi.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+                else if (ncol == 1) tempi.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
+                else if (ncol == 2) tempi.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
+
+                if (nfil == 0) tempi.VerticalAlignment = System.Windows.VerticalAlignment.Top;
+                else if (nfil == 1) tempi.VerticalAlignment = System.Windows.VerticalAlignment.Center;
+                else if (nfil == 2) tempi.VerticalAlignment = System.Windows.VerticalAlignment.Bottom;
+
+                //Si la serie es la primera de una nueva pagina entonces se va a la pagina anterior
+                if ((i + 1) % 9 == 0 && i != 0)
+                {
+                    Pags[npag + 1].Children.Remove(tempi);
+                    Pags[npag].Children.Add(tempi);
+                }
+
+                i++;
+            }
+        }
+
         private void BorrarSeriesenEspera()
         {
             for (int i = 0; i < SeriesaBorrar.Count; i++)
@@ -801,24 +724,27 @@ namespace EyeSeries
             escribe.Close();
         }
 
-        private void Emp(object sender, EventArgs e)
+        public void bajarInformacion()
         {
-          /*  foreach (IntSerie s in IntSeries)
+            DispatcherTimer bajaTodo = new DispatcherTimer()
             {
-                if (s.normal && !s.ZonaC.IsMouseOver)
-                    s.ZonaC_MouseLeave(null, null);
-            }
-            empieza.Stop();*/
+                Interval = TimeSpan.FromSeconds(5),
+            };
+
+            bajaTodo.Tick += bajarInfoEvento;
+            bajaTodo.Start();
         }
 
-        private void Actualiza(object sender, EventArgs e)
+        public void bajarInfoEvento(object sender, EventArgs e)
         {
-            foreach (IntSerie s in IntSeries)
+            foreach (IntSerie i in IntSeries)
             {
-                if (s.Se.Temporada != 0 && s.Se.Capitulo != 0)
-                 s.Actualiza();
+                i.bajarInformacion();
             }
+
+            ((DispatcherTimer)sender).Stop();
         }
+      
 
         private void ActualizarBD()
         {
@@ -920,7 +846,7 @@ namespace EyeSeries
                     {
                         if (e.Key == Key.F4)
                         {
-                            controlador.Series[0].siguienteEpisodio();
+                           controlador.prueba();
                         }
                     }
                 }
@@ -1002,6 +928,73 @@ namespace EyeSeries
 
         }
 
+        public void reacomodarInterfazAñadir(int posicion, bool agregar)
+        {
+
+            //Se calcula en que pagina, fila y columna estará colocado
+            int pag = posicion / 9;
+            int fil = (posicion % 9) / 3;
+            int col = (posicion % 9) % 3;
+
+            //Se coloca en la fila y columna correspondiente
+            Grid.SetRow(IconoAgregar, fil);
+            Grid.SetColumn(IconoAgregar, col);
+
+            //Si el icono agregar va en una nueva página, se crea
+            if (agregar)
+            {
+                if (posicion % 9 == 0 && posicion != 0)
+                {
+                    CrearPag(pag);
+
+                    Pags[pag - 1].Children.Remove(Tapa);
+                    Pags[pag - 1].Children.Remove(InterfazAgregar);
+                    Pags[pag - 1].Children.Remove(IconoAgregar);
+
+                }
+                else
+                {
+                    Pags[pag].Children.Remove(Tapa);
+                    Pags[pag].Children.Remove(InterfazAgregar);
+                    Pags[pag].Children.Remove(IconoAgregar);
+                }
+
+                Pags[pag].Children.Add(Tapa);
+                Pags[pag].Children.Add(InterfazAgregar);
+                Pags[pag].Children.Add(IconoAgregar);
+
+                if (PagAct < Pags.Count - 1) IconoSiguiente.Visibility = System.Windows.Visibility.Visible;
+
+            }
+            else
+            {
+                if ((posicion + 1) % 9 == 0 && posicion != 0)
+                {
+                    Pags[pag + 1].Children.Remove(IconoAgregar);
+                    Pags[pag].Children.Add(IconoAgregar);
+                    Pags[pag + 1].Children.Remove(Tapa);
+                    Pags[pag].Children.Add(Tapa);
+                    Pags[pag + 1].Children.Remove(InterfazAgregar);
+                    Pags[pag].Children.Add(InterfazAgregar);
+
+                    //Se elimina la pagina 
+                    gPrinc.BeginAnimation(MarginProperty, new ThicknessAnimation(new Thickness(gPrinc.Margin.Left, 0, gPrinc.Margin.Right + 1058, 0), new TimeSpan(0, 0, 0, 0, 1)));
+                    gPrinc.Children.Remove(Pags[Pags.Count - 1]);
+                    Pags.RemoveAt(Pags.Count - 1);
+
+                    if (PagAct == Pags.Count - 1) IconoSiguiente.Visibility = System.Windows.Visibility.Hidden;
+                }
+            }
+
+
+
+            IconoAgregar.Visibility = Visibility.Visible;
+            IconoAgregar.BeginAnimation(OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(250)));
+
+
+
+        }
+
         public void agregarSigAnt()
         {
             //Se crea la imagen del icono siguiente
@@ -1066,9 +1059,14 @@ namespace EyeSeries
             s.subirLona(primeraVez);
         }
 
-        public void agregarDesgloseEpisodios(IntSerie s)
+        public void agregarDesgloseEpisodios(IntSerie s, bool escondido)
         {
-            s.agregarDesgloseEpisodios();
+            s.agregarDesgloseEpisodios(escondido);
+        }
+
+        public IntSerie getInterfazSerie(int num)
+        {
+            return IntSeries[num];
         }
 
         public void desplegarEpisodios(IntSerie s)

@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\RestSharp.105.0.1\lib\net4\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -43,6 +46,12 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="TMDbLib">
+      <HintPath>..\packages\TMDbLib.0.7.7\lib\net40\TMDbLib.dll</HintPath>
+    </Reference>
+    <Reference Include="TVDBSharp">
+      <HintPath>..\..\..\..\Desktop\TVDBSharp.dll</HintPath>
     </Reference>
     <Reference Include="UTorrentAPI">
       <HintPath>..\..\..\Downloads\uTorrentAPI 1.0.0.4\Release\AnyCPU\UTorrentAPI.dll</HintPath>
@@ -63,7 +72,6 @@
     <Compile Include="IntSerie.xaml.cs">
       <DependentUpon>IntSerie.xaml</DependentUpon>
     </Compile>
-    <Compile Include="NumberToImageConverter.cs" />
     <Compile Include="OpaqueClickableImage.cs" />
     <Compile Include="Serie.cs" />
     <Page Include="Agregar.xaml">
@@ -107,6 +115,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

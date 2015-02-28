@@ -24,24 +24,24 @@ namespace EyeSeries
         public string Nombre { get; set; } ///Nombre de la serie
         public int Id { get; set; }       //Id de la serie
         public int Numserie;             //Numero de la serie
-        public char estado; //Estado de la serie
+        private char estado; //Estado de la serie
+        public int Subid { get; set; }
+        public bool episodiosCargados { get; set; }
+
+        public int TemporadaUltEpisodioVisto { get; set; }
+        public int CapituloUltEpisodioVisto { get; set; }
+
+
+        private int temporada;  //Temporada de siguiente episodio a ver / descargar
+        private int capitulo;   //Capitulo de siguiente episodio a ver / descargar
+        private int porVer; //Cantidad de episodios por ver
+        private int descargando;          //Cantidad de episodios por descargar
+        public string Hora;
+        private bool aldia;
 
         public List<List<Episodio>> EpisodiosVistos { get; set; } //Matriz de episodios de la serie
         public List<Episodio> EpisodiosNoVistos { get; set; }
-        public List<Episodio> EpisodiosVistosPorMeter { get; set; }
 
-        public int Subid { get; set; }
-        public string NombreCap { get; set; }
-        public int EstadoCap { get; set; }
-        public bool episodiosCargados { get; set; }
-        private int temporada;  //Temporada de siguiente episodio a ver / descargar
-        private int capitulo;   //Capitulo de siguiente episodio a ver / descargar
-        private int porVer { get; set; } //Cantidad de episodios por ver
-        private int descargando;          //Cantidad de episodios por descargar
-      //  private XmlDocument doc;        //Documento de donde se extrae la informacion de la serie
-        private string Hora;
-        private bool aldia;
-        UTorrentClient uClient;
         private Controlador controlador;
 
         //Eventos
@@ -130,11 +130,11 @@ namespace EyeSeries
         /// </summary>
         /// <param name="id">Id de la serie</param>
 
-        public Serie(int id, int nums)
+        public Serie(int id, int nums, Controlador contr)
         {
-
+            controlador = contr;
             Numserie = nums;
-            Id = id;
+            Id = id;           
 
             //Se carga el documento de donde se saca la informacion
             XmlDocument doc = new XmlDocument();
@@ -164,7 +164,7 @@ namespace EyeSeries
                 };
 
             c.RunWorkerAsync();
-            AddEpisodes();
+            añadirEpisodios(doc);
         }
         /// <summary>
         /// Constructor de la serie
@@ -173,7 +173,7 @@ namespace EyeSeries
         /// <param name="n">Nombre de la serie</param>
         /// <param name="ns">Numero de la serie</param>
         /// <param name="e">Estado de la serie</param>
-        public Serie(int i, string n, int t, int c, int ns, char e, string h, int s, Controlador contr)
+        public Serie(int i, string n, int t, int c, int ns, char e, string h, int s, int tempUV, int capUV, Controlador contr)
         {
             Id = i;
             Nombre = n;
@@ -185,23 +185,24 @@ namespace EyeSeries
             Capitulo = c;
             Hora = h;
             Subid = s;
+            TemporadaUltEpisodioVisto = tempUV;
+            CapituloUltEpisodioVisto = capUV;
+
             controlador = contr;
 
             EpisodiosVistos = new List<List<Episodio>>();
             EpisodiosNoVistos = new List<Episodio>();
-            EpisodiosVistosPorMeter = new List<Episodio>();
 
             AlDia = false;
-            uClient = new UTorrentClient(new Uri("http://127.0.0.1:8080/gui/"), "admin", "admin", 1000000);
+            //uClient = new UTorrentClient(new Uri("http://127.0.0.1:8080/gui/"), "admin", "admin", 1000000);
         }
+
 
         /// <summary>
         /// Metodo utilizado para agregar episodios nuevos
         /// </summary>
-        public void AddEpisodes()
+        public void añadirEpisodios(XmlDocument doc)
         {
-            XmlDocument doc = new XmlDocument();
-            doc.Load(@"http://thetvdb.com/api/97AAE7796E3F60D2/series/" + Id + "/all/en.xml");
             //Se declaran las variables
             XmlNodeList episodios = doc.SelectNodes("/Data/Episode");
             string nombreEp, calidad;
@@ -271,167 +272,18 @@ namespace EyeSeries
         }
 
         /// <summary>
-        /// Metodo que sirve para agregar una serie una vez seleccionada
-        /// </summary>
-        /// <param name="t">Temporada del siguiente capitulo a descargar</param>
-        /// <param name="c">Capitulo del siguiente capitulo a descargar</param>
-        public void addSerie(int t, int c)
-        {
-            Temporada = t;
-            Capitulo = c;
-            if ((Temporada == 0 && Capitulo == 0) || EpisodiosVistos[Temporada - 1][Capitulo - 1].Estado == 0)
-            {
-                AlDia = true;
-            }
-            else
-            {
-                AlDia = false;
-            }
-
-        }
-
-        public void Descarga()
-        {
-            if (!AlDia)
-            {
-                for (int i = Temporada - 1; i < EpisodiosVistos.Count; i++)
-                {
-                    int j = (i == Temporada - 1 ? capitulo - 1 : 0);
-                    while (j < EpisodiosVistos[i].Count)
-                    {
-
-                        if (EpisodiosVistos[i][j].Fecha < DateTime.Now)
-                        {
-                            EpisodiosVistos[i][j].getMagnet();
-                            EpisodiosVistos[i][j].Estado = 1;
-                            Descargando++;
-                        }
-                        else
-                        {
-                            EpisodiosVistos[i][j].Estado = 0;
-                            if ((EpisodiosVistos[i][j].Fecha - DateTime.Now).TotalDays < 24)
-                            {
-                                System.Timers.Timer act = new System.Timers.Timer()
-                                {
-                                    Interval = (EpisodiosVistos[i][j].Fecha - DateTime.Now).TotalMilliseconds,
-
-
-                                };
-                                act.Elapsed += (sender, e) => episodioAlAire(sender, e, EpisodiosVistos[i][j]);
-                                act.Start();
-
-                            }
-                        }
-                        j++;
-
-                    }
-                }
-                if (!System.IO.Directory.Exists(@"C:\Users\Marcelo\Videos\Series\" + Nombre))
-                {
-                    System.IO.Directory.CreateDirectory(@"C:\Users\Marcelo\Videos\Series\" + Nombre);
-                }
-            }
-            guardarEpisodiosVistos();
-        }
-        
-
-        /// <summary>
         /// Alimenta los episodios de la base de datos a la serie
         /// </summary>
-        public void AlimentarEps(int t, int c)
-        {
-            StreamReader leer = new StreamReader(@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Bases de Datos\Series\" + Nombre + ".txt");
-            List<Episodio> aux = new List<Episodio>();
-            string linea;
-            while (!leer.EndOfStream)
-            {
-                linea = leer.ReadLine();
-                if (linea == "-")
-                {
-                    EpisodiosVistos.Add(aux);
-                    aux = new List<Episodio>();
-                }
-                else
-                {
-                    DateTime fecha = new DateTime(Convert.ToInt32(linea.Split('*')[4].Split('/')[0]), Convert.ToInt32(linea.Split('*')[4].Split('/')[1]), Convert.ToInt32(linea.Split('*')[4].Split('/')[2]), Convert.ToInt32(linea.Split('*')[4].Split('/')[3]), Convert.ToInt32(linea.Split('*')[4].Split('/')[4]), 0);
-                    Episodio ep = new Episodio(this, Convert.ToInt32(linea.Split('*')[0]), Convert.ToInt32(linea.Split('*')[1]), linea.Split('*')[2], linea.Split('*')[3], fecha, Convert.ToInt32(linea.Split('*')[5]), "720p");
-
-                    if (ep.Estado == 0)
-                    {
-                        if (ep.Fecha < DateTime.Now)
-                        {
-                            ep.Estado = 1;
-                            ep.getMagnet();
-                            Descargando++;
-                            //CrearArchivo();
-                        }
-                        else
-                        {
-                            if ((ep.Fecha - DateTime.Now).TotalDays < 24)
-                            {
-                                System.Timers.Timer act = new System.Timers.Timer()
-                                {
-                                    Interval = (ep.Fecha - DateTime.Now).TotalMilliseconds,
-                                   
-                                    
-                                };
-                                act.Elapsed += (sender, e) => episodioAlAire(sender, e, ep);
-                                act.Start();
-                                
-                            }
-                           
-                        }
-                    }
-                    else
-                    {
-                        if (ep.Estado == 1)
-                        {
-
-                            if (uClient.Torrents[ep.Hash].RemainingBytes == 0 && uClient.Torrents[ep.Hash].DownloadedBytes > 0 || uClient.Torrents[ep.Hash].ProgressInMils == 1000)
-                            {
-                                ep.Mover(uClient, true);
-                                PorVer++;
-                            }
-                            else
-                            {
-                                Descargando++;
-                            }
-                        }
-                        else
-                        {
-                            if (ep.Estado == 2) PorVer++;
-                        }
-                    }
-                    aux.Add(ep);
-                }
-
-            }
-
-            Temporada = t;
-            Capitulo = c;
-
-            if ((Temporada == 0 && Capitulo == 0) || EpisodiosVistos[Temporada - 1][Capitulo - 1].Estado == 0)
-            {
-                AlDia = true;
-            }
-            else
-            {
-                AlDia = false;
-            }
-
-
-            leer.Close();
-
-            guardarEpisodiosVistos();
-
-        }
-
+       
         public void alimentarEpisodiosNoVistos()
         {
             //Path del archivo de donde se van a leer los episodios
             string PathArchivoLeer = @"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Bases de Datos\Series\EpisodiosNoVistos\" + Nombre + ".txt";
             
             StreamReader leer = new StreamReader(PathArchivoLeer);
+
+            List<Episodio> aDescargar = new List<Episodio>();
+            List<Episodio> aMover = new List<Episodio>();
 
             string linea;
             //Se recorre todo el archivo
@@ -442,33 +294,15 @@ namespace EyeSeries
                 DateTime fecha = new DateTime(Convert.ToInt32(linea.Split('*')[4].Split('/')[0]), Convert.ToInt32(linea.Split('*')[4].Split('/')[1]), Convert.ToInt32(linea.Split('*')[4].Split('/')[2]), Convert.ToInt32(linea.Split('*')[4].Split('/')[3]), Convert.ToInt32(linea.Split('*')[4].Split('/')[4]), 0);
                 //Se crea el episodio
                 Episodio ep = new Episodio(this, Convert.ToInt32(linea.Split('*')[0]), Convert.ToInt32(linea.Split('*')[1]), linea.Split('*')[2], linea.Split('*')[3], fecha, Convert.ToInt32(linea.Split('*')[5]), "720p");
-                //Revisa si el episodio ya salió o ya se terminó
-                bool procesado = false;
-                int contador = 0;
+
                 switch (ep.Estado)
                 {
                     case 0:
                         if (ep.Fecha < DateTime.Now)
                         {
-                            contador++;
-                            BackgroundWorker b = new BackgroundWorker();
-                            b.DoWork += (sender, e) =>
-                            {
-                                controlador.descargarEpisodio(ep);
-                                Descargando++;
-                            };
 
-                            b.RunWorkerCompleted += (sender, e) =>
-                            {
-                                contador--;
-                                if (contador == 0 && procesado)
-                                {
-                                    guardarEpisodiosNoVistos();
-                                }
-                            };
-                            b.RunWorkerAsync();
+                            aDescargar.Add(ep);
 
-                            ep.Estado = 1;
                             
                         }
                         else
@@ -495,26 +329,8 @@ namespace EyeSeries
                     case 1:
                     if (controlador.torrentTerminado(ep.Hash))
                     {
-                        contador++;
-                        BackgroundWorker b = new BackgroundWorker();
-                        b.DoWork += (sender, e) =>
-                        {
-                            controlador.moverEpisodioTerminado(ep);                            
-                        };
-
-                        b.RunWorkerCompleted += (sender, e) =>
-                        {
-                            contador--;
-                            if (contador == 0 && procesado)
-                            {
-                                guardarEpisodiosNoVistos();
-                            }
-                            
-                        };
-
-                        b.RunWorkerAsync();
-                        ep.Estado = 2;
-                        PorVer++;
+                        aMover.Add(ep);
+                        
                         
                     }
                     else
@@ -529,7 +345,7 @@ namespace EyeSeries
                     break;
                 }
 
-                procesado = true;
+                
                 //Se añade a la lista de Episodios no vistos
                 EpisodiosNoVistos.Add(ep);
                
@@ -549,6 +365,33 @@ namespace EyeSeries
             }
 
             leer.Close();
+
+
+            BackgroundWorker b = new BackgroundWorker();
+            b.DoWork += (sender, e) =>
+                {
+                    foreach (Episodio ep in aMover)
+                    {
+                        controlador.moverEpisodioTerminado(ep);
+                        ep.Estado = 2;
+                        PorVer++;
+                    }
+
+                    foreach (Episodio ep in aDescargar)
+                    {
+                        controlador.descargarEpisodio(ep);
+                        ep.Estado = 1;
+                        Descargando++;
+                    }
+                };
+
+            b.RunWorkerCompleted += (sender, e) =>
+                {
+                    guardarEpisodiosNoVistos();
+                };
+
+            b.RunWorkerAsync();
+
 
         }
 
@@ -627,6 +470,8 @@ namespace EyeSeries
         public void moverEpisodiosVistosaNoVistos()
         {
             EpisodiosNoVistos = new List<Episodio>();
+            List<Episodio> aDescargar = new List<Episodio>();
+
             for (int t = EpisodiosVistos.Count - 1; t >= Temporada - 1; t--)
             {
                 int c = EpisodiosVistos[t].Count - 1;
@@ -642,11 +487,8 @@ namespace EyeSeries
                         }
                         else
                         {
-                            epReferenciado.Estado = 1;
-                            BackgroundWorker b = new BackgroundWorker();
-                            b.DoWork += (sender, e) => controlador.descargarEpisodio(epReferenciado);
-                            b.RunWorkerCompleted += (sender, e) => Descargando++;
-                            b.RunWorkerAsync();
+
+                            aDescargar.Add(epReferenciado);
 
                         }
                     }
@@ -682,18 +524,23 @@ namespace EyeSeries
                 }
             }
 
-            if (EpisodiosNoVistos.Count == 0)
-            {
-                AlDia = true;
-            }
-            else
-            {
-                Episodio aux = EpisodiosNoVistos[0];
-                if (aux.Fecha > DateTime.Now)
+            BackgroundWorker b = new BackgroundWorker();
+            b.DoWork += (sender, e) =>
                 {
-                    AlDia = true;
-                }
-            }
+                    foreach (Episodio ep in aDescargar)
+                    {
+                        controlador.descargarEpisodio(ep);
+                        ep.Estado = 1;
+                        Descargando++;
+                    }
+
+                    guardarEpisodiosNoVistos();
+                    guardarEpisodiosVistos();
+
+                };
+            b.RunWorkerAsync();
+
+            
 
         }
 
@@ -718,7 +565,7 @@ namespace EyeSeries
         /// <returns>El string con toda la informacion de la serie</returns>
         public string Imprimir()
         {
-            return Nombre + "\r\n" + Id + "\r\n" + Subid + "\r\n" + Temporada + " " + Capitulo + "\r\n" + Estado + "\r\n" + Hora + "\r\n-";
+            return Nombre + "\r\n" + Id + "\r\n" + Subid + "\r\n" + Temporada + " " + Capitulo + "\r\n" + Estado + "\r\n" + Hora + "\r\n" + TemporadaUltEpisodioVisto + " " + CapituloUltEpisodioVisto + "\r\n-";
 
         }
 
@@ -730,6 +577,15 @@ namespace EyeSeries
 
             StreamWriter agregarEpisodioVisto = new StreamWriter(@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Bases de Datos\Series\EpisodiosVistos\" + Nombre + ".txt", true);
             Episodio epActual = EpisodiosNoVistos[0];
+
+            TemporadaUltEpisodioVisto = epActual.Temporada;
+            CapituloUltEpisodioVisto = epActual.Capitulo;
+
+            if (epActual.Estado == 1 && epActual.Hash != "-1")
+            {
+                controlador.quitarTorrent(epActual.Hash);
+            }
+
             epActual.Estado = 3;
 
             if (epActual.Capitulo == 1) agregarEpisodioVisto.WriteLine("-");
@@ -865,6 +721,17 @@ namespace EyeSeries
             guardarEpisodiosVistos();
 
 
+        }
+
+        public void actualizarBasedeDatos()
+        {
+
+            XmlDocument doc = new XmlDocument();
+            
+            doc.Load(@"http://thetvdb.com/api/97AAE7796E3F60D2/series/" + Id + "/all/en.xml");
+
+            //Se actualiza el estado de la serie
+            Estado = doc.SelectSingleNode("/Data/Series/Status").InnerText == "Continuing" ? 'c' : 'e';
         }
 
         private void episodioAlAire(object sender, EventArgs e, Episodio ep)

@@ -1,0 +1,141 @@
+1*1*Pilot*-1*2009/9/24/9/0*3
+1*2*The Bicycle Thief*-1*2009/10/1/9/0*3
+1*3*Come Fly with Me*-1*2009/10/8/9/0*3
+1*4*The Incident*-1*2009/10/15/9/0*3
+1*5*Coal Digger*-1*2009/10/22/9/0*3
+1*6*Run for Your Wife*-1*2009/10/29/9/0*3
+1*7*En Garde*-1*2009/11/5/9/0*3
+1*8*Great Expectations*-1*2009/11/19/9/0*3
+1*9*Fizbo*-1*2009/11/26/9/0*3
+1*10*Undeck the Halls*-1*2009/12/10/9/0*3
+1*11*Up All Night*-1*2010/1/7/9/0*3
+1*12*Not in My House*-1*2010/1/14/9/0*3
+1*13*Fifteen Percent*-1*2010/1/21/9/0*3
+1*14*Moon Landing*-1*2010/2/4/9/0*3
+1*15*My Funky Valentine*-1*2010/2/11/9/0*3
+1*16*Fears*-1*2010/3/4/9/0*3
+1*17*Truth Be Told*-1*2010/3/11/9/0*3
+1*18*Starry Night*-1*2010/3/25/9/0*3
+1*19*Game Changer*-1*2010/4/1/9/0*3
+1*20*Benched*-1*2010/4/15/9/0*3
+1*21*Travels with Scout*-1*2010/4/29/9/0*3
+1*22*Airport 2010*-1*2010/5/6/9/0*3
+1*23*Hawaii*-1*2010/5/13/9/0*3
+1*24*Family Portrait*-1*2010/5/20/9/0*3
+-
+2*1*The Old Wagon*-1*2010/9/23/9/0*3
+2*2*The Kiss*-1*2010/9/30/9/0*3
+2*3*Earthquake*-1*2010/10/7/9/0*3
+2*4*Strangers on a Treadmill*-1*2010/10/14/9/0*3
+2*5*Unplugged*-1*2010/10/21/9/0*3
+2*6*Halloween*-1*2010/10/28/9/0*3
+2*7*Chirp*-1*2010/11/4/9/0*3
+2*8*Manny Get Your Gun*-1*2010/11/18/9/0*3
+2*9*Mother Tucker*-1*2010/11/25/9/0*3
+2*10*Dance Dance Revelation*-1*2010/12/9/9/0*3
+2*11*Slow Down Your Neighbors*-1*2011/1/6/9/0*3
+2*12*Our Children, Ourselves*-1*2011/1/13/9/0*3
+2*13*Caught in the Act*-1*2011/1/20/9/0*3
+2*14*Bixby's Back*-1*2011/2/10/9/0*3
+2*15*Princess Party*-1*2011/2/17/9/0*3
+2*16*Regrets Only*-1*2011/2/24/9/0*3
+2*17*Two Monkeys and a Panda*-1*2011/3/3/9/0*3
+2*18*Boys' Night*-1*2011/3/24/9/0*3
+2*19*The Musical Man*-1*2011/4/14/9/0*3
+2*20*Someone to Watch Over Lily*-1*2011/4/21/9/0*3
+2*21*Mother's Day*-1*2011/5/5/9/0*3
+2*22*Good Cop, Bad Dog*-1*2011/5/12/9/0*3
+2*23*See You Next Fall*-1*2011/5/19/9/0*3
+2*24*The One That Got Away*-1*2011/5/26/9/0*3
+-
+3*1*Dude Ranch*-1*2011/9/22/9/0*3
+3*2*When Good Kids Go Bad*-1*2011/9/22/9/0*3
+3*3*Phil on Wire*-1*2011/9/29/9/0*3
+3*4*Door to Door*-1*2011/10/6/9/0*3
+3*5*Hit and Run*-1*2011/10/13/9/0*3
+3*6*Go Bullfrogs!*-1*2011/10/20/9/0*3
+3*7*Treehouse*-1*2011/11/3/9/0*3
+3*8*After the Fire*-1*2011/11/17/9/0*3
+3*9*Punkin Chunkin*-1*2011/11/24/9/0*3
+3*10*Express Christmas*-1*2011/12/8/9/0*3
+3*11*Lifetime Supply*-1*2012/1/5/9/0*3
+3*12*Egg Drop*-1*2012/1/12/9/0*3
+3*13*Little Bo Bleep*-1*2012/1/19/9/0*3
+3*14*Me? Jealous?*-1*2012/2/9/9/0*3
+3*15*Aunt Mommy*-1*2012/2/16/9/0*3
+3*16*Virgin Territory*-1*2012/2/23/9/0*3
+3*17*Leap Day*-1*2012/3/1/9/0*3
+3*18*Send Out the Clowns*-1*2012/3/15/9/0*3
+3*19*Election Day*-1*2012/4/12/9/0*3
+3*20*The Last Walt*-1*2012/4/19/9/0*3
+3*21*Planes, Trains and Cars*-1*2012/5/3/9/0*3
+3*22*Disneyland*-1*2012/5/10/9/0*3
+3*23*Tableau Vivant*-1*2012/5/17/9/0*3
+3*24*Baby on Board*-1*2012/5/24/9/0*3
+-
+4*1*Bringing Up Baby*-1*2012/9/27/9/0*3
+4*2*Schooled*-1*2012/10/11/9/0*3
+4*3*Snip*-1*2012/10/11/9/0*3
+4*4*The Butler's Escape*-1*2012/10/18/9/0*3
+4*5*Open House of Horrors*-1*2012/10/25/9/0*3
+4*6*Yard Sale*-1*2012/11/1/9/0*3
+4*7*Arrested*-1*2012/11/8/9/0*3
+4*8*Mistery Date*-1*2012/11/15/9/0*3
+4*9*When a Tree Falls*-1*2012/11/29/9/0*3
+4*10*Diamond in the Rough*-1*2012/12/13/9/0*3
+4*11*New Year's Eve*-1*2013/1/10/9/0*3
+4*12*Party Crasher*-1*2013/1/17/9/0*3
+4*13*Fulgencio*-1*2013/1/24/9/0*3
+4*14*A Slight at the Opera*-1*2013/2/7/9/0*3
+4*15*Heart Broken*-1*2013/2/14/9/0*3
+4*16*Bad Hair Day*-1*2013/2/21/9/0*3
+4*17*Best Men*-1*2013/2/28/9/0*3
+4*18*The Wow Factor*-1*2013/3/28/9/0*3
+4*19*The Future Dunphys*-1*2013/4/4/9/0*3
+4*20*Flip Flop*-1*2013/4/11/9/0*3
+4*21*Career Day*-1*2013/5/2/9/0*3
+4*22*My Hero*-1*2013/5/9/9/0*3
+4*23*Games People Play*-1*2013/5/16/9/0*3
+4*24*Goodnight, Gracie*-1*2013/5/23/9/0*3
+-
+5*1*Suddenly, Last Summer*-1*2013/9/26/9/0*3
+5*2*First Days*-1*2013/9/26/9/0*3
+5*3*Larry's Wife*-1*2013/10/3/9/0*3
+5*4*Farm Strong*-1*2013/10/10/9/0*3
+5*5*The Late Show*-1*2013/10/17/9/0*3
+5*6*The Help*-1*2013/10/24/9/0*3
+5*7*A Fair to Remember*-1*2013/11/14/9/0*3
+5*8*ClosetCon '13*-1*2013/11/21/9/0*3
+5*9*The Big Game *-1*2013/12/5/9/0*3
+5*10*The Old Man & the Tree*-1*2013/12/12/9/0*3
+5*11*And One to Grow On*-1*2014/1/9/9/0*3
+5*12*Under Pressure*-1*2014/1/16/9/0*3
+5*13*Three Dinners*-1*2014/1/23/9/0*3
+5*14*iSpy*-1*2014/2/6/9/0*3
+5*15*The Feud*-1*2014/2/27/9/0*3
+5*16*Spring-a-Ding-Fling*-1*2014/3/6/9/0*3
+5*17*Other People's Children*-1*2014/3/13/9/0*3
+5*18*Las Vegas*-1*2014/3/27/9/0*3
+5*19*A Hard Jay's Night*-1*2014/4/3/9/0*3
+5*20*Australia*-1*2014/4/24/9/0*3
+5*21*Sleeper*-1*2014/5/1/9/0*3
+5*22*Message Received*-1*2014/5/8/9/0*3
+5*23*The Wedding (1)*-1*2014/5/15/9/0*3
+5*24*The Wedding (2)*-1*2014/5/22/9/0*3
+-
+6*1*The Long Honeymoon*-1*2014/9/25/9/0*3
+6*2*Do Not Push*-1*2014/10/2/9/0*3
+6*3*The Cold*-1*2014/10/9/9/0*3
+6*4*Marco Polo*-1*2014/10/16/9/0*3
+6*5*Won't You Be Our Neighbor*-1*2014/10/23/9/0*3
+6*6*Halloween 3:  AwesomeLand*-1*2014/10/30/9/0*3
+6*7*Queer Eyes, Full Hearts*-1*2014/11/13/9/0*3
+6*8*Three Turkeys*-1*2014/11/20/9/0*3
+6*9*Strangers in the Night*-1*2014/12/4/9/0*3
+6*10*Haley's 21st Birthday*-1*2014/12/11/9/0*3
+6*11*The Day We Almost Died*-1*2015/1/8/9/0*3
+6*12*The Big Guns*-1*2015/1/15/9/0*3
+6*13*Rash Decisions*-1*2015/2/5/9/0*3
+6*14*Valentine's Day 4: Twisted Sister*-1*2015/2/12/9/0*3
+6*15*Fight or Flight*-1*2015/2/19/9/0*3
+6*16*Connection Lost*F36AF56B28C38BF1A09B5AF916CEDD495739D1FF*2015/2/26/9/0*3
