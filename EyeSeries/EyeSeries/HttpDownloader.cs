@@ -40,6 +40,7 @@ namespace EyeSeries
             using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
             {
                 Headers = response.Headers;
+                
                 Url = response.ResponseUri;
                 return ProcessContent(response);
             }

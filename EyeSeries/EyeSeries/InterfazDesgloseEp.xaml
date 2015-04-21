@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="EyeSeries.InterfazDesgloseEp"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:Width="350" Height="17">
+    <Grid Width="350">
+        <Rectangle x:Name="BarraProgreso" Fill="#FF30FF00" Stroke="Black" Opacity="0.2" Width="0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="19" Margin="-1,-1,0,0"/>
+        <StackPanel HorizontalAlignment="Left" Height="17" Width="350" VerticalAlignment="Top" Orientation="Horizontal" Margin="0,0,-8,0">
+            <Image x:Name="Estado" Stretch="None" Margin="4,0,0,0" MouseUp="Estado_MouseUp"/>
+            <TextBlock x:Name="Nombre" TextWrapping="Wrap" Foreground="White" Margin="4,0,0,0"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

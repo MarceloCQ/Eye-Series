@@ -39,36 +39,9 @@ namespace EyeSeries
         private Image IconoSiguiente;
         private Image IconoAnterior;
 
-        DispatcherTimer empieza;
         public DispatcherTimer control;
-        private int Cargado;
-        private bool terminoActualizacion;
-        private bool SeriesEnEspera;
-        private List<Serie> SeriesaBorrar;
-        private List<IntSerie> InterfacesaBorrar;
-        private DateTime UltimaActualizacion;
-        private bool Actualizar;
 
         private Controlador controlador;
-
-        private bool TerminoActualizacion
-        {
-            get { return terminoActualizacion; }
-            set
-            {
-                if (value != terminoActualizacion)
-                {
-                    terminoActualizacion = value;
-                    if (value)
-                    {
-                        if (SeriesEnEspera)
-                        {
-                            BorrarSeriesenEspera();
-                        }
-                    }
-                }
-            }
-        }
 
         public MainWindow()
         {
@@ -78,16 +51,11 @@ namespace EyeSeries
             {
                 Interval = new TimeSpan(0,0,1),
             };
-       //     control.Tick += Actualiza;
             PagAct = 0;
-            Cargado = 0;
-            TerminoActualizacion = true;
-            SeriesEnEspera = false;
-            SeriesaBorrar = new List<Serie>();
             Pags = new List<Grid>();
             IntSeries = new List<IntSerie>();
-            InterfacesaBorrar = new List<IntSerie>();
             controlador = new Controlador(this);
+
            
 
         }
@@ -342,8 +310,6 @@ namespace EyeSeries
             im.BeginAnimation(OpacityProperty, new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250)));
         }
 
-
-
         public void CrearPag(int num)
         {
           
@@ -415,7 +381,6 @@ namespace EyeSeries
             
         }
 
-
         public void agregarSerie(Serie s, int num)
         {
             
@@ -468,153 +433,10 @@ namespace EyeSeries
 
         }
 
-
         public void agregarNuevaSerie(Serie s, int temp, int cap)
         {
             controlador.agregarNuevaSerie(s, temp, cap);
         }       
-
-        public void EliminarSerie(int num)
-        {
-            control.Stop();
-            //Interfaz de la serie a eliminar
-            IntSerie EliminaInt = IntSeries[num];
-
-            //Serie de la serie a eliminar
-            Serie EliminaS = Series[num];
-
-            //Pagina en que se encuentra la serie a eliminar
-            int pag = num / 9;
-
-            //Revisa los episodios de la serie a eliminar a ver si hay alguno descargandose
-            if (EliminaS.Temporada != 0 && EliminaS.Capitulo != 0)
-            {
-                for (int m = EliminaS.Temporada - 1; m < EliminaS.EpisodiosVistos.Count; m++)
-                {
-                    for (int j = (m == EliminaS.Temporada - 1 ? EliminaS.Capitulo - 1 : 0); j < EliminaS.EpisodiosVistos[m].Count; j++)
-                    {
-                        Episodio aux = EliminaS.EpisodiosVistos[m][j];
-                        if (aux.Estado == 1)
-                        {
-                            //uClient.Torrents.Remove(aux.Hash, TorrentRemovalOptions.TorrentFileAndData);
-                        }
-                    }
-                }
-            }
-
-            //Declaracion animacion de desaparece
-            DoubleAnimation desaparece = new DoubleAnimation(0, new TimeSpan(0, 0, 0, 0, 250));
-
-
-
-            //Cuando se termina de desaparecer la serie
-            desaparece.Completed += (sender, e) =>
-                {
-                    //Se esconde la interfaz de la serie
-                    EliminaInt.Visibility = System.Windows.Visibility.Hidden;
-
-                    //Se quita de la pagina
-                    Pags[pag].Children.Remove(EliminaInt);
-                    
-                    //Se itera sobre las series para cambiarlas de posición
-                    //El entero i corresponde a el nuevo numserie de las series iteradas
-                    int i = num;
-                    while(i < Series.Count - 1)
-                    {
-                        //Serie de serie a mover
-                        Serie temps = Series[i + 1];
-                        //Interfaz de serie a mover
-                        IntSerie tempi = IntSeries[i + 1];
-
-                        //Nueva fila, pagina y columna de la serie a mover
-                        int npag = i / 9;
-                        int nfil = (i % 9) / 3;
-                        int ncol = (i % 9) % 3;
-
-                        //Se decrementa el numero interno de la serie
-                        temps.Numserie--;
-
-                        //Se reposiciona la serie
-                        Grid.SetColumn(tempi, ncol);
-                        Grid.SetRow(tempi, nfil);
-
-                        //Se reposicionan conforme a su posicion en el grid (por columna y fila)
-                        if (ncol == 0) tempi.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-                        else if (ncol == 1) tempi.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
-                        else if (ncol == 2) tempi.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
-
-                        if (nfil == 0) tempi.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-                        else if (nfil == 1) tempi.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-                        else if (nfil == 2) tempi.VerticalAlignment = System.Windows.VerticalAlignment.Bottom;
-
-                        //Si la serie es la primera de una nueva pagina entonces se va a la pagina anterior
-                        if ((i + 1) % 9 == 0 && i != 0)
-                        {
-                            Pags[npag + 1].Children.Remove(tempi);
-                            Pags[npag].Children.Add(tempi);
-                        }
-
-                        i++;
-                    
-                 
-                    }
-
-                    //Se mueve de posicion el boton de agregr
-                    int npagagr = i / 9;
-                    int nfilagr = (i % 9) / 3;
-                    int ncolagr = (i % 9) % 3;
-
-                    //Se reposiciona la imagen
-                    Grid.SetRow(IconoAgregar, nfilagr);
-                    Grid.SetColumn(IconoAgregar, ncolagr);
-
-                    //Si agregar es la primera de una nueva pagina entonces se va a la pagina anterior, junto con la interfaz
-                    //de agregar
-                    if ((i + 1) % 9 == 0 && i != 0)
-                    {
-                        Pags[npagagr + 1].Children.Remove(IconoAgregar);
-                        Pags[npagagr].Children.Add(IconoAgregar);
-                        Pags[npagagr + 1].Children.Remove(Tapa);
-                        Pags[npagagr].Children.Add(Tapa);
-                        Pags[npagagr + 1].Children.Remove(InterfazAgregar);
-                        Pags[npagagr].Children.Add(InterfazAgregar);
-
-                        //Se elimina la pagina 
-                        gPrinc.BeginAnimation(MarginProperty, new ThicknessAnimation(new Thickness(gPrinc.Margin.Left, 0, gPrinc.Margin.Right + 1058, 0), new TimeSpan(0, 0, 0, 0, 1)));
-                        gPrinc.Children.Remove(Pags[Pags.Count - 1]);
-                        Pags.RemoveAt(Pags.Count - 1);
-
-                        if (PagAct == Pags.Count - 1) IconoSiguiente.Visibility = System.Windows.Visibility.Hidden;
-                        
-                        
-                    }
-
-                    //Checa si termina la actualizacion
-                    if (TerminoActualizacion)
-                    {
-                        //Se quita la serie de la lista de series
-                        Series.Remove(EliminaS);
-                        //Se quita la serie de las interfaces
-                        IntSeries.Remove(EliminaInt);
-                        control.Start();
-                        crearArchivo();
-                        System.IO.File.Delete(@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Bases de Datos\Series\" + EliminaS.Nombre + ".txt");
-                       
-                    }
-                    //Si no ha terminado, se meten en la lista de espera
-                    else
-                    {
-                        SeriesEnEspera = true;
-                        SeriesaBorrar.Add(Series[num]);
-                        InterfacesaBorrar.Add(IntSeries[num]);
-
-                    }
-                    
-
-                };
-            
-            EliminaInt.BeginAnimation(OpacityProperty, desaparece);
-        }
 
         public void eliminarSeriedeInterfaz(int num)
         {
@@ -702,28 +524,6 @@ namespace EyeSeries
             }
         }
 
-        private void BorrarSeriesenEspera()
-        {
-            for (int i = 0; i < SeriesaBorrar.Count; i++)
-            {
-                Series.Remove(SeriesaBorrar[i]);
-                IntSeries.Remove(InterfacesaBorrar[i]);
-            }
-            SeriesEnEspera = false;
-        }
-
-        public void crearArchivo()
-        {
-            StreamWriter escribe = new StreamWriter(@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Bases de Datos\General.txt");
-            escribe.WriteLine(UltimaActualizacion.Day.ToString() + "/" + UltimaActualizacion.Month.ToString() + "/" + UltimaActualizacion.Year.ToString());
-            foreach (Serie s in Series)
-            {
-                escribe.WriteLine(s.Imprimir());
-            }
-
-            escribe.Close();
-        }
-
         public void bajarInformacion()
         {
             DispatcherTimer bajaTodo = new DispatcherTimer()
@@ -745,32 +545,6 @@ namespace EyeSeries
             ((DispatcherTimer)sender).Stop();
         }
       
-
-        private void ActualizarBD()
-        {
-            Application.Current.Dispatcher.Invoke(
-            DispatcherPriority.Normal,
-            (ThreadStart)delegate
-            {
-                BackgroundWorker b = new BackgroundWorker();
-                    b.DoWork += (sender, e) =>
-                        {
-                            int i = 0;
-                            foreach (Serie s in Series)
-                            {
-                                s.ActualizarBD(IntSeries[i]);
-                                i++;
-                            }
-                            UltimaActualizacion = DateTime.Now;
-                            TerminoActualizacion = true;
-                            crearArchivo();
-                        };
-
-                    b.RunWorkerAsync();
-            });
-            
-        }
-
         private void EyeSeries_KeyDown(object sender, KeyEventArgs e)
         {
 

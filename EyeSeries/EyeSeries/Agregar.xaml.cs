@@ -109,7 +109,6 @@ namespace EyeSeries
 
             if (text != "")
             {
-
                 
                 XmlDocument x = new XmlDocument();
                 x.Load(@"http://thetvdb.com/api/GetSeries.php?seriesname=" + text);

@@ -22,8 +22,9 @@ namespace EyeSeries
         private string nombreep; //Nombre del episodio
         public int Temporada { get; set; } //Numero de Temporada
         public int Capitulo { get; set; } //Numero de Capitulo
+        public bool Doble { get; set; }
         private int estado; //0-> No ha salido, 1-> Descargando, 2-> Descargado, 3-> Visto
-        private DateTime fecha; //Fecha de cuando salio el episodio
+        private DateTime fecha; 
         public string Hash { get; set; } //Hash del torrent
         public string Calidad { get; set; } //Calidad 720p/1080p
         private UTorrentClient uClient;
@@ -82,7 +83,7 @@ namespace EyeSeries
         /// <param name="fecha">Fecha en que se transmite el episodio</param>
         /// <param name="estado">Estadp del episodio</param>
         /// <param name="calidad">Calidad del episodio</param>
-        public Episodio(Serie s, int tempo, int capi, string nombrep, string hash, DateTime fecha, int estado, string calidad)
+        public Episodio(Serie s, int tempo, int capi, string nombrep, string hash, DateTime fecha, int estado, string calidad, bool doble)
         {
             uClient = new UTorrentClient(new Uri("http://127.0.0.1:8080/gui/"), "admin", "admin", 1000000);
             NombreEp = nombrep;
@@ -94,6 +95,7 @@ namespace EyeSeries
             Hash = hash;
             Calidad = calidad;
             Hash = hash;
+            Doble = doble;
         }
 
         public void getMagnet()
@@ -305,7 +307,7 @@ namespace EyeSeries
 
         public string Imprimir()
         {
-            return Temporada + "*" + Capitulo + "*" + NombreEp + "*" + Hash + "*" + Fecha.Year + "/" + Fecha.Month + "/" + Fecha.Day + "/" + Fecha.Hour + "/" + Fecha.Minute + "*" + Estado;
+            return Temporada + "*" + Capitulo + "*" + NombreEp + "*" + Hash + "*" + Fecha.Year + "/" + Fecha.Month + "/" + Fecha.Day + "/" + Fecha.Hour + "/" + Fecha.Minute + "*" + Estado + "*" + Doble;
         }
 
 

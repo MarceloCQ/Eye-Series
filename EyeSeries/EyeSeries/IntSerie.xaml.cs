@@ -31,7 +31,6 @@ namespace EyeSeries
         private List<StackPanel> temporadas;
 
         public Boolean episodiosMostrados;
-        private Boolean desplegado;
 
         private int tempActiva;
 
@@ -44,7 +43,6 @@ namespace EyeSeries
         {
             Se = s;
             episodiosMostrados = false;
-            desplegado = true;
             Principal = m;
 
             actualizarInterfazEpPrinc = new DispatcherTimer()
@@ -181,14 +179,25 @@ namespace EyeSeries
         {
             
             StackPanel temporada = temporadas[temporadas.Count - 1];
-
-            string imagen;
+            InterfazDesgloseEp intEpisodio = new InterfazDesgloseEp(ep, this);
+          /*  string imagen;
 
             //Dependiendo de su estado se pone la imagen
-            if (ep.Estado == 0) imagen = "Clocks";
-            else if (ep.Estado == 1) imagen = "descs";
-            else if (ep.Estado == 2) imagen = "plays";
-            else imagen = "paloma";
+            switch (ep.Estado)
+            {
+                case 0:
+                    imagen = "Clocks";
+                    break;
+                case 1:
+                    imagen = "descs";
+                    break;
+                case 2:
+                    imagen = "plays";
+                    break;
+                default:
+                    imagen = "paloma";
+                    break;
+            }
 
             //Se crea el stackpanel del episodio
             StackPanel spEpisodio = new StackPanel()
@@ -229,21 +238,16 @@ namespace EyeSeries
 
             spEpisodio.Children.Add(estado);
             spEpisodio.Children.Add(texto);
+           */
 
             //Se añade el stackPanel del episodio a la temporada
             temporada.Height += 17;
-            temporada.Children.Add(spEpisodio);
+            temporada.Children.Add(intEpisodio);
 
             if (tempActiva == temporadas.Count - 1)
             {
                 Temporadas.Height = temporadas[tempActiva].Height;
             }
-
-            if (ep.Temporada != Se.Temporada || ep.Capitulo != Se.Capitulo)
-            {
-                ep.PropertyChanged += PropertyChangedEpisodiosRestantes;
-            }
-
 
         }
 
@@ -282,6 +286,7 @@ namespace EyeSeries
                     Informacion.Visibility = System.Windows.Visibility.Hidden;
                     Ald.Visibility = System.Windows.Visibility.Hidden;
                     Trian.Visibility = System.Windows.Visibility.Hidden;
+                    BarraProgreso.Visibility = System.Windows.Visibility.Hidden;
                     if (!primeraVez)
                     {
                         DesgloseEpisodios.Visibility = System.Windows.Visibility.Visible;
@@ -293,6 +298,7 @@ namespace EyeSeries
             Informacion.BeginAnimation(OpacityProperty, invisible);
             Ald.BeginAnimation(OpacityProperty, invisible2);
             Trian.BeginAnimation(OpacityProperty, invisible2);
+            BarraProgreso.BeginAnimation(OpacityProperty, invisible2);
 
         }
 
@@ -316,6 +322,13 @@ namespace EyeSeries
             storyboard.Children.Add(rotateAnimation);
             Informacion.Visibility = System.Windows.Visibility.Visible;
 
+            if (Se.EpisodiosNoVistos.Count != 0 && Se.EpisodiosNoVistos[0].Estado == 1)
+            {
+                BarraProgreso.Visibility = System.Windows.Visibility.Visible;
+                BarraProgreso.BeginAnimation(WidthProperty, new DoubleAnimation(Principal.getProgesoTorrent(Se.EpisodiosNoVistos[0].Hash) * 3.5, TimeSpan.FromMilliseconds(0)));
+            }
+
+
             invisible.Completed += (sender, e) =>
                 {
                     InfoRect.BeginAnimation(HeightProperty, alto);
@@ -327,6 +340,7 @@ namespace EyeSeries
             flechabajo.Completed += (sender, e) =>
                 {
                     Informacion.BeginAnimation(OpacityProperty, visible);
+                    BarraProgreso.BeginAnimation(OpacityProperty, new DoubleAnimation(.2, TimeSpan.FromMilliseconds(250)));
                     DesgloseEpisodios.Visibility = System.Windows.Visibility.Hidden;
                     if (Se.AlDia)
                     {
@@ -431,18 +445,6 @@ namespace EyeSeries
 
         private void Play_MouseUp(object sender, MouseButtonEventArgs e)
         {
-
-            
-            Image im = (Image)sender;
-            Episodio ep = (Episodio)im.Tag;
-            
-            Principal.cambiarEpPrincipal(ep);
-           
-                                  
-        }
-
-        private void Play2_MouseUp(object sender, MouseButtonEventArgs e)
-        {
             if (Se.EpisodiosNoVistos.Count != 0 && Se.EpisodiosNoVistos[0].Estado == 2)
             {
                 Episodio ep = Se.EpisodiosNoVistos[0];
@@ -450,21 +452,16 @@ namespace EyeSeries
                 System.Diagnostics.Process.Start(dir);
                 ep.PropertyChanged -= PropertyChangedEpisodioPrincipal;
 
-                if (Se.EpisodiosVistos.Count != 0)
-                {
-                    ep.PropertyChanged += PropertyChangedEpisodiosRestantes;
-                }
-
                 Se.siguienteEpisodio();
+
+                if (ep.Doble)
+                {
+                    Se.siguienteEpisodio();
+                }
 
                 if (Se.EpisodiosNoVistos.Count > 0)
                 {
                     ep = Se.EpisodiosNoVistos[0];
-
-                    if (Se.EpisodiosVistos.Count != 0)
-                    {
-                        ep.PropertyChanged -= PropertyChangedEpisodiosRestantes;
-                    }
                     ep.PropertyChanged += PropertyChangedEpisodioPrincipal;
                 }
             }
@@ -747,6 +744,8 @@ namespace EyeSeries
                                 Play.Source = new BitmapImage(new Uri
                                     (@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\play.png"));
                                 NombreEp.Text = ep.NombreEp;
+                                BarraProgreso.BeginAnimation(WidthProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(1)));
+                                BarraProgreso.Visibility = System.Windows.Visibility.Hidden;
                                 break;
                         }
                         break;
@@ -774,7 +773,7 @@ namespace EyeSeries
                         break;              
                 }
 
-                //Checa si el episodio principal esta cargado para actualizarlo
+        /*        //Checa si el episodio principal esta cargado para actualizarlo
                 if (Se.episodiosCargados)
                 {
 
@@ -816,68 +815,9 @@ namespace EyeSeries
                             break;
                     }
 
-                }      
+                }      */
             });
 
-        }
-
-        private void PropertyChangedEpisodiosRestantes(object sender, PropertyChangedEventArgs e)
-        {
-            Application.Current.Dispatcher.Invoke(
-           DispatcherPriority.Normal,
-           (ThreadStart)delegate
-           {
-
-               Episodio ep = (Episodio)sender;
-               StackPanel epi = (StackPanel)temporadas[ep.Temporada - 1].Children[ep.Capitulo - 1];
-               Image estado = (Image)epi.Children[0];
-               TextBlock texto = (TextBlock)epi.Children[1]; 
-
-
-               switch (e.PropertyName)
-               {
-                   case "Estado":
-                       switch (ep.Estado)
-                       {
-                           case 1:
-                               estado.Source = new BitmapImage(new Uri
-                                   (@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\descs.png"));
-                               texto.Text = "E" + (ep.Capitulo < 10 ? "0" : "") + ep.Capitulo + " - " + ep.NombreEp + " - 0%";
-                               break;
-
-                           case 2:
-                               estado.Source = new BitmapImage(new Uri
-                                   (@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\plays.png"));
-                               texto.Text = "E" + (ep.Capitulo < 10 ? "0" : "") + ep.Capitulo + " - " + ep.NombreEp;
-                               break;
-
-                           case 3:
-                               estado.Source = new BitmapImage(new Uri
-                                   (@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\paloma.png"));
-                               texto.Text = "E" + (ep.Capitulo < 10 ? "0" : "") + ep.Capitulo + " - " + ep.NombreEp;
-                               break;
-                       }
-                       break;
-
-                   case "NombreEp":
-                       if (ep.Estado == 0)
-                       {
-                           texto.Text = "E" + (ep.Capitulo < 10 ? "0" : "") + ep.Capitulo + " - " + ep.NombreEp + " - " + ep.Fecha.ToShortDateString();
-                       }
-                       else
-                       {
-                           texto.Text = "E" + (ep.Capitulo < 10 ? "0" : "") + ep.Capitulo + " - " + ep.NombreEp;
-                       }
-                       break;
-
-                   case "Fecha":
-                       texto.Text = "E" + (ep.Capitulo < 10 ? "0" : "") + ep.Capitulo + " - " + ep.NombreEp + " - " + ep.Fecha.ToShortDateString();
-                       break;
-               }
-
-
-
-           });
         }
 
         //Funciones
@@ -948,11 +888,18 @@ namespace EyeSeries
                     //Si el episodio se esta descargando
                     if (ep.Estado == 1)
                     {
+                        double progreso = Principal.getProgesoTorrent(ep.Hash);
                         Play.Source = new BitmapImage(new Uri
                                    (@"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Interfaz\Descb.png"));
 
                         //Se pone el nombre + el progreso
-                        NombreEp.Text += " - " + Principal.getProgesoTorrent(ep.Hash) + "%";
+                        NombreEp.Text += " - " + progreso + "%";
+
+                        if (!episodiosMostrados)
+                        {
+                            BarraProgreso.BeginAnimation(WidthProperty, new DoubleAnimation(progreso * 3.5, TimeSpan.FromMilliseconds(1)));
+                            BarraProgreso.Visibility = System.Windows.Visibility.Visible;
+                        }
 
                         //Se ajusta
                         Ajustar(NombreEp);
@@ -1022,10 +969,22 @@ namespace EyeSeries
         {
             if (!Se.AlDia && Se.EpisodiosNoVistos[0].Estado == 1)
             {
+                BarraProgreso.Visibility = System.Windows.Visibility.Visible;
+
+                double progreso = Principal.getProgesoTorrent(Se.EpisodiosNoVistos[0].Hash);
                 //Se pone el nombre + el progreso
-                NombreEp.Text = Se.EpisodiosNoVistos[0].NombreEp + " - " + Principal.getProgesoTorrent(Se.EpisodiosNoVistos[0].Hash) + "%";
+                NombreEp.Text = Se.EpisodiosNoVistos[0].NombreEp + " - " + progreso + "%";
                 //Se ajusta
                 Ajustar(NombreEp);
+
+                TimeSpan tiempo = BarraProgreso.Width == 0 ? TimeSpan.FromMilliseconds(1) : TimeSpan.FromSeconds(1);
+
+                //Se hace actualiza la barra de progreso
+                BarraProgreso.BeginAnimation(WidthProperty, new DoubleAnimation(progreso * 3.5, tiempo));
+              
+
+
+
             }
         }
 
@@ -1037,10 +996,9 @@ namespace EyeSeries
                 {
                     if (ep.Estado == 1)
                     {
-                        StackPanel epi = (StackPanel)temporadas[ep.Temporada - 1].Children[ep.Capitulo - 1];
-                        TextBlock texto = (TextBlock)epi.Children[1];
-
-                        texto.Text = "E" + (ep.Capitulo < 10 ? "0" : "") + ep.Capitulo + " - " + ep.NombreEp + " - " + Principal.getProgesoTorrent(ep.Hash) + "%";
+                        InterfazDesgloseEp epi = (InterfazDesgloseEp)temporadas[ep.Temporada - 1].Children[ep.Capitulo - 1];
+                        epi.ActualizarPorcentaje(Principal.getProgesoTorrent(ep.Hash));
+                        
                     }
                     else
                     {
@@ -1057,17 +1015,30 @@ namespace EyeSeries
         private void GPrinc_MouseLeave(object sender, MouseEventArgs e)
         {
 
+
+
             TimeSpan tiempo = new TimeSpan(0, 0, 0, 0, 250);
 
             actualizarInterfazEpPrinc.Stop();
 
             ThicknessAnimation paraAbajo = new ThicknessAnimation(new Thickness(InfoRect.Margin.Left, 197, 0, 0), tiempo);
-            InformacionCaps.BeginAnimation(MarginProperty, new ThicknessAnimation(new Thickness(InfoRect.Margin.Left, 197, 0, 0), tiempo));
-            desplegado = false;
+            paraAbajo.Completed += (sender2, e2) =>
+                {
+                    BarraProgreso.Visibility = System.Windows.Visibility.Hidden;
+                    BarraProgreso.BeginAnimation(WidthProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(0)));
+                };
+
+
+            InformacionCaps.BeginAnimation(MarginProperty, paraAbajo);
         }
 
         private void GPrinc_MouseEnter(object sender, MouseEventArgs e)
-        {
+        {            
+            if (Se.EpisodiosNoVistos.Count != 0 && Se.EpisodiosNoVistos[0].Estado == 1)
+            {
+                BarraProgreso.Visibility = System.Windows.Visibility.Visible;
+            }
+
             actualizarInterfazEpPr(null, null);
             actualizarInterfazEpPrinc.Start();
 
@@ -1075,7 +1046,6 @@ namespace EyeSeries
             TimeSpan tiempo = new TimeSpan(0, 0, 0, 0, 250);
             ThicknessAnimation paraArriba = new ThicknessAnimation(new Thickness(InfoRect.Margin.Left, 153, 0, 0), tiempo);
             InformacionCaps.BeginAnimation(MarginProperty, paraArriba);
-            desplegado = true;
         }
 
         public void agregarHandlerAEpisodioPrincipal()
@@ -1086,16 +1056,6 @@ namespace EyeSeries
         public void quitarHandlerAEpisodioPrincipal()
         {
             Se.EpisodiosNoVistos[0].PropertyChanged -= PropertyChangedEpisodioPrincipal;
-        }
-
-        public void agregarHandlerDeRestantesAEpisodio(Episodio ep)
-        {
-            ep.PropertyChanged += PropertyChangedEpisodiosRestantes;
-        }
-
-        public void quitarHandlerDeRestantesAEpisodio(Episodio ep)
-        {
-            ep.PropertyChanged -= PropertyChangedEpisodiosRestantes;
         }
 
         public void bajarInformacion()
@@ -1111,6 +1071,28 @@ namespace EyeSeries
                 GPrinc.MouseEnter += GPrinc_MouseEnter;
                 GPrinc.MouseLeave += GPrinc_MouseLeave;
             }
+        }
+
+        public void cambiarEpPrincipal(Episodio ep)
+        {
+            if (Se.Temporada != 0)
+            {
+                Se.EpisodiosNoVistos[0].PropertyChanged -= PropertyChangedEpisodioPrincipal;
+            }
+
+            Principal.cambiarEpPrincipal(ep);
+
+            if (Se.Temporada != 0)
+            {
+                Se.EpisodiosNoVistos[0].PropertyChanged += PropertyChangedEpisodioPrincipal;
+            }
+
+
+        }
+
+        public double getProgresoTorrent(string hash)
+        {
+            return Principal.getProgesoTorrent(hash);
         }
 
 

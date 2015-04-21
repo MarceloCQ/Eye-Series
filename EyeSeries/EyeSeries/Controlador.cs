@@ -51,7 +51,7 @@ namespace EyeSeries
             string archivoAbrir = @"C:\Users\Marcelo\Documents\Eye-Series\EyeSeries\EyeSeries\Bases de Datos\General2.txt";
             StreamReader leer = new StreamReader(archivoAbrir);
 
-            //Revisa si la ultima actualizacion fue hace mas de 14 dias
+            //Revisa si la ultima actualizacion fue hace mas de 7 dias
             string ultact = leer.ReadLine();
             UltimaActualizacion = new DateTime(Convert.ToInt32(ultact.Split('/')[2]), Convert.ToInt32(ultact.Split('/')[1]), Convert.ToInt32(ultact.Split('/')[0]));
             Actualizar = (DateTime.Now - UltimaActualizacion).TotalDays > 7;
@@ -104,7 +104,7 @@ namespace EyeSeries
             escribe.WriteLine(UltimaActualizacion.Day.ToString() + "/" + UltimaActualizacion.Month.ToString() + "/" + UltimaActualizacion.Year.ToString());
             foreach (Serie s in Series)
             {
-                escribe.WriteLine(s.Imprimir());
+                escribe.WriteLine(s.imprimir());
             }
 
             escribe.Close();
@@ -157,7 +157,21 @@ namespace EyeSeries
 
             DateTime final = DateTime.Now;
             TimeSpan diferencia = final - inicio;
-            MessageBox.Show(diferencia.TotalSeconds.ToString());
+         //   MessageBox.Show(diferencia.TotalSeconds.ToString());
+
+            if (Actualizar)
+            {
+                BackgroundWorker b = new BackgroundWorker();
+                b.DoWork += (sender, e) => actualizarBasedeDatos();
+                b.RunWorkerCompleted += (sender, e) =>
+                    {
+                        UltimaActualizacion = DateTime.Now;
+                        guardarBasedeDatos();
+                       // MessageBox.Show("LISTO");
+                    };
+                b.RunWorkerAsync();
+            }
+
 
         }
 
@@ -221,201 +235,157 @@ namespace EyeSeries
 
         public void descargarEpisodio(Episodio ep)
         {
-            Ping checarConexion = new Ping();
 
-            /*try
+            string magnet = "";
+
+            magnet = descargarEpisodioKickass(ep, false);
+
+            if (magnet == "")
             {
-                var result = checarConexion.Send("http://thepiratebay.se");
-                descargarEpisodioTPB(ep);
+                magnet = descargarEpisodioTPB(ep, false);
             }
-            catch
-            {*/
-            descargarEpisodioKickass(ep);
-            //}
-       
-        }
 
-        private void descargarEpisodioTPB(Episodio ep)
-        {
-            string link;
-            string temp = (ep.Temporada < 10 ? "0" : "") + ep.Temporada;
-            string cap = (ep.Capitulo < 10 ? "0" : "") + ep.Capitulo;
-            string codigoFuentePagina;
-            int primero, segundo;
-            bool lastresort = false;
-            string pagina = "";
-            do
+            if (magnet == "")
             {
-
-                if (!lastresort)
-                    pagina = "http://thepiratebay.se/search/" + ep.Serie.Nombre.Replace(' ', '+') + "+S" + temp + "E" + cap + "+" + ep.Calidad + "/0/7/0";
-                HttpDownloader fuente = new HttpDownloader(pagina, "thepiratebay.se", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:29.0) Gecko/20100101 Firefox/29.0");
-                codigoFuentePagina = fuente.GetPage();
-
-                primero = codigoFuentePagina.IndexOf("href=\"magnet");
-                if (primero == -1)
+                //Checa a ver si el episodio es doble y ya se descargo
+                if (descargarEpisodioKickass(ep, true) != "")
                 {
-                    if (ep.Calidad == "")
+                    Episodio epAnterior = ep.Serie.buscarEpEnNoVistos(ep.Temporada, ep.Capitulo - 1);
+                    ep.Hash = epAnterior.Hash;
+                    epAnterior.Doble = true;
+                }
+                else
+                {
+                    magnet = descargarEpisodioTPB(ep, true);
+                    if (magnet != "")
                     {
-                        if (cap == "01" || cap == "02" || cap == "21" || cap == "22" && !lastresort)
+                        ep.Doble = true;
+                        uClient.Torrents.AddUrl(magnet);
+                        Regex r2 = new Regex(".+xt=urn:btih:(.+?)&dn=.+");
+                        ep.Hash = r2.Match(magnet).Groups[1].Value.ToUpper();
+                        
+                    }
+                    else
+                    {
+                        if (ep.Serie.Capitulo > 1 && ep.Serie.buscarEpEnNoVistos(ep.Temporada, ep.Capitulo - 1).Doble)
                         {
-                            lastresort = true;
-                            if (cap == "01" || cap == "02") pagina = "http://thepiratebay.se/search/" + ep.Serie.Nombre.Replace(' ', '+') + "+S" + temp + "E01E02+720P/0/7/0";
-                            else if (cap == "21" || cap == "22") pagina = pagina = "http://thepiratebay.se/search/" + ep.Serie.Nombre.Replace(' ', '+') + "+S" + temp + "E21E22+720P/0/7/0";
+                            Episodio epAnterior = ep.Serie.buscarEpEnNoVistos(ep.Temporada, ep.Capitulo - 1);
+                            ep.Hash = epAnterior.Hash;
                         }
                         else
                         {
-                            link = "-1";
-                            break;
+                            MessageBox.Show("No se encontro el torrent");
                         }
                     }
-                    ep.Calidad = (ep.Calidad == "1080p" ? "720p" : "");
                 }
-
-            }
-            while (primero == -1);
-
-
-
-
-            if (primero != -1)
-            {
-                //Saca el link de la pagina
-                segundo = codigoFuentePagina.IndexOf("\" title", primero);
-                link = codigoFuentePagina.Substring(primero + 6, segundo - primero - 6);
-                uClient.Torrents.AddUrl(link);
-                //Saca el HASH del link
-                Regex r2 = new Regex(".+xt=urn:btih:(.+?)&dn=.+");
-                ep.Hash = r2.Match(link).Groups[1].Value.ToUpper();
-
             }
             else
             {
-                throw new Exception("No se encontro el torrent");
-            }
-        }
-
-        private void descargarEpisodioKickass(Episodio ep)
-        {
-            //Se construye la pagina con los datos del capitulo
-            string temp = (ep.Temporada < 10 ? "0" : "") + ep.Temporada;
-            string cap = (ep.Capitulo < 10 ? "0" : "") + ep.Capitulo;
-            string calidad = "720p";
-            string nombreSerie = ep.Serie.Nombre;
-
-            bool torrentEncontrado = false;
-            string codigoFuentePagina = "";
-            while (!torrentEncontrado)
-            {
-                string pagina = @"http://kickass.to/usearch/"+ nombreSerie + " S" + temp +"E" + cap + " " + calidad + @"/?field=seeders&sorder=desc";
-
-                //Se saca el codigo fuente de la pagina
-                HttpDownloader fuente = new HttpDownloader(pagina, "kickass.so", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:29.0) Gecko/20100101 Firefox/29.0");
-                codigoFuentePagina = fuente.GetPage();
-
-                //Se checa si la búsqueda encontró resultados
-                Regex resultados = new Regex("did not match any documents");
-                if (!resultados.Match(codigoFuentePagina).Success)
-                {
-                    torrentEncontrado = true;
-                }
-                else
-                {
-                    if (calidad != "")
-                    {
-                        calidad = "";
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
-
-            if (torrentEncontrado)
-            {
-
-                Regex encontrarMagnet = new Regex("Torrent magnet link\" href=\"(.*?)\"");
-                string magnet = encontrarMagnet.Match(codigoFuentePagina).Groups[1].Value;
-
                 uClient.Torrents.AddUrl(magnet);
 
-                //Saca el HASH del link
                 Regex r2 = new Regex(".+xt=urn:btih:(.+?)&dn=.+");
                 ep.Hash = r2.Match(magnet).Groups[1].Value.ToUpper();
-
             }
 
-            else
-            {
-                MessageBox.Show("TORRRENT NO ENCONTRADO");
-            }
+            
 
-
+            //    Regex r2 = new Regex(".+xt=urn:btih:(.+?)&dn=.+");
+            //    ep.Hash = r2.Match(magnet).Groups[1].Value.ToUpper();
+       
         }
 
-        private void descargarEpisodioTOPB(Episodio ep)
+        private string descargarEpisodioTPB(Episodio ep, bool doble)
         {
+            string magnet = "";
+            string temp = (ep.Temporada < 10 ? "0" : "") + ep.Temporada;
+            string cap = (ep.Capitulo < 10 ? "0" : "") + ep.Capitulo;
+            string nombreSerie = ep.Serie.Nombre;
+            string calidad = "720p";
+
+            for (int i = 0; i < 2; i++)
+            {
+                string pagina;
+                if (!doble)
+                {
+                    pagina = @"https://thepiratebay.se/search/" + nombreSerie + " S" + temp + "E" + cap + " " + calidad + "/0/7/0";
+                }
+                else
+                {
+                    pagina = @"https://thepiratebay.se/search/" + nombreSerie + " S" + temp + "E" + cap + "E" + (ep.Capitulo + 1 < 10 ? "0" : "") + (ep.Capitulo + 1) +" " + calidad + "/0/7/0";
+                }
+
+                WebClient wc = new WebClient();
+                string codigoFuente = wc.DownloadString(pagina);
+
+                string patron = "<a href=\"(magnet.+?)\"";
+                Regex enlaceMagent = new Regex(patron);
+                Match m = enlaceMagent.Match(codigoFuente);
+                if (m.Success)
+                {
+                    magnet = m.Groups[1].Value;
+                    break;
+                }
+                else
+                {
+                    calidad = "";
+                }
+            }
+
+            return magnet;
+        }
+
+        private string descargarEpisodioKickass(Episodio ep, bool doble)
+        {
+            string magnet = "";
+
             //Se construye la pagina con los datos del capitulo
             string temp = (ep.Temporada < 10 ? "0" : "") + ep.Temporada;
             string cap = (ep.Capitulo < 10 ? "0" : "") + ep.Capitulo;
             string calidad = "720p";
             string nombreSerie = ep.Serie.Nombre;
 
-            bool torrentEncontrado = false;
-            string codigoFuentePagina = "";
-            while (!torrentEncontrado)
+            for (int i = 0; i < 2; i++)
             {
-                string pagina = @"https://oldpiratebay.org/search.php?q=" + "\"" + nombreSerie+ "\"" + " \"S" + temp + "E" + cap + "\" " + calidad + @"&Torrent_sort=seeders.desc";
-
-                //Se saca el codigo fuente de la pagina
-                HttpDownloader fuente = new HttpDownloader(pagina, "oldpiratebay.org", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:29.0) Gecko/20100101 Firefox/29.0");
-                codigoFuentePagina = fuente.GetPage();
-
-                //Se checa si la búsqueda encontró resultados
-                Regex resultados = new Regex("No results found.");
-                if (!resultados.Match(codigoFuentePagina).Success)
+                string pagina;
+                if (!doble)
                 {
-                    torrentEncontrado = true;
+                    pagina = @"http://kickass.to/usearch/" + nombreSerie + " S" + temp + "E" + cap + " " + calidad + @"/?field=seeders&sorder=desc";
                 }
                 else
                 {
-                    if (calidad != "")
+                    pagina = @"http://kickass.to/usearch/" + nombreSerie + " S" + temp + "E" + (ep.Capitulo - 1 < 10 ? "0" : "") + (ep.Capitulo - 1)+ "E" + cap + " " + calidad + @"/?field=seeders&sorder=desc";
+                }
+                try
+                {
+                    //Se saca el codigo fuente de la pagina
+                    HttpDownloader fuente = new HttpDownloader(pagina, "kickass.to", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.89 Safari/537.36");
+                    string codigoFuente = fuente.GetPage();
+
+                    string patron = "did not match any documents";
+                    Regex resultados = new Regex(patron);
+                    if (!resultados.Match(codigoFuente).Success)
                     {
-                        calidad = "";
+                        string patronMagnet = "<a title=\"Torrent magnet link\" href=\"(magnet.+?)\"";
+                        Regex encontrarMagent = new Regex(patronMagnet);
+                        Match magnetMatch = encontrarMagent.Match(codigoFuente);
+
+                        magnet = magnetMatch.Groups[1].Value;
+
+                        break;
+
                     }
                     else
                     {
-                        break;
+                        calidad = "";
                     }
                 }
-            }
-
-            if (torrentEncontrado)
-            {
-                int primero = codigoFuentePagina.IndexOf("href='magnet");
-                int segundo = codigoFuentePagina.IndexOf("' title", primero);
-                string magnet = codigoFuentePagina.Substring(primero + 6, segundo - primero - 6);
-                //Saca el HASH del link
-                Regex r2 = new Regex(".+xt=urn:btih:(.+?)&dn=.+");
-
-                if (r2.Match(magnet).Success)
+                catch
                 {
-                    ep.Hash = r2.Match(magnet).Groups[1].Value.ToUpper();
+                    return magnet;
                 }
-                else
-                {
-                    Regex r3 = new Regex(".+xt=urn:btih:(.+?)&amp");
-                    ep.Hash = r3.Match(magnet).Groups[1].Value.ToUpper();
-                }
-
-                uClient.Torrents.AddUrl(magnet);
             }
 
-            else
-            {
-                MessageBox.Show("TORRRENT NO ENCONTRADO");
-            }
+            return magnet;
         }
 
         public void moverEpisodioTerminado(Episodio ep)
@@ -426,7 +396,7 @@ namespace EyeSeries
             //Saca el path del archivo .mkv
             foreach (UTorrentAPI.File f in uClient.Torrents[ep.Hash].Files)
             {
-                if (f.Path.EndsWith(".mkv"))
+                if (f.Path.EndsWith(".mkv") || f.Path.EndsWith(".mp4"))
                 {
                     if (!f.Path.Contains(@"Sample\"))
                     {
@@ -452,6 +422,9 @@ namespace EyeSeries
             //Se elimina el torrent de la lista de torrents
             uClient.Torrents.Remove(ep.Hash, TorrentRemovalOptions.TorrentFile);
 
+            //Se pone su hash en -1
+            ep.Hash = "-1";
+
             Timer moveryDescargar = new Timer()
             {
                 Interval = 1,
@@ -467,7 +440,14 @@ namespace EyeSeries
                         if (!System.IO.File.Exists(pathDestino))
                         {
                             //Se copia al destino
-                            System.IO.File.Move(pathOrigen, pathDestino);
+                            if (!uClient.Torrents.Contains(ep.Hash))
+                            {
+                                System.IO.File.Move(pathOrigen, pathDestino);
+                            }
+                            else
+                            {
+                                throw new Exception("El torrent aun no se elimina");
+                            }
                         }
 
                         ((Timer)sender).Stop();
@@ -475,8 +455,7 @@ namespace EyeSeries
                         //Se descarga el subtitulo
                         descargarSubtituloSUBDB(nombreArchivo, pathDestino, ep);
 
-                        //Se pone su hash en -1
-                        ep.Hash = "-1";
+
 
                         
 
@@ -487,7 +466,7 @@ namespace EyeSeries
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("No jalo! " + ex.Message);
+                        Console.WriteLine(ex.Message);
                     }
                 };
 
@@ -592,13 +571,31 @@ namespace EyeSeries
                         {
                             if (ep.Hash != "-1" && torrentTerminado(ep.Hash))
                             {
+                                if (ep.Doble)
+                                {
+                                    Episodio epPosterior = ep.Serie.buscarEpEnNoVistos(ep.Temporada, ep.Capitulo + 1);
+                                    epPosterior.Hash = "-1";
+                                    epPosterior.Estado = 2;
+                                    s.Descargando--;
+                                    s.PorVer++;
+                                }
+
                                 BackgroundWorker b = new BackgroundWorker();
-                                b.DoWork += (sender2, e2) => moverEpisodioTerminado(ep);
+                                b.DoWork += (sender2, e2) =>
+                                    {
+                                        
+
+                                        moverEpisodioTerminado(ep);
+                                    };
+                                b.RunWorkerCompleted += (sender3, e3) =>
+                                    {
+                                        s.Descargando--;
+                                        s.PorVer++;
+                                        ep.Estado = 2;
+                                        s.guardarEpisodiosNoVistos();   
+                                    };
                                 b.RunWorkerAsync();
-                                s.Descargando--;
-                                s.PorVer++;
-                                ep.Estado = 2;
-                                s.guardarEpisodiosNoVistos();                                
+                                                             
                             }
 
                         }
@@ -648,7 +645,17 @@ namespace EyeSeries
 
             if (ep.Estado == 2)
             {
-                reproducirEpisodio(ep);
+                if (System.IO.File.Exists(@"C:\Users\Marcelo\Videos\Series\" + ep.Serie.Nombre + @"\Temporada " + ep.Temporada + @"\Episodio " + ep.Capitulo + ".mkv"))
+                {
+                    reproducirEpisodio(ep);
+                }
+                else
+                {
+                    if (ep.Serie.buscarEpEnNoVistos(ep.Temporada, ep.Capitulo - 1).Doble)
+                    {
+                        reproducirEpisodio(ep.Serie.buscarEpEnNoVistos(ep.Temporada, ep.Capitulo - 1));
+                    }
+                }
 
                 while (Se.EpisodiosNoVistos.Count != 0 && Se.EpisodiosNoVistos[0] != ep)
                 {
@@ -656,6 +663,11 @@ namespace EyeSeries
                 }
 
                 Se.siguienteEpisodio();
+
+                if (ep.Doble)
+                {
+                    Se.siguienteEpisodio();
+                }
 
             }
             else
@@ -665,13 +677,6 @@ namespace EyeSeries
                     List<Episodio> aDescargar = new List<Episodio>();
                     Se.AlDia = false;
 
-                    if (Se.Temporada != 0)
-                    {
-                        Interfaz.getInterfazSerie(Se.Numserie).quitarHandlerAEpisodioPrincipal();
-                    }
-
-                    Interfaz.getInterfazSerie(Se.Numserie).agregarHandlerDeRestantesAEpisodio(ep);
-
                     for (int t = Se.EpisodiosVistos.Count - 1; t >= ep.Temporada - 1; t--)
                     {
                         int c = Se.EpisodiosVistos[t].Count - 1;
@@ -680,7 +685,7 @@ namespace EyeSeries
 
                             
                             Episodio epReferenciado = Se.EpisodiosVistos[t][c];
-                            if (System.IO.File.Exists(@"C:\Users\Marcelo\Videos\Series\" + Se.Nombre + @"\Temporada " + epReferenciado.Temporada + @"\Episodio " + epReferenciado.Capitulo + ".mkv"))
+                            if (System.IO.File.Exists(@"C:\Users\Marcelo\Videos\Series\" + Se.Nombre + @"\Temporada " + epReferenciado.Temporada + @"\Episodio " + epReferenciado.Capitulo + ".mkv") || (c > 0 && Se.EpisodiosVistos[t][c-1].Doble))
                             {
                                 epReferenciado.Estado = 2;
                                 Se.PorVer++;
@@ -728,9 +733,6 @@ namespace EyeSeries
 
                     Se.Temporada = ep.Temporada;
                     Se.Capitulo = ep.Capitulo;
-
-                    Interfaz.getInterfazSerie(Se.Numserie).quitarHandlerDeRestantesAEpisodio(Se.EpisodiosNoVistos[0]);
-                    Interfaz.getInterfazSerie(Se.Numserie).agregarHandlerAEpisodioPrincipal();
 
                     BackgroundWorker b = new BackgroundWorker();
                     b.DoWork += (sender, e) =>
@@ -867,7 +869,7 @@ namespace EyeSeries
 
 
                                 //Se crea el nuevo episodio con los parametros sacados
-                                Episodio epAAgregar = new Episodio(s, temporada, capitulo, nombreEp, "-1", fecha, 0, "720p");
+                                Episodio epAAgregar = new Episodio(s, temporada, capitulo, nombreEp, "-1", fecha, 0, "720p", false);
                                 //Se agrega a la lista de episodios
                                 s.EpisodiosNoVistos.Add(epAAgregar);
 
@@ -944,7 +946,7 @@ namespace EyeSeries
 
         public void prueba()
         {
-            actualizarBasedeDatos();
+            
         }
 
         private DateTime convertirAFecha(string fecha, string horas)
