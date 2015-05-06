@@ -54,7 +54,7 @@
       <HintPath>..\..\..\..\Desktop\TVDBSharp.dll</HintPath>
     </Reference>
     <Reference Include="UTorrentAPI">
-      <HintPath>..\..\..\Downloads\uTorrentAPI 1.0.0.4\Release\AnyCPU\UTorrentAPI.dll</HintPath>
+      <HintPath>Bases de Datos\UTorrentAPI.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />

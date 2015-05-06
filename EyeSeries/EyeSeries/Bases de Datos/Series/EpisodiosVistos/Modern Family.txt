@@ -135,3 +135,7 @@
 6*10*Haley's 21st Birthday*-1*2014/12/11/9/0*3*False
 6*11*The Day We Almost Died*-1*2015/1/8/9/0*3*False
 6*12*The Big Guns*-1*2015/1/15/9/0*3*False
+6*13*Rash Decisions*-1*2015/2/5/9/0*3*False
+6*14*Valentine's Day 4: Twisted Sister*-1*2015/2/12/9/0*3*False
+6*15*Fight or Flight*-1*2015/2/19/9/0*3*False
+6*16*Connection Lost*-1*2015/2/26/9/0*3*False
