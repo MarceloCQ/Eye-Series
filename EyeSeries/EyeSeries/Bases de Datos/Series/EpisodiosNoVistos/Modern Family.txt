@@ -2,7 +2,7 @@
 6*18*Spring Break*-1*2015/3/26/9/0*2*False
 6*19*Grill, Interrupted*-1*2015/4/2/9/0*2*False
 6*20*Knock 'em Down*-1*2015/4/23/9/0*2*False
-6*21*Integrity*70D5BFF759D2AC27573FF094D48E444913EFC6E6*2015/4/30/9/0*1*False
-6*22*Patriot Games*-1*2015/5/7/9/0*0*False
+6*21*Integrity*-1*2015/4/30/9/0*2*False
+6*22*Patriot Games*9A2063A6CED3711E419FDFFD3E856DE08EC97584*2015/5/7/9/0*1*False
 6*23*Crying Out Loud*-1*2015/5/14/9/0*0*False
 6*24*American Skyper*-1*2015/5/21/9/0*0*False
